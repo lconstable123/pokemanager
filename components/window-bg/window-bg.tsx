@@ -21,7 +21,7 @@ export default function WindowBg({ image }: WindowBgProps) {
       src={getImageSrc(image)}
       width={6000}
       height={300}
-      className="absolute -translate-x-50 translate-y-20 opacity-[3%]  pointer-events-none"
+      className="z-1 absolute sm:-translate-x-50 -translate-x-10 md:translate-y-20 opacity-[3%] scale-[150%] md:scale-100 pointer-events-none"
       alt="Logo"
     />
   );

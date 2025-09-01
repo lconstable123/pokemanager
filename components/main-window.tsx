@@ -7,9 +7,9 @@ export default function MainWindow({
   children: React.ReactNode;
 }) {
   return (
-    <section className="hardShadow flex flex-col w-[800px] overflow-hidden rounded-2xl">
+    <section className="hardShadow flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] overflow-hidden rounded-none sm:rounded-2xl">
       <FrameBar />
-      <div className="h-[400px] bg-white flex items-center justify-center relative">
+      <div className=" h-full  sm:h-[500px] md:h-[400px] bg-white flex flex-col items-center justify-center relative">
         {children}
       </div>
       <FrameBar />
