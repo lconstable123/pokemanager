@@ -3,11 +3,11 @@ import Pokeball from "./pokeball";
 
 export default function Features({ features }: { features: string[] }) {
   return (
-    <ul className="flex gap-2 text-center justify-center mb-5 flex-wrap ">
+    <ul className="flex gap-5 text-center justify-center mb-7 flex-wrap ">
       {features.map((feature, index) => (
         <li
           key={index}
-          className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3 group "
+          className="flex flex-col sm:flex-row items-center gap-1 sm:gap-0 group "
         >
           <div className="w-4 h-4 group-hover:scale-135 transition-all duration-200 ">
             <Pokeball type="09" fill={true} />

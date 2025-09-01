@@ -2,18 +2,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import React from "react";
 import Pokeball from "./pokeball";
+import Link from "next/link";
 
 export default function Nav({
   items,
 }: {
-  items: { name: string; ball: string }[];
+  items: { name: string; ball: string; href: string }[];
 }) {
   return (
     <nav className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
       {items.map((item, index) => {
         return (
           <div
-            className=" flex not-even:flex-row even:flex-row-reverse gap-2 items-center h-9 group"
+            className=" flex not-even:flex-row even:flex-row-reverse gap-2 items-center h-8 group"
             key={index}
           >
             <div
@@ -26,17 +27,19 @@ export default function Nav({
             >
               <Pokeball type={item.ball} size={30} fill={true} shadow={true} />
             </div>
-            <Button
-              key={item.name}
-              className={cn(
-                " w-30 h-full transition-transform duration-300 active:scale-90",
-                index % 2 === 0
-                  ? "group-hover:-translate-x-2"
-                  : "group-hover:translate-x-2"
-              )}
-            >
-              {item.name}
-            </Button>
+            <Link href={item.href}>
+              <Button
+                key={item.name}
+                className={cn(
+                  " w-25 h-full transition-transform duration-300 active:scale-90",
+                  index % 2 === 0
+                    ? "group-hover:-translate-x-2"
+                    : "group-hover:translate-x-2"
+                )}
+              >
+                {item.name}
+              </Button>
+            </Link>
           </div>
         );
       })}
