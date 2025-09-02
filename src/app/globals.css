@@ -60,6 +60,10 @@ body {
   background-image: url("/ditheredgrad.jpg");
   background-size: auto 100%;
 }
+.ditheredGrad {
+  background-image: url("/ditheredgrad_bw.jpg");
+  background-size: auto 100%;
+}
 
 .softShadow {
   box-shadow: var(--shadow-deep) 4 rgba(0, 0, 0, 0.2);
@@ -95,6 +99,46 @@ h1 {
 h2 {
   font-family: var(--font-inter);
   @apply font-normal leading-[15pt]   tracking-wider text-[16pt] text-gray-800;
+}
+
+.imageFrame {
+  @apply border-2 border-gray-600 rounded-lg;
+  box-shadow: var(--shadow-mid) 0 rgba(0, 0, 0, 0.2);
+}
+.pixelImage {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: -o-pixelated !important;
+  image-rendering: crisp-edges !important;
+  user-select: none !important; /* ✅ corrected line */
+  -webkit-user-drag: none;
+  display: inline-block; /* prevents inline selection box */
+}
+
+.pixelImage img {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  -webkit-user-drag: none;
+  user-drag: none;
+  display: block;
+}
+
+.noSelect {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  -webkit-user-drag: none;
+  user-drag: none;
+  /* display: block; */
+}
+
+.transition-quick {
+  @apply transition-all duration-1300;
 }
 
 :root {

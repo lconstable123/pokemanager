@@ -31,10 +31,10 @@ export default function Nav({
               <Button
                 key={item.name}
                 className={cn(
-                  " w-25 h-full transition-transform duration-300 active:scale-90",
+                  " w-25 h-8transition-transform duration-300 active:scale-90",
                   index % 2 === 0
-                    ? "group-hover:-translate-x-2"
-                    : "group-hover:translate-x-2"
+                    ? "group-hover:-translate-x-1"
+                    : "group-hover:translate-x-1"
                 )}
               >
                 {item.name}

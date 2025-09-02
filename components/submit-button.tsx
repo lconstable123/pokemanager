@@ -1,0 +1,35 @@
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import React from "react";
+import Pokeball from "./pokeball";
+
+export default function SubmitButton({
+  ball,
+  name,
+  onSubmit,
+}: {
+  ball: string;
+  name: string;
+  onSubmit: () => void;
+}) {
+  return (
+    <div className=" flex flex-row gap-2 items-center h-10 w-[150px]  group">
+      <Button
+        className={cn(
+          " w-30 h-8 transition-transform duration-300 active:scale-90",
+          "group-hover:translate-x-1"
+        )}
+      >
+        {name}
+      </Button>
+      <div
+        className={cn(
+          " h-9 w-full transition-transform duration-300",
+          "group-hover:translate-x-4"
+        )}
+      >
+        <Pokeball type={ball} size={30} fill={true} shadow={true} />
+      </div>
+    </div>
+  );
+}
