@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Urbanist, Inter } from "next/font/google";
 import "./globals.css";
 import BG from "../../components/bg";
+import { Toaster } from "react-hot-toast";
+import PokeAppContextProvider from "@/lib/contexts/PokeAppContext";
+import MainWindow from "../../components/main-window";
+import Canvas from "../../components/canvas";
+import NavBar from "../../components/nav-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +41,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable}  ${urbanist.variable} ${inter.variable} antialiased`}
       >
-        {children}
+        <Toaster position="top-center" />
+        <PokeAppContextProvider>
+          <Canvas>
+            <MainWindow>
+              <NavBar
+                isBackEnabled={true}
+                isProfileEnabled={true}
+                Navlink="/"
+              />
+              <div className="flex-grow ">{children}</div>
+            </MainWindow>
+          </Canvas>
+        </PokeAppContextProvider>
         <BG />
       </body>
     </html>

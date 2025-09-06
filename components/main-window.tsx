@@ -7,18 +7,17 @@ export default function MainWindow({
 }: {
   children: React.ReactNode;
 }) {
-  const dimensions =
-    "h-full sm:h-[500px]  2xl:h-[600px] w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px]";
+  // const dimensions = " ";
   return (
-    <section className="  relative hardShadow flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] overflow-hidden rounded-none sm:rounded-2xl">
+    <main className="hardShadow flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] overflow-hidden rounded-none sm:rounded-2xl">
       <FrameBar />
       <div
-        className={`transition-all duration-200 py-3 ${dimensions} bg-white flex flex-col items-center justify-center relative`}
+        className={` bg-white h-full sm:h-[500px] 2xl:h-[600px] w-full relative flex flex-col`}
       >
         {children}
       </div>
       <FrameBar />
-    </section>
+    </main>
   );
 }
 

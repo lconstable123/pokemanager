@@ -10,7 +10,7 @@ export default function Nav({
   items: { name: string; ball: string; href: string }[];
 }) {
   return (
-    <nav className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+    <nav className="my-5 sm:my:0 flex flex-col sm:flex-row gap-4 sm:gap-4 justify-center">
       {items.map((item, index) => {
         return (
           <div
@@ -27,7 +27,7 @@ export default function Nav({
             >
               <Pokeball type={item.ball} size={30} fill={true} shadow={true} />
             </div>
-            <Link href={item.href}>
+            <Link href={item.href} tabIndex={-1}>
               <Button
                 key={item.name}
                 className={cn(

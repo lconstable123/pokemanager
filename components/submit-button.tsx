@@ -15,6 +15,7 @@ export default function SubmitButton({
   return (
     <div className=" flex flex-row gap-2 items-center h-10 w-[150px]  group">
       <Button
+        type="submit"
         className={cn(
           " w-30 h-8 transition-transform duration-300 active:scale-90",
           "group-hover:translate-x-1"

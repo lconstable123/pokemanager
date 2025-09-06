@@ -4,36 +4,11 @@ import { motion } from "framer-motion";
 import SignUpForm from "./signup-form";
 import SignInForm from "./signin-form";
 import { timeOffset_1, timeOffset_2 } from "@/lib/constants";
-import SelectTrainer from "./select-trainer";
 
-import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 type welcomeTextProps = {
   mode: "sign-up" | "sign-in";
 };
-
-export default function EntryContent({ mode }: welcomeTextProps) {
-  const { isMobile } = usePokeAppContext();
-  return (
-    <FormStyle>
-      <WelcomeForm mode={mode} />
-      {!isMobile && <SelectTrainer mode={mode} />}
-    </FormStyle>
-  );
-}
-
-//---------------------------------------------------
-
-function FormStyle({ children }: { children: React.ReactNode }) {
-  return (
-    <section className="h-full flex flex-col items-center justify-center w-full">
-      <div className="mt-3 sm:mt-0 mb-5 relative w-full px-10  md:px-20  flex flex-col sm:flex-row justify-around items-center">
-        {children}
-      </div>
-    </section>
-  );
-}
-
-function WelcomeForm({ mode }: welcomeTextProps) {
+export default function WelcomeForm({ mode }: welcomeTextProps) {
   return (
     <div className="relative flex flex-col justify-center text-center items-center ">
       <FormHeaderText mode={mode} />

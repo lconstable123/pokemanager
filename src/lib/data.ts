@@ -1,0 +1,51 @@
+import { TTrainer } from "./types";
+
+export const initialTrainerData: TTrainer = {
+  id: "1",
+  name: "Ash",
+  email: "ash.ketchum@example.com",
+  age: 10,
+  avatar: 1,
+  lineup: [
+    {
+      id: "1",
+      ball: "01",
+      name: "Cassandra",
+      species: "Eggsecutor",
+      type: ["Water", "Electric"],
+      level: 5,
+      exp: 12,
+      sprite: "/placeholders/pokesprites/Eggsecutor.png",
+    },
+    {
+      id: "02",
+      ball: "02",
+      name: "Herbie",
+      species: "Treeko",
+      type: ["Water", "Electric"],
+      level: 5,
+      exp: 12,
+      sprite: "/placeholders/pokesprites/Treeko.png",
+    },
+    {
+      id: "3",
+      ball: "03",
+      name: "Enoch",
+      species: "Lapras",
+      type: ["Water", "Electric"],
+      level: 5,
+      exp: 12,
+      sprite: "/placeholders/pokesprites/Lapras.png",
+    },
+    {
+      id: "4",
+      ball: "04",
+      name: "Michael",
+      species: "Blastoise",
+      type: ["Water", "Electric"],
+      level: 5,
+      exp: 12,
+      sprite: "/placeholders/pokesprites/Blastoise.png",
+    },
+  ],
+};

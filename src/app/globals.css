@@ -89,7 +89,7 @@ body {
 
 p {
   font-family: var(--font-urbanist);
-  @apply font-semibold leading-tight tracking-wide text-sm text-gray-800;
+  @apply leading-tight  text-gray-800;
 }
 
 h1 {
@@ -99,6 +99,13 @@ h1 {
 h2 {
   font-family: var(--font-inter);
   @apply font-normal leading-[15pt]   tracking-wider text-[16pt] text-gray-800;
+}
+
+.primary-p-styling {
+  @apply text-sm font-semibold tracking-wide;
+}
+.secondary-p-styling {
+  @apply text-[10pt] font-normal tracking-widest;
 }
 
 .imageFrame {

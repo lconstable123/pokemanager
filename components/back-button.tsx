@@ -5,7 +5,7 @@ import React from "react";
 
 export default function BackButton() {
   return (
-    <Link href={"/"} className="absolute top-5 left-5 z-4">
+    <Link href={"/"} tabIndex={-1} className=" z-4 focus:outline-none">
       <Button
         className={cn(
           " cursor-pointer w-25 h-7 transition-transform duration-300 active:scale-80 hover:scale-105"

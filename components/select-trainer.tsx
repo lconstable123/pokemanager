@@ -6,17 +6,13 @@ import { cn } from "@/lib/utils";
 import DirectionNav from "./direction-nav";
 import { motion, useAnimation } from "framer-motion";
 import { Label } from "@/components/ui/label";
-import { MdOpacity } from "react-icons/md";
+import { timeOffset_1, timeOffset_2 } from "@/lib/constants";
 type SelectTrainerProps = {
   mode: "sign-up" | "sign-in";
-  timeOffsets: { timeOffset1: number; timeOffset2: number };
 };
-export default function SelectTrainer({
-  mode,
-  timeOffsets,
-}: SelectTrainerProps) {
+export default function SelectTrainer({ mode }: SelectTrainerProps) {
   const trainerlength = mode === "sign-up" ? 9 : 2;
-  const timeOffset3 = timeOffsets.timeOffset2 * 1000 + 900;
+  const timeOffset3 = timeOffset_2 * 1000 + 900;
   const trainers = Array.from({ length: trainerlength }, (_, i) =>
     i.toString()
   );
@@ -52,7 +48,7 @@ export default function SelectTrainer({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ delay: 0, duration: 0.3 }}
-      className={` h-110 py-4 flex flex-col`}
+      className={`mb-0 sm:mb-0 h-full  flex flex-col`}
     >
       <Label
         className={`transition-quick self-center ${
@@ -62,7 +58,7 @@ export default function SelectTrainer({
         Choose your Avatar
       </Label>
 
-      <div className=" user-select-none pt-1 flex items-center gap-1 w-full flex-grow">
+      <div className=" user-select-none pt-1  flex items-center gap-1 w-full flex-grow">
         {mode === "sign-up" && (
           <DirectionNav
             direction="left"
