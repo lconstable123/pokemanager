@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="poison" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.28 21.74">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke-linecap: round;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+        stroke-width: 1.8px;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #add25d;
+      }
+
+      .cls-4 {
+        fill: #231f20;
+      }
+    </style>
+  </defs>
+  <g id="poison-2" data-name="poison">
+    <path class="cls-2" d="M20.24,10.87c0,4.2-3.4,7.61-7.61,7.61s-7.61-3.4-7.61-7.61,3.4-7.61,7.61-7.61,7.61,3.4,7.61,7.61Z"/>
+    <line class="cls-1" x1="16.24" y1="14.79" x2="8.5" y2="11.63"/>
+    <line class="cls-1" x1="16.4" y1="11.77" x2="8.56" y2="14.66"/>
+    <circle class="cls-4" cx="12.45" cy="8.52" r="3.11"/>
+    <circle class="cls-3" cx="13.94" cy="8.56" r=".71"/>
+    <circle class="cls-3" cx="10.95" cy="8.56" r=".71"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="rock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.28 21.74">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #8f99a1;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 1.8px;
+      }
+    </style>
+  </defs>
+  <g id="rock-2" data-name="rock">
+    <path class="cls-2" d="M20.46,10.87c0,4.32-3.5,7.82-7.82,7.82s-7.82-3.5-7.82-7.82,3.5-7.82,7.82-7.82,7.82,3.5,7.82,7.82Z"/>
+    <polygon class="cls-1" points="16.67 13.85 16.67 11.46 14.84 10.46 13.45 9.91 13.17 12.24 13.73 13.13 13.17 14.74 14.67 15.07 16.67 13.85"/>
+    <polygon class="cls-1" points="12.12 14.69 12.67 13.07 12.12 12.07 12.67 9.69 11.73 8.19 11.01 6.96 9.34 7.57 8.86 9.6 7.79 10.46 8.01 12.71 9.95 13.63 10.62 15.07 12.12 14.69"/>
+    <polygon class="cls-1" points="16.67 10.67 13.14 8.93 11.9 6.67 14.6 6.67 15.34 7.63 16.27 8.07 16.67 10.67"/>
+  </g>
+</svg>

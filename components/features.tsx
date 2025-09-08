@@ -32,6 +32,7 @@ const techStack = [
   "Figma",
   "PokeApi",
   "React-hot-toast",
+  "React-Form",
   "React-Context",
   "Git",
 ];

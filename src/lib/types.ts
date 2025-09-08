@@ -11,6 +11,7 @@ export type TLineUp = TPokemon[];
 
 export type TPokemon = {
   id: string;
+  apiId: string;
   ball: string;
   name: string;
   species: string;
@@ -37,4 +38,5 @@ export type Element =
   | "Normal"
   | "Ground"
   | "Fighting"
-  | "Flying";
+  | "Flying"
+  | "Dark";

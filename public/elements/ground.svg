@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.28 21.74">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #754b3e;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 1.8px;
+      }
+
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #231f20;
+      }
+    </style>
+  </defs>
+  <g id="fighting-2" data-name="fighting">
+    <path class="cls-1" d="M20.46,10.87c0,4.32-3.5,7.82-7.82,7.82s-7.82-3.5-7.82-7.82,3.5-7.82,7.82-7.82,7.82,3.5,7.82,7.82Z"/>
+    <polygon class="cls-2" points="8.03 14.19 12.71 6.23 17.24 14.19 8.03 14.19"/>
+  </g>
+</svg>

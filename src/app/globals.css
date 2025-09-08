@@ -105,7 +105,7 @@ h2 {
   @apply text-sm font-semibold tracking-wide;
 }
 .secondary-p-styling {
-  @apply text-[10pt] font-normal tracking-widest;
+  @apply text-[10pt] font-medium tracking-widest;
 }
 
 .imageFrame {

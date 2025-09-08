@@ -1,6 +1,7 @@
 // hooks/useIsMobile.js
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTrainerContext } from "./contexts/TrainerContext";
 
 export const useFontsLoaded = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -40,4 +41,51 @@ export const useIsMobile = (breakpoint = 640) => {
   }, [breakpoint]);
 
   return { isMobile, isSmall };
+};
+
+export const useLineUp = () => {
+  const { lineUp, handleReorder, slots } = useTrainerContext();
+  const [ballEdit, setBallEdit] = useState<number | null>(null);
+  const [ballShiftMode, setBallShiftMode] = useState<"select" | "shift">(
+    "select"
+  );
+  const [isReordering, setReordering] = useState(false);
+  const handleToggleReorder = () => {
+    setReordering((prev) => {
+      if (prev) {
+        resetShifting();
+      }
+      return !prev;
+    });
+  };
+  const resetShifting = () => {
+    setBallEdit(null);
+    setBallShiftMode("select");
+  };
+
+  const handleBallClick = (selectedBallIndex?: number) => {
+    if (isReordering && selectedBallIndex !== undefined) {
+      //reorder mode toggled
+      if (ballShiftMode === "select") {
+        setBallEdit(selectedBallIndex);
+        setBallShiftMode("shift");
+      } else if (ballEdit !== null) {
+        handleReorder(ballEdit, selectedBallIndex);
+        resetShifting();
+      }
+    } else {
+      toast.success("navigating inside ball");
+    }
+  };
+
+  return {
+    lineUp,
+    handleReorder,
+    slots,
+    ballEdit,
+    ballShiftMode,
+    isReordering,
+    handleToggleReorder,
+    handleBallClick,
+  };
 };

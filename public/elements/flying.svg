@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="flying" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.28 21.74">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c5b8da;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 1.8px;
+      }
+
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #231f20;
+      }
+    </style>
+  </defs>
+  <g id="flying-2" data-name="flying">
+    <path class="cls-1" d="M20.24,10.87c0,4.2-3.4,7.61-7.61,7.61s-7.61-3.4-7.61-7.61,3.4-7.61,7.61-7.61,7.61,3.4,7.61,7.61Z"/>
+    <path class="cls-2" d="M12.58,5.71s2.35.94,2.35,4.11c0,3.59-1.63,4.22-1.63,4.22,0,0,.08,2.12-.26,2.45-.28.28-.62.26-.93,0s-.18-2.48-.18-2.48c0,0-1.68-.55-1.68-4.03,0-3.79,2.33-4.28,2.33-4.28Z"/>
+  </g>
+</svg>

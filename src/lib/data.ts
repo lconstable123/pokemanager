@@ -8,7 +8,8 @@ export const initialTrainerData: TTrainer = {
   avatar: 1,
   lineup: [
     {
-      id: "1",
+      id: "#eggs",
+      apiId: "5",
       ball: "01",
       name: "Cassandra",
       species: "Eggsecutor",
@@ -18,7 +19,8 @@ export const initialTrainerData: TTrainer = {
       sprite: "/placeholders/pokesprites/Eggsecutor.png",
     },
     {
-      id: "02",
+      id: "#treek",
+      apiId: "6",
       ball: "02",
       name: "Herbie",
       species: "Treeko",
@@ -28,7 +30,8 @@ export const initialTrainerData: TTrainer = {
       sprite: "/placeholders/pokesprites/Treeko.png",
     },
     {
-      id: "3",
+      id: "#lap",
+      apiId: "7",
       ball: "03",
       name: "Enoch",
       species: "Lapras",
@@ -38,7 +41,30 @@ export const initialTrainerData: TTrainer = {
       sprite: "/placeholders/pokesprites/Lapras.png",
     },
     {
-      id: "4",
+      id: "#blast1",
+      apiId: "9",
+      ball: "04",
+      name: "Michael",
+      species: "Blastoise",
+      type: ["Water", "Electric"],
+      level: 5,
+      exp: 12,
+      sprite: "/placeholders/pokesprites/Blastoise.png",
+    },
+    {
+      id: "#blast2",
+      apiId: "9",
+      ball: "04",
+      name: "Michael",
+      species: "Blastoise",
+      type: ["Water", "Electric"],
+      level: 5,
+      exp: 12,
+      sprite: "/placeholders/pokesprites/Blastoise.png",
+    },
+    {
+      id: "#blast3",
+      apiId: "9",
       ball: "04",
       name: "Michael",
       species: "Blastoise",
@@ -49,3 +75,5 @@ export const initialTrainerData: TTrainer = {
     },
   ],
 };
+
+export const lineUpArray = Array.from({ length: 6 }, (_, i) => i);

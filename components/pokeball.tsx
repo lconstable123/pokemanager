@@ -13,7 +13,12 @@ export default function Pokeball({
   shadow = true,
 }: pokeballprops) {
   return (
-    <div className={cn("pointer-events-none", fill ? "w-full h-full" : "")}>
+    <div
+      className={cn(
+        "pointer-events-none noSelect ",
+        fill ? "w-full h-full" : ""
+      )}
+    >
       <img
         src={`/pokeballs/pokeballs-${type}.svg`}
         width={size}
