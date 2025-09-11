@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useState } from "react";
 import { TLineUp, TTrainer } from "../types";
 import toast from "react-hot-toast";
+import { initialTrainerData } from "../data";
+import { usePokeAppContext } from "./PokeAppContext";
 type TrainerContextType = {
   trainer: TTrainer;
   lineUp: TLineUp;
@@ -12,8 +14,11 @@ type TrainerContextType = {
   handleReorder: (fromIndex: number, toIndex: number) => void;
   handleBallClick?: (selectedBallIndex?: number) => void;
   handleToggleReorder?: () => void;
+  isShaking: boolean;
+  setIsShaking: React.Dispatch<React.SetStateAction<boolean>>;
+  ballLayoutEnabled?: boolean;
 };
-import { initialTrainerData } from "../data";
+//-----------------
 export const TrainerContext = createContext<TrainerContextType | null>(null);
 
 export default function TrainerContextProvider({
@@ -21,13 +26,23 @@ export default function TrainerContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  //-----stores
   const [lineUp, setLineUp] = useState(initialTrainerData.lineup.slice(0, 5));
-
+  const { disableScroll } = usePokeAppContext();
+  const [ballLayoutEnabled, setBallLayoutEnabled] = useState(true);
   const slots = Array.from({ length: 6 }, (_, i) =>
     lineUp[i] ? lineUp[i].id : "empty" + (i + 1)
   );
-
+  const [isShaking, setIsShaking] = useState(false);
+  const [ballEdit, setBallEdit] = useState<number | null>(null);
+  const [ballShiftMode, setBallShiftMode] = useState<"select" | "shift">(
+    "select"
+  );
+  const [isReordering, setReordering] = useState(false);
+  //--------handlers
   const handleReorder = (fromIndex: number, toIndex: number) => {
+    // handleDisableBallLayout(1000);
+    disableScroll(300); // disable scroll for 300ms during animation
     setLineUp((prev) => {
       const tempFromTrainer = lineUp[fromIndex];
       const tempToTrainer = lineUp[toIndex];
@@ -39,11 +54,6 @@ export default function TrainerContextProvider({
     });
   };
 
-  const [ballEdit, setBallEdit] = useState<number | null>(null);
-  const [ballShiftMode, setBallShiftMode] = useState<"select" | "shift">(
-    "select"
-  );
-  const [isReordering, setReordering] = useState(false);
   const handleToggleReorder = () => {
     setReordering((prev) => {
       if (prev) {
@@ -76,6 +86,15 @@ export default function TrainerContextProvider({
     }
   };
 
+  const handleDisableBallLayout = (time: number) => {
+    setBallLayoutEnabled(false);
+    setTimeout(() => {
+      toast.success("disabling layout");
+      toast.success("enabling layout");
+      setBallLayoutEnabled(true);
+    }, time);
+  };
+
   return (
     <TrainerContext.Provider
       value={{
@@ -88,6 +107,9 @@ export default function TrainerContextProvider({
         isReordering,
         handleToggleReorder,
         handleBallClick,
+        isShaking,
+        setIsShaking,
+        ballLayoutEnabled,
       }}
     >
       {children}

@@ -4,6 +4,28 @@ import { Element } from "./types";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+export function getTrainerSprite(avatar: number) {
+  switch (avatar) {
+    case 1:
+      return "/trainers/trainer_1.png";
+    case 2:
+      return "/trainers/trainer_2.png";
+    case 3:
+      return "/trainers/trainer_3.png";
+    case 4:
+      return "/trainers/trainer_4.png";
+    case 5:
+      return "/trainers/trainer_5.png";
+    case 6:
+      return "/trainers/trainer_6.png";
+    case 7:
+      return "/trainers/trainer_7.png";
+    case 8:
+      return "/trainers/trainer_8.png";
+    default:
+      return "/trainers/trainer_0.png";
+  }
+}
 
 export function getElementSprite(element: Element) {
   switch (element) {

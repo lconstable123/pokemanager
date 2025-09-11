@@ -120,6 +120,9 @@ h2 {
   user-select: none !important; /* ✅ corrected line */
   -webkit-user-drag: none;
   display: inline-block; /* prevents inline selection box */
+  backface-visibility: hidden;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
 }
 
 .pixelImage img {
@@ -146,6 +149,14 @@ h2 {
 
 .transition-quick {
   @apply transition-all duration-1300;
+}
+.hide-scrollbar {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
 }
 
 :root {

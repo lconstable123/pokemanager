@@ -7,6 +7,9 @@ import PokeAppContextProvider from "@/lib/contexts/PokeAppContext";
 import MainWindow from "../../components/main-window";
 import Canvas from "../../components/canvas";
 import NavBar from "../../components/nav-bar";
+import TrainerContextProvider, {
+  TrainerContext,
+} from "@/lib/contexts/TrainerContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,21 +40,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="">
       <body
-        className={`${geistSans.variable}  ${urbanist.variable} ${inter.variable} antialiased`}
+        className={` ${geistSans.variable}  ${urbanist.variable} ${inter.variable} antialiased`}
       >
         <Toaster position="top-center" />
         <PokeAppContextProvider>
           <Canvas>
-            <MainWindow>
-              <NavBar
-                isBackEnabled={true}
-                isProfileEnabled={true}
-                Navlink="/"
-              />
-              <div className="flex-grow ">{children}</div>
-            </MainWindow>
+            <TrainerContextProvider>
+              <MainWindow>
+                <NavBar
+                  isBackEnabled={true}
+                  isProfileEnabled={true}
+                  Navlink="/"
+                />
+                <div className="flex-grow">{children}</div>
+              </MainWindow>
+            </TrainerContextProvider>
           </Canvas>
         </PokeAppContextProvider>
         <BG />

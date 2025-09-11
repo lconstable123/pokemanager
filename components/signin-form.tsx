@@ -30,7 +30,7 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
       className=" flex flex-col items-center justify-center "
     >
       {isMobile && <SelectTrainer mode={"sign-in"} />}
-      <div className="mb-6 w-full items-center justify-end text-right grid grid-rows-2 grid-cols-[1fr_4fr] gap-y-5 gap-x-4">
+      <div className="mt-4 mb-6 w-full items-center justify-end text-right grid grid-rows-2 grid-cols-[1fr_4fr] gap-y-5 gap-x-4">
         <Label className="justify-self-end" htmlFor="email">
           Email
         </Label>

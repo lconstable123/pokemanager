@@ -32,7 +32,7 @@ export default function Home() {
         <Features
           features={features}
           initialDelay={timeOffset_1}
-          delayBetweenItems={0.2}
+          delayBetweenItems={0.1}
         />
         {isMobile && <AppPreview isMobile={true} />}
       </BottomSection>

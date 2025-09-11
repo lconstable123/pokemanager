@@ -89,3 +89,30 @@ export const useLineUp = () => {
     handleBallClick,
   };
 };
+
+export function useScrollStatus(debounceMs = 200) {
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const onScroll = () => {
+      toast.success("scrolling");
+      setIsScrolling(true);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        toast.success("stopped scrolling");
+        setIsScrolling(false);
+      }, debounceMs);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timeout);
+    };
+  }, [debounceMs]);
+
+  return isScrolling;
+}

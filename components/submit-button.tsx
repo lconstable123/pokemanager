@@ -13,7 +13,7 @@ export default function SubmitButton({
   onSubmit: () => void;
 }) {
   return (
-    <div className=" flex flex-row gap-2 items-center h-10 w-[150px]  group">
+    <div className="hover:-translate-x-2 transition-transform duration-300 flex flex-row gap-2 items-center h-10 w-[150px]  group">
       <Button
         type="submit"
         className={cn(

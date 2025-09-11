@@ -4,5 +4,5 @@ export const timeOffsets = {
 };
 
 export const timeOffset_1 = 0.2;
-export const timeOffset_2 = 1;
-export const timeOffset_3 = 1.5;
+export const timeOffset_2 = 0.5;
+export const timeOffset_3 = 1;

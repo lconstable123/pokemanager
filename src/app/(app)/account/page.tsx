@@ -1,14 +1,16 @@
 "use client";
-
+import { FaPlus } from "react-icons/fa";
 import { useIsMobile } from "@/lib/hooks";
-import { motion, useAnimation } from "framer-motion";
+import { motion, Reorder, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { Element, TPokemon } from "@/lib/types";
 import { getElementSprite } from "@/lib/utils";
 
 import LineupBar from "../../../../components/lineup-bar";
 import { useEffect, useState } from "react";
-import { b } from "framer-motion/client";
+import { b, tr } from "framer-motion/client";
+import WindowBg from "../../../../components/window-bg/window-bg";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 const features = [
   "Full Stack with Next",
   "Optimistic Frontend",
@@ -18,21 +20,23 @@ const features = [
 
 export default function Home() {
   const { isMobile, isSmall } = useIsMobile();
-  const { lineUp, trainer, slots } = useTrainerContext();
+  const { lineUp, trainer, slots, isReordering } = useTrainerContext();
 
   return (
     <WholeSection>
       <PokeGrid>
         {slots.map((slotId, index) => (
-          <PokemonCard
-            key={slotId}
-            pokemon={lineUp[index]}
-            id={slotId}
-            lineUpPos={index}
-          />
+          <div key={slotId} className="relative">
+            <GridNumber index={index} isReordering={isReordering} />
+            <PokemonCard
+              key={slotId}
+              pokemon={lineUp[index]}
+              id={slotId}
+              lineUpPos={index}
+            />
+          </div>
         ))}
       </PokeGrid>
-      <LineupBar reorderable={true} />
     </WholeSection>
   );
 }
@@ -40,15 +44,33 @@ export default function Home() {
 //---------------------------------------------------
 function PokeGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="px-20 w-full grid grid-cols-3 grid-row-2 gap-4 gap-y-4 grid-template-rows-[auto_auto_auto] mb-1 ">
+    <div className=" px-2 sm:px-7 lg:px-20  rounded-3xl  w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
       {children}
+    </div>
+  );
+}
+
+function GridNumber({
+  index,
+  isReordering,
+}: {
+  index: number;
+  isReordering?: boolean;
+}) {
+  return (
+    <div
+      className={`${
+        isReordering ? "opacity-100" : "opacity-0"
+      } transition-opacity duration-500 noSelect z-1 absolute -top-2 left-0 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-0 font-black text-gray-400 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-gray-100`}
+    >
+      {index + 1}
     </div>
   );
 }
 
 function WholeSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className="w-full h-full flex flex-col items-center my-3">
+    <section className="relative mb-30  sm:mb-3 mt-5 flex justify-center">
       {children}
     </section>
   );
@@ -63,15 +85,39 @@ export function PokemonCard({
   id: string;
   lineUpPos: number;
 }) {
-  const { lineUp, handleBallClick, ballEdit } = useTrainerContext();
+  const { lineUp, handleBallClick, ballEdit, slots } = useTrainerContext();
+  const cardAnimationControls = useAnimation();
+
+  const handleAnimateIn = () => {
+    slots.forEach((_, index) => {
+      cardAnimationControls.start((custom) => ({
+        opacity: 1,
+        duration: 2,
+        transition: { delay: custom * 0.02 },
+      }));
+    });
+  };
+
+  useEffect(() => {
+    handleAnimateIn();
+  }, []);
+
   return (
     <motion.div
-      layout
+      layout="position"
+      layoutScroll
+      custom={lineUpPos}
+      initial={{ opacity: 0 }}
+      animate={cardAnimationControls}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
       className="h-45 relative flex flex-col items-center gap-0"
       onClick={() => handleBallClick?.(lineUpPos)}
     >
-      <PkCardImage pokemon={pokemon} highlighted={ballEdit === lineUpPos} />
+      <PkCardImage
+        pokemon={pokemon}
+        highlighted={ballEdit === lineUpPos}
+        index={lineUpPos}
+      />
       {pokemon && <PKCardDetails pokemon={pokemon} />}
     </motion.div>
   );
@@ -81,69 +127,61 @@ export function PokemonCard({
 export function PkCardImage({
   pokemon,
   highlighted,
+  index,
 }: {
   pokemon?: TPokemon;
   highlighted: boolean;
+  index: number;
 }) {
-  const { isReordering, ballShiftMode } = useTrainerContext();
+  const { isReordering, ballShiftMode, slots, isShaking, setIsShaking } =
+    useTrainerContext();
+
+  const spriteAnimationControls = useAnimation();
+
+  const handleAnimateIn = () => {
+    slots.forEach((_, index) => {
+      spriteAnimationControls.start((custom) => ({
+        scale: 1,
+        duration: 0.6,
+        transition: { delay: custom * 0.03 },
+      }));
+    });
+  };
+
+  useEffect(() => {
+    handleAnimateIn();
+  }, []);
   // If no data, return empty bubble
   if (!pokemon)
     return (
-      <div className="noSelect relative w-20 h-20 md:w-25 md:h-25 lg:w-35 lg:h-35">
+      <div className="noSelect relative  w-35 h-35">
         <div className="noSelect z-5 absolute -top-2 -left-6 "></div>
-        <BackBubble editing={isReordering} />
+        <AddBubble />
       </div>
     );
   // If data, return populated entry
 
-  const spriteAnimationControls = useAnimation();
-  // const [isShaking, setIsShaking] = useState(false);
-  const handleAnimateShake = () => {
-    spriteAnimationControls.set({ x: 0 });
-    spriteAnimationControls.start({
-      x: [-7, 7, -7],
-      transition: {
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 0.5,
-      },
-    });
-  };
-  const handleAnimateShakeStop = () => {
-    spriteAnimationControls.start({
-      x: 0,
-      transition: { duration: 0, ease: "linear" },
-    });
-  };
-  useEffect(() => {
-    if (ballShiftMode === "shift" && !highlighted) {
-      // setIsShaking(true);
-      handleAnimateShake();
-    } else {
-      // setIsShaking(false);
-      handleAnimateShakeStop();
-    }
-  }, [isReordering, ballShiftMode, highlighted]);
   return (
-    <div
-      className={` noSelect transition-all duration-300 relative w-20 h-20 md:w-25 md:h-25 lg:w-35 lg:h-35`}
-    >
+    <div className={` noSelect relative  w-35 h-35`}>
       <div className="noSelect z-5 absolute -top-2 -right-6 ">
         <PKCardTypes types={pokemon.type} />
       </div>
-      <div className="noSelect z-5 absolute -top-2 -left-6 "></div>
 
-      <motion.img
-        // style={{ transform: "translateX(0px)" }}
-        // initial={{ translateX: 0 }}
-
+      <motion.div
+        initial={{ scale: 0 }}
         animate={spriteAnimationControls}
-        src={pokemon.sprite}
-        alt={pokemon.name}
-        className={`${
-          highlighted ? "scale-120" : "scale-105"
-        } transform-gpu w-full h-full transition-scale duration-300  object-cover absolute z-3 user-select-none pixelImage pointer-events-none`}
-      />
+        custom={index}
+        className={`
+           w-full group  h-full  absolute z-3 `}
+      >
+        <img
+          src={pokemon.sprite}
+          alt={pokemon.name}
+          className={`${
+            highlighted ? " scale-120" : "scale-102 hover:scale-110   "
+          } w-full h-full cursor-pointer   absolute z-3 user-select-none pixelImage `}
+        />
+      </motion.div>
       <BackBubble editing={isReordering} />
     </div>
   );
@@ -181,24 +219,24 @@ function PKCardTypes({ types }: { types: Element[] }) {
   );
 }
 
-//Exp
-function ExpBubble({ exp, types }: { exp: number; types: Element[] }) {
-  return (
-    <div className="noSelect z-5 absolute -top-2 -left-6 ">
-      {/* <div className="Font-secondary bg-white text-[8pt] px-[4px] py-[0px] border-2 rounded-sm">
-        exp. {exp}
-      </div> */}
-      <PKCardTypes types={types} />
-    </div>
-  );
-}
-
 function BackBubble({ editing = false }: { editing?: boolean }) {
   return (
     <div
-      className={`transition-all duration-400 absolute m-1 noSelect inset-0 z-1  rounded-full ${
-        editing ? "bg-gray-300 " : "bg-gray-200"
+      className={` transition-all  duration-700 absolute m-1 noSelect inset-0 z-1  rounded-full ${
+        editing ? "bg-gray-100 scale-70 " : "bg-gray-200 scale-100"
       }`}
     />
+  );
+}
+
+function AddBubble() {
+  const { setAddPkModalOpen } = usePokeAppContext();
+  return (
+    <div
+      onClick={() => setAddPkModalOpen(true)}
+      className="cursor-pointer transition-all  hover:bg-gray-100 bg-white duration-700  absolute noSelect inset-0 flex justify-center items-center z-1 border-4 border-gray-200  rounded-full"
+    >
+      <FaPlus className="m-auto w-7 h-7 text-gray-400" />
+    </div>
   );
 }

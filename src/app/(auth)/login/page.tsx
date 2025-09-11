@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-
 import WindowBg from "../../../../components/window-bg/window-bg";
-
 import EntryWindow from "../../../../components/entry-window";
 
 export default function Page() {

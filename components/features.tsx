@@ -119,7 +119,13 @@ function FeaturesBar({ children }: { children: React.ReactNode }) {
       <ul className="flex gap-1 sm:gap-5 text-center justify-center mb-4 sm:mb-2 flex-wrap ">
         {children}
       </ul>
-      <MoreDetails />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 + 0.1 * 6, duration: 1 }}
+      >
+        <MoreDetails />
+      </motion.div>
     </section>
   );
 }

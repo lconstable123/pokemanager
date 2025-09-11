@@ -21,7 +21,7 @@ export default function WindowBg({ image }: WindowBgProps) {
   return (
     <motion.img
       initial={{ scale: 1.1, opacity: 0 }}
-      animate={{ scale: 1, opacity: 0.025 }}
+      animate={{ scale: 1, opacity: 0.03 }}
       transition={{ duration: 1, ease: "easeOut" }}
       src={getImageSrc(image)}
       width={6000}
