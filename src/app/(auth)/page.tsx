@@ -101,8 +101,8 @@ function WelcomeText() {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0 }}
         transition={{
-          delay: timeOffset_3,
-          stiffness: 200,
+          delay: timeOffset_1,
+          stiffness: 100,
           type: "spring",
           damping: 20,
         }}

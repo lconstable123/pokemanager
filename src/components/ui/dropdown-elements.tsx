@@ -41,7 +41,7 @@ type TDropDown = {
   type?: "text" | "icon";
 };
 
-export function MultiSelectDropdown({
+export function MultiSelectElmDropdown({
   options,
   width = "50",
   type = "text",
@@ -77,27 +77,22 @@ export function MultiSelectDropdown({
             align="start"
             side="bottom"
             sideOffset={1}
-            className=" absolute bg-white border rounded-md shadow-md p-1 w-56 z-50"
+            className=" absolute bg-white border rounded-md shadow-md p-1  z-50"
           >
-            <div className="flex flex-col gap-0">
+            <div className="flex flex-wrap gap-0 w-100">
               {options.map((option) => {
                 const isSelected = selected.includes(option);
                 return (
                   <label
                     key={option}
-                    className="flex items-center gap-2 cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
+                    className="flex items-center flex-wrap gap-2 cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
                   >
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleOption(option)}
-                    />
-                    {type == "text" && option}
                     {type == "icon" && (
                       <img
                         src={getElementSprite(option as any)}
                         alt={option}
-                        className="w-5 h-5"
+                        className="w-7 h-7"
+                        onClick={() => toggleOption(option)}
                       />
                     )}
                   </label>

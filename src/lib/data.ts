@@ -77,14 +77,28 @@ export const initialTrainerData: TTrainer = {
 };
 
 export const lineUpArray = Array.from({ length: 6 }, (_, i) => i);
+
 export const elmOptions = [
+  "Ice",
   "Fire",
   "Water",
   "Grass",
   "Electric",
-  "Rock",
   "Psychic",
-];
+  "Rock",
+  "Ghost",
+  "Dragon",
+  "Poison",
+  "Bug",
+  "Steel",
+  "Fairy",
+  "Normal",
+  "Ground",
+  "Fighting",
+  "Flying",
+  "Dark",
+] as const;
+
 export const genOptions = [
   "I",
   "II",
@@ -95,5 +109,5 @@ export const genOptions = [
   "VII",
   "VIII",
   "IX",
-];
+] as const;
 export const placeholderPk = [];

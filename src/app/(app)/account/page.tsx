@@ -61,7 +61,7 @@ function GridNumber({
     <div
       className={`${
         isReordering ? "opacity-100" : "opacity-0"
-      } transition-opacity duration-500 noSelect z-1 absolute -top-2 left-0 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-0 font-black text-gray-400 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-gray-100`}
+      } transition-opacity duration-500 noSelect z-1 absolute  -top-2 left-0 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-2 font-black border-yellow-300 text-yellow-700 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-yellow-100`}
     >
       {index + 1}
     </div>

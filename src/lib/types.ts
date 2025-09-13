@@ -1,3 +1,5 @@
+import { elmOptions } from "./data";
+
 export type TTrainer = {
   id: string;
   name: string;
@@ -21,22 +23,4 @@ export type TPokemon = {
   sprite: string;
 };
 
-export type Element =
-  | "Ice"
-  | "Fire"
-  | "Water"
-  | "Grass"
-  | "Electric"
-  | "Psychic"
-  | "Rock"
-  | "Ghost"
-  | "Dragon"
-  | "Poison"
-  | "Bug"
-  | "Steel"
-  | "Fairy"
-  | "Normal"
-  | "Ground"
-  | "Fighting"
-  | "Flying"
-  | "Dark";
+export type Element = (typeof elmOptions)[number];
