@@ -1,3 +1,5 @@
+"use client";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import React, { use, useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
@@ -19,7 +21,12 @@ export default function Dropdown({
 }) {
   // const [currentBall, setCurrentBall] = useState("02");
   return (
-    <div className="relative cursor-pointer w-10 " onClick={onClick}>
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      className="relative cursor-pointer w-10 "
+      onClick={onClick}
+    >
       <FaCaretDown
         className={cn(
           "z-30 w-6 h-6 absolute -right-2 top-2 -translate-y-1/2 border-2 border-black rounded-full bg-white "
@@ -27,7 +34,7 @@ export default function Dropdown({
       />
 
       <Pokeball type={currentBall} size={10} fill={true} shadow={true} />
-    </div>
+    </motion.div>
   );
 }
 
@@ -75,8 +82,11 @@ export function MultiSelectBallDropdown({ options, width = "50" }: TDropDown) {
               {OPTIONS.map((option) => {
                 const isSelected = selected.includes(option);
                 return (
-                  <div
-                    className="transition-all duration-200 w-9 h-9 p-1 rounded-full hover:bg-gray-200 hover:scale-105 scale-100"
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    className=" w-9 h-9 p-1 rounded-full  "
                     key={option}
                     onClick={() => {
                       setCurrentBall(option);
@@ -89,7 +99,7 @@ export function MultiSelectBallDropdown({ options, width = "50" }: TDropDown) {
                       fill={true}
                       shadow={true}
                     />
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

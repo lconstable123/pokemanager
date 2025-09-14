@@ -20,7 +20,7 @@ import ImportRadioDropdown from "@/components/dropdown2";
 import { cn } from "@/lib/utils";
 import { elmOptions, genOptions } from "@/lib/data";
 import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
-import { MultiSelectElmDropdown } from "@/components/ui/dropdown-elements";
+import { MultiSelectFilterDropdown } from "@/components/ui/dropdown-elements";
 const pokemon = [
   {
     id: "#blast3",
@@ -50,65 +50,42 @@ export function AddPkModal() {
         <FormStyle>
           <Border />
           <div className="w-full">
-            <h3 className="text-[9pt] text-left ">Search Filter</h3>
+            {/* <h3 className="text-[9pt] text-left ">Search Filter</h3> */}
           </div>
           <VertFields>
             <div className="w-full  ">
-              <Label className="" htmlFor="type">
-                <h3 className="text-md font-bold">Gen</h3>
-              </Label>
-              <MultiSelectDropdown
+              <FormLabel lblfor="gen" header="Gen" />
+              <MultiSelectFilterDropdown
                 options={[...genOptions]}
-                width="full basis-1 flex-grow"
+                type="gen"
+                width="full"
+                cap={0}
               />
             </div>
             <div className="w-full ">
-              <Label className="" htmlFor="type">
-                <h3 className="text-md font-bold">Type</h3>
-              </Label>
-              <MultiSelectElmDropdown
+              <FormLabel lblfor="type" header="Type" />
+              <MultiSelectFilterDropdown
                 options={[...elmOptions]}
-                type="icon"
+                type="elm"
                 width="full"
               />
             </div>
           </VertFields>
           <Border />
           <div className="w-full relative">
-            <Label className="" htmlFor="type">
-              <h3 className="text-md font-bold ">Pokemon</h3>
-            </Label>
+            <FormLabel lblfor="pk" header="Add Pokemon from PokeApi" />
             <MultiSelectDropdown options={[...elmOptions]} width="full " />
             {/* <FormErrorMessage message="Type is required" /> */}
           </div>
 
-          <div className="mt-4 flex justify-center relative  h-full ">
-            <div className=" absolute -left-5 top-0 z-10">
-              <MultiSelectBallDropdown
-                options={[...elmOptions]}
-                width="full absolute left-0 top-0 "
-              />
-            </div>
-
-            <div className="mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300">
-              {/* <img
-              src={""}
-              alt="Trainer"
-              className="pixelImage absolute object-cover -top-15 w-100 h-100"
-              /> */}
-            </div>
-          </div>
+          <ImageField />
           <VertFields>
             <div className="w-200">
-              <Label className="" htmlFor="type">
-                <h3 className="text-md font-bold">Name</h3>
-              </Label>
+              <FormLabel lblfor="name" header="Name" />
               <Input placeholder="Name" />
             </div>
             <div className="w-full">
-              <Label className="" htmlFor="type">
-                <h3 className="text-md font-bold">Xp</h3>
-              </Label>
+              <FormLabel lblfor="xp" header="Xp" />
               <Input placeholder="Xp" />
             </div>
           </VertFields>
@@ -137,6 +114,37 @@ const VertFields = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex-row gap-x-5 flex w-full items-center justify-center">
       {children}
+    </div>
+  );
+};
+
+const FormLabel = ({ lblfor, header }: { lblfor: string; header: string }) => {
+  return (
+    <Label className="" htmlFor={lblfor}>
+      <h3 className="text-md font-bold text-[10pt] tracking-wider my-1 ">
+        {header}
+      </h3>
+    </Label>
+  );
+};
+
+const ImageField = () => {
+  return (
+    <div className="mt-4 flex justify-center relative  h-full ">
+      <div className=" absolute -left-5 top-0 z-10">
+        <MultiSelectBallDropdown
+          options={[...elmOptions]}
+          width="full absolute left-0 top-0 "
+        />
+      </div>
+
+      <div className="mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300">
+        {/* <img
+              src={""}
+              alt="Trainer"
+              className="pixelImage absolute object-cover -top-15 w-100 h-100"
+              /> */}
+      </div>
     </div>
   );
 };
