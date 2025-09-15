@@ -40,9 +40,9 @@ const pokemon = [
 ];
 
 // import { Popover } from "@radix-ui/react-popover";
-export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
+export function EditPkModal() {
   const { trainer } = useTrainerContext();
-  const { AddPkModalopen, setAddPkModalOpen } = usePokeAppContext();
+  const { EditPkModalopen, setEditPkModalOpen } = usePokeAppContext();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const handleSearchToggle = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -83,9 +83,8 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   const [generations, setGenerations] = useState<string[]>([]);
   return (
     <DialogWindowStyle
-      mode={mode}
-      AddPkModalopen={AddPkModalopen}
-      setAddPkModalOpen={setAddPkModalOpen}
+      AddPkModalopen={EditPkModalopen}
+      setAddPkModalOpen={setEditPkModalOpen}
       isSearchOpen={isSearchOpen}
     >
       <form
@@ -101,13 +100,12 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
         }}
       >
         <div className="gap-y-1 items-center w-60 mb-5 flex flex-col flex-grow">
-          {mode == "add" && (
-            <SearchFilterButton
-              handleClick={handleSearchToggle}
-              isSearchOpen={isSearchOpen}
-            />
-          )}
-          {isSearchOpen && mode == "add" && (
+          <SearchFilterButton
+            handleClick={handleSearchToggle}
+            isSearchOpen={isSearchOpen}
+          />
+
+          {isSearchOpen && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

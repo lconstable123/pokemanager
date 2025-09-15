@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { useIsMobile } from "../hooks";
 import toast from "react-hot-toast";
+import { TPokemon } from "../types";
 
 type AppContextType = {
   isMobile: boolean;
@@ -9,6 +10,10 @@ type AppContextType = {
   disableScroll: (time?: number) => void;
   AddPkModalopen: boolean;
   setAddPkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  EditPkModalopen: boolean;
+  setEditPkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedPk: TPokemon | null;
+  setSelectedPk: React.Dispatch<React.SetStateAction<TPokemon | null>>;
 };
 
 export const PokeAppContext = createContext<AppContextType | null>(null);
@@ -20,6 +25,8 @@ export default function PokeAppContextProvider({
 }) {
   const { isMobile, isSmall } = useIsMobile(); // default 640px breakpoint
   const [AddPkModalopen, setAddPkModalOpen] = useState(false);
+  const [EditPkModalopen, setEditPkModalOpen] = useState(false);
+  const [selectedPk, setSelectedPk] = useState<TPokemon | null>(null);
   const disableScroll = (time = 500) => {
     const scrollContainer = (document.scrollingElement ||
       document.documentElement) as HTMLElement;
@@ -44,6 +51,10 @@ export default function PokeAppContextProvider({
         disableScroll,
         AddPkModalopen,
         setAddPkModalOpen,
+        EditPkModalopen,
+        setEditPkModalOpen,
+        selectedPk,
+        setSelectedPk,
       }}
     >
       {children}

@@ -11,25 +11,24 @@ const OPTIONS = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
 export default function Dropdown({
   currentBall = "02",
   onClick,
-  selected = [""],
+
   extraStyling,
 }: {
   onClick?: () => void;
-  selected: string[];
+  // selected: string[];
   extraStyling?: string;
   currentBall?: string;
 }) {
-  // const [currentBall, setCurrentBall] = useState("02");
   return (
     <motion.div
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
-      className="relative cursor-pointer w-10 "
+      className="relative cursor-pointer w-8 "
       onClick={onClick}
     >
       <FaCaretDown
         className={cn(
-          "z-30 w-6 h-6 absolute -right-2 top-2 -translate-y-1/2 border-2 border-black rounded-full bg-white "
+          "z-30 w-4 h-4 absolute -right-2 top-2 -translate-y-1/2 border-2 border-black rounded-full bg-white "
         )}
       />
 
@@ -41,19 +40,18 @@ export default function Dropdown({
 type TDropDown = {
   options: string[];
   width?: string;
+  selected: string;
+  onSelect: (value: string) => void;
 };
 
-export function MultiSelectBallDropdown({ options, width = "50" }: TDropDown) {
-  const [selected, setSelected] = useState<string[]>([]);
+export function MultiSelectBallDropdown({
+  options,
+  width = "50",
+  selected,
+  onSelect,
+}: TDropDown) {
   const [open, setOpen] = useState(false);
-  const [currentBall, setCurrentBall] = useState("02");
-  const toggleOption = (option: string) => {
-    setSelected((prev) =>
-      prev.includes(option)
-        ? prev.filter((o) => o !== option)
-        : [...prev, option]
-    );
-  };
+
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
     // if (newOpen) toast.success("Dropdown opened");
@@ -64,9 +62,8 @@ export function MultiSelectBallDropdown({ options, width = "50" }: TDropDown) {
   return (
     <>
       <Dropdown
-        currentBall={currentBall}
+        currentBall={selected}
         extraStyling={`w-${width} `}
-        selected={selected}
         onClick={handletoggleOpen}
       />
       <Popover.Root open={open} onOpenChange={handleOpenChange}>
@@ -76,20 +73,23 @@ export function MultiSelectBallDropdown({ options, width = "50" }: TDropDown) {
             align="start"
             side="bottom"
             sideOffset={1}
-            className=" absolute bg-white border rounded-md shadow-md p-3 w-36 z-50"
+            id="ball"
+            className="absolute bg-white border rounded-md shadow-md p-3 w-33 z-50"
           >
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 items-center justify-center">
               {OPTIONS.map((option) => {
-                const isSelected = selected.includes(option);
+                const isSelected = selected === option;
                 return (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     whileHover={{ scale: 1.1 }}
-                    className=" w-9 h-9 p-1 rounded-full  "
+                    className=" w-8 h-8 p-1 rounded-full  "
                     key={option}
                     onClick={() => {
-                      setCurrentBall(option);
+                      // setCurrentBall(option);
+                      onSelect(option);
+                      // toggleOption(option);
                       handleOpenChange(false);
                     }}
                   >

@@ -8,10 +8,12 @@ import toast from "react-hot-toast";
 import { Button } from "./button";
 import clsx from "clsx";
 import InputBar from "./input-bar";
+import { elmOptions } from "@/lib/data";
+import { Element } from "@/lib/types";
 const OPTIONS = ["Fire", "Water", "Grass", "Electric", "Rock", "Psychic"];
 export default function Dropdown({
   onClick,
-  selected = [""],
+  // selected = [""],
   extraStyling,
   selectedElm = [],
   type = "elm",
@@ -23,30 +25,50 @@ export default function Dropdown({
   type?: "elm" | "gen";
 }) {
   return (
-    <div className="relative cursor-pointer  " onClick={onClick}>
-      <div className="z-200  absolute flex flex-row gap-0 items-center pl-1 h-full w-[50px] overflow-hidden ">
-        {selectedElm.length > 0 &&
+    <div className="relative cursor-pointer  w-25" onClick={onClick}>
+      <div className="z-200  absolute flex flex-row gap-0 items-center pl-1 h-full  overflow-hidden ">
+        {selectedElm?.length > 0 &&
           selectedElm.map((elm, index) => {
-            if (type === "elm")
+            if (type === "elm" && elmOptions.includes(elm as Element))
               return (
                 <motion.img
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   key={elm + index}
-                  src={getElementSprite(elm as any)}
+                  src={getElementSprite(elm as Element)}
                   alt={elm}
                   className="w-7 h-7"
                 />
               );
-            if (type === "gen")
+            if (type === "elm")
               return (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   key={elm + index}
-                  className="text-gray-700 h-5 w-full font-bold text-sm ml-1 first:ml-2"
+                  className="w-4 h-4 bg-red-400 rounded-full"
+                />
+              );
+            if (type === "gen" && selectedElm.length <= 3)
+              return (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  key={elm + index}
+                  className="text-gray-700 flex items-center justify-center h-5 w-full font-bold text-[8pt] ml-1 first:ml-2"
                 >
                   {elm}
+                </motion.div>
+              );
+            if (type === "gen" && selectedElm.length > 3 && index === 0)
+              return (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  key={elm + index}
+                  className="text-gray-700 flex items-center justify-center h-5 w-full font-bold text-[8pt] ml-0 first:ml-2"
+                >
+                  {"..."}
                 </motion.div>
               );
           })}
@@ -67,6 +89,8 @@ type TDropDown = {
   width?: string;
   type?: "elm" | "gen";
   cap?: number;
+  selected: string[];
+  onSelect: (value: string[]) => void;
 };
 
 export function MultiSelectFilterDropdown({
@@ -74,8 +98,9 @@ export function MultiSelectFilterDropdown({
   width = "50",
   type = "elm",
   cap = 1,
+  selected,
+  onSelect,
 }: TDropDown) {
-  const [selected, setSelected] = useState<string[]>([]);
   const tooMany = selected.length > cap;
   const [open, setOpen] = useState(false);
   const [displayError, setDisplayError] = useState(false);
@@ -91,10 +116,10 @@ export function MultiSelectFilterDropdown({
   };
 
   const toggleOption = (option: string) => {
-    setSelected((prev) =>
-      prev.includes(option)
-        ? prev.filter((o) => o !== option)
-        : [...prev, option]
+    onSelect(
+      selected.includes(option)
+        ? selected.filter((o) => o !== option)
+        : [...selected, option]
     );
   };
   const handleOpenChange = (newOpen: boolean) => {
@@ -120,7 +145,8 @@ export function MultiSelectFilterDropdown({
             align="start"
             side="bottom"
             sideOffset={1}
-            className=" absolute bg-white border rounded-md shadow-md p-1  z-50"
+            id={type}
+            className="absolute bg-white border rounded-md shadow-md p-1  z-50"
           >
             <div className="transition-all duration-200 h-full flex flex-wrap items-start justify-center gap-0 w-30">
               {options.map((option) => {

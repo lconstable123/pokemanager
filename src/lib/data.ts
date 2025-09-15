@@ -76,8 +76,20 @@ export const initialTrainerData: TTrainer = {
   ],
 };
 
-export const lineUpArray = Array.from({ length: 6 }, (_, i) => i);
+export const testPokeData = ["Blastoise", "Lapras", "Pikachu", "Charizard"];
 
+export const lineUpArray = Array.from({ length: 6 }, (_, i) => i);
+export const balloptions = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+] as const;
 export const elmOptions = [
   "Ice",
   "Fire",

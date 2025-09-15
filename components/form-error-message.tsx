@@ -1,6 +1,12 @@
 import React from "react";
 
-export default function FormErrorMessage({ message }: { message: string }) {
+export default function FormErrorMessage({
+  message,
+  pos = "left",
+}: {
+  message: string;
+  pos?: "left" | "right";
+}) {
   return (
     <p className="absolute text-left tracking-wider! -bottom-4 left-1/2 -translate-x-1/2 w-full text-red-600!  text-[7pt]!">
       {message}

@@ -66,6 +66,6 @@ export function getElementSprite(element: Element) {
     case "Normal":
       return "/elements/normal.svg";
     default:
-      return "/elements/water.svg";
+      return "";
   }
 }

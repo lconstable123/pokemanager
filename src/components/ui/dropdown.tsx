@@ -8,15 +8,18 @@ import InputBar from "./input-bar";
 const OPTIONS = ["Fire", "Water", "Grass", "Electric", "Rock", "Psychic"];
 export default function Dropdown({
   onClick,
-  selected = [""],
+  selected = "",
   extraStyling,
 }: {
   onClick?: () => void;
-  selected: string[];
+  selected: string;
   extraStyling?: string;
 }) {
   return (
     <div className="relative cursor-pointer " onClick={onClick}>
+      <h3 className="absolute left-1/2 z-30 top-1/2 -translate-y-1/2 -translate-x-1/2">
+        {selected}
+      </h3>
       <FaCaretDown
         className={cn(
           "z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  "
@@ -31,26 +34,25 @@ type TDropDown = {
   options: string[];
   width?: string;
   type?: "text" | "icon";
+  selected: string;
+  onSelect: (value: string) => void;
 };
 
 export function MultiSelectDropdown({
   options,
   width = "50",
   type = "text",
+  selected,
+  onSelect,
 }: TDropDown) {
-  const [selected, setSelected] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
   const toggleOption = (option: string) => {
-    setSelected((prev) =>
-      prev.includes(option)
-        ? prev.filter((o) => o !== option)
-        : [...prev, option]
-    );
+    toast.success(option + " selected");
+    onSelect(option);
   };
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-    // if (newOpen) toast.success("Dropdown opened");
   };
   const handletoggleOpen = () => {
     setOpen((prev) => !prev);
@@ -69,21 +71,22 @@ export function MultiSelectDropdown({
             align="start"
             side="bottom"
             sideOffset={1}
-            className=" absolute bg-white border rounded-md shadow-md p-1 w-56 z-50"
+            id={type}
+            className="absolute bg-white border rounded-md shadow-md p-1 w-56 z-50"
           >
             <div className="flex flex-col gap-0">
               {options.map((option) => {
-                const isSelected = selected.includes(option);
+                const isSelected = selected === option;
                 return (
                   <label
                     key={option}
-                    className="flex items-center gap-2 cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
+                    onClick={() => toggleOption(option)}
+                    className={cn(
+                      "flex items-center gap-2 cursor-pointer px-2 py-1 rounded hover:bg-gray-100",
+                      "",
+                      isSelected && "bg-gray-200 font-bold"
+                    )}
                   >
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleOption(option)}
-                    />
                     {type == "text" && option}
                     {type == "icon" && (
                       <img

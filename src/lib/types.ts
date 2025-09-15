@@ -1,4 +1,4 @@
-import { elmOptions } from "./data";
+import { balloptions, elmOptions } from "./data";
 
 export type TTrainer = {
   id: string;
@@ -24,3 +24,4 @@ export type TPokemon = {
 };
 
 export type Element = (typeof elmOptions)[number];
+export type TBallOption = (typeof balloptions)[number];

@@ -222,7 +222,7 @@ function PKCardTypes({ types }: { types: Element[] }) {
 function BackBubble({ editing = false }: { editing?: boolean }) {
   return (
     <div
-      className={` transition-all  duration-700 absolute m-1 noSelect inset-0 z-1  rounded-full ${
+      className={` transition-all duration-700 absolute m-1 noSelect inset-0 z-1  rounded-full ${
         editing ? "bg-gray-100 scale-70 " : "bg-gray-200 scale-100"
       }`}
     />

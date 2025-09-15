@@ -7,13 +7,17 @@ export default function SubmitButton({
   ball,
   name,
   onSubmit,
+  ballPadding = "150px",
 }: {
   ball: string;
   name: string;
   onSubmit: () => void;
+  ballPadding?: string;
 }) {
   return (
-    <div className="hover:-translate-x-2 transition-transform duration-300 flex flex-row gap-2 items-center h-10 w-[150px]  group">
+    <div
+      className={`hover:-translate-x-2 transition-transform duration-300 flex flex-row gap-2 items-center h-10 w-[${ballPadding}] group`}
+    >
       <Button
         type="submit"
         className={cn(
@@ -25,7 +29,7 @@ export default function SubmitButton({
       </Button>
       <div
         className={cn(
-          " h-9 w-full transition-transform duration-300",
+          " h-9 w-9 transition-transform duration-300",
           "group-hover:translate-x-4"
         )}
       >
