@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { b, tr } from "framer-motion/client";
 import WindowBg from "../../../../components/window-bg/window-bg";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import toast from "react-hot-toast";
 const features = [
   "Full Stack with Next",
   "Optimistic Frontend",
@@ -233,7 +234,10 @@ function AddBubble() {
   const { setAddPkModalOpen } = usePokeAppContext();
   return (
     <div
-      onClick={() => setAddPkModalOpen(true)}
+      onClick={() => {
+        toast.success("Opening add Pokémon modal");
+        setAddPkModalOpen(true);
+      }}
       className="cursor-pointer transition-all  hover:bg-gray-100 bg-white duration-700  absolute noSelect inset-0 flex justify-center items-center z-1 border-4 border-gray-200  rounded-full"
     >
       <FaPlus className="m-auto w-7 h-7 text-gray-400" />

@@ -12,7 +12,7 @@ export default function MainWindow({
     <main className="hardShadow flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] overflow-hidden rounded-none sm:rounded-2xl">
       <FrameBar />
       <div
-        className={` bg-white h-full sm:h-[550px] 2xl:h-[600px] w-full relative flex flex-col`}
+        className={` bg-white h-full sm:h-[550px]  w-full relative flex flex-col`}
       >
         {children}
       </div>

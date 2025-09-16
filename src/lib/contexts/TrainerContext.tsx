@@ -39,7 +39,7 @@ export default function TrainerContextProvider({
     "select"
   );
   const [isReordering, setReordering] = useState(false);
-  const { selectedPk, setSelectedPk } = usePokeAppContext();
+  const { selectedPk, setSelectedPk, handleSelectPk } = usePokeAppContext();
   //--------handlers
   const handleReorder = (fromIndex: number, toIndex: number) => {
     // handleDisableBallLayout(1000);
@@ -83,8 +83,8 @@ export default function TrainerContextProvider({
         resetShifting();
       }
     } else {
-      setSelectedPk(lineUp[selectedBallIndex ?? 0] || null);
-      toast.success(selectedPk?.name || "");
+      handleSelectPk(lineUp[selectedBallIndex ?? 0] || null);
+      // toast.success(selectedPk?.name || "");
     }
   };
 

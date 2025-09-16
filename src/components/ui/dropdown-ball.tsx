@@ -20,12 +20,7 @@ export default function Dropdown({
   currentBall?: string;
 }) {
   return (
-    <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      className="relative cursor-pointer w-8 "
-      onClick={onClick}
-    >
+    <div className="relative cursor-pointer w-8 " onClick={onClick}>
       <FaCaretDown
         className={cn(
           "z-30 w-4 h-4 absolute -right-2 top-2 -translate-y-1/2 border-2 border-black rounded-full bg-white "
@@ -33,7 +28,7 @@ export default function Dropdown({
       />
 
       <Pokeball type={currentBall} size={10} fill={true} shadow={true} />
-    </motion.div>
+    </div>
   );
 }
 

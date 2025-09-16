@@ -1,7 +1,7 @@
 "use client";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
 import { MultiSelectDropdown } from "@/components/ui/dropdown";
 import { AddPkFormSchema, AddPkFormValues } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
+import { cn, RomanToInt } from "@/lib/utils";
 import { elmOptions, genOptions, testPokeData } from "@/lib/data";
 import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
 import { MultiSelectFilterDropdown } from "@/components/ui/dropdown-elements";
@@ -28,6 +28,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleAddPokemon } from "@/lib/actions";
+import PlaceholderPk from "./placeholder-pk";
 const pokemon = [
   {
     id: "#blast3",
@@ -38,9 +39,10 @@ const pokemon = [
     sprite: "/placeholders/pokesprites/Blastoise.png",
   },
 ];
-
 // import { Popover } from "@radix-ui/react-popover";
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
+  const Pokedex = require("pokeapi-js-wrapper");
+  const P = new Pokedex.Pokedex();
   const { trainer } = useTrainerContext();
   const { AddPkModalopen, setAddPkModalOpen } = usePokeAppContext();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -80,7 +82,72 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
 
   const onFormSubmission = async () => {};
   const [elements, setElements] = useState<string[]>([]);
-  const [generations, setGenerations] = useState<string[]>([]);
+  // const [generations, setGenerations] = useState<string[]>([]);
+
+  const [tempSelectedPK, setTempSelectedPK] = useState<string | null>(null);
+  const {
+    setPkDropdownEntries,
+    PkDropdownEntries,
+    setGenerationFilter,
+    setTypeFilter,
+    generationFilter,
+    typeFilter,
+  } = usePokeAppContext();
+  //   const fetchPkByName = async (name: string) => {
+  //     // toast.success("Fetching " + name + " from PokeAPI");
+
+  //     P.getPokemonByName(name).then(function (response) {
+  //       toast.success(response.name);
+  //       console.log(response);
+  //     });
+  //   };
+
+  //   const fetchPkByGeneration = async (generations: number[]) => {
+  //     // toast.success("Fetching " + generation + " from PokeAPI");
+  // const interval = {
+  //     offset: 1,
+  //     limit: 4,
+  //   };
+  //     P.getGeneration(1, interval).then(function (response) {
+  //       toast.success(response.name);
+  //       console.log(response);
+  //     });
+  //   };
+
+  const fetchAllPK = async (page: number, limit: number) => {
+    const interval = {
+      offset: (page - 1) * limit,
+      limit: limit,
+    };
+    P.getPokemonsList(interval).then(function (response) {
+      toast.success("Fetched all pokemon");
+      const pokeList = response.results.map((pk: any) => pk.name);
+      setPkDropdownEntries(pokeList);
+      console.log(pokeList);
+    });
+  };
+  // useEffect(() => {
+  //   // fetchPkByName("eevee");
+  //   toast.success("changing generation filter");
+  //   fetchPkByGeneration(gensAsNumber);
+  //   // toast.success("Fetching Eevee from PokeAPI");
+  // }, [generations]);
+
+  // useEffect(() => {
+  //   // fetchPkByName("eevee");
+  //   toast.success("changing types filter");
+  //   // fetchPkByGeneration(gensAsNumber);
+  //   // toast.success("Fetching Eevee from PokeAPI");
+  // }, [elements]);
+
+  useEffect(() => {
+    // fetchPkByName("eevee");
+    fetchAllPK(1, 7);
+    toast.success("changing types filter");
+    // fetchPkByGeneration(gensAsNumber);
+    // toast.success("Fetching Eevee from PokeAPI");
+  }, []);
+
   return (
     <DialogWindowStyle
       mode={mode}
@@ -100,7 +167,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
           toast.success("DONE");
         }}
       >
-        <div className="gap-y-1 items-center w-60 mb-5 flex flex-col flex-grow">
+        <div className="gap-y-0 items-center w-60 mb-5 flex flex-col flex-grow">
           {mode == "add" && (
             <SearchFilterButton
               handleClick={handleSearchToggle}
@@ -112,7 +179,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className={clsx(
-                "w-full h-full p-2 transition-all duration-400 overflow-hidden"
+                "w-full h-full px-2 pt-5 transition-all duration-400 overflow-hidden"
               )}
             >
               <VertFields>
@@ -124,8 +191,8 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
                     type="gen"
                     width="full"
                     cap={0}
-                    selected={elements}
-                    onSelect={setElements}
+                    selected={generationFilter}
+                    onSelect={setGenerationFilter}
                   />
                 </div>
                 <div className="relative">
@@ -135,8 +202,8 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
                     options={[...elmOptions]}
                     type="elm"
                     width="full"
-                    selected={generations}
-                    onSelect={setGenerations}
+                    selected={typeFilter}
+                    onSelect={setTypeFilter}
                   />
                 </div>
               </VertFields>
@@ -153,7 +220,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               rules={{ required: "Please select a Pokemon" }}
               render={({ field }) => (
                 <MultiSelectDropdown
-                  options={[...testPokeData]}
+                  options={[...PkDropdownEntries]}
                   width="full"
                   selected={field.value}
                   onSelect={field.onChange}
@@ -168,7 +235,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
             )}
           </div>
 
-          <ImageField>
+          <ImageField image={tempSelectedPK}>
             <Controller
               name="Ball"
               control={control}
@@ -246,8 +313,8 @@ const DialogWindowStyle = ({
         aria-describedby="add-pokemon-modal"
         tabIndex={-1}
         className={cn(
-          "w-100 duration-0 flex flex-col items-center gap-y-1! noSelect pb-3",
-          isSearchOpen ? "h-[650px]" : "h-[550px]"
+          "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
+          isSearchOpen ? "h-[600px]" : "h-[520px]"
         )}
       >
         <FormHeader mode={mode} />
@@ -268,23 +335,31 @@ const VertFields = ({ children }: { children: React.ReactNode }) => {
 const FormLabel = ({ lblfor, header }: { lblfor: string; header: string }) => {
   return (
     <Label className="" htmlFor={lblfor}>
-      <h3 className="text-md font-bold text-[10pt] tracking-wider my-1 ">
+      <h3 className="text-md font-bold text-[10pt] tracking-wider my-0 ">
         {header}
       </h3>
     </Label>
   );
 };
 
-const ImageField = ({ children }: { children: React.ReactNode }) => {
+const ImageField = ({
+  children,
+  image,
+}: {
+  children: React.ReactNode;
+  image?: string | null;
+}) => {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.1 }}
+      transition={{ duration: 0.3 }}
       className="mt-6 flex justify-center relative  h-full "
     >
-      <div className=" absolute -left-5 top-0 z-10">{children}</div>
-      <div className="mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300" />
+      <div className="absolute -left-5 top-0 z-10">{children}</div>
+      <div className="relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300">
+        <PlaceholderPk text={"Add a pokemon"} loading={true} />
+      </div>
     </motion.div>
   );
 };

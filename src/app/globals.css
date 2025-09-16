@@ -76,6 +76,10 @@ body {
   filter: drop-shadow(var(--shadow-mid) 0 rgba(0, 0, 0, 0.2));
 }
 
+.softSVGShadow {
+  filter: drop-shadow(var(--shadow-close) 0 rgba(0, 0, 0, 0.1));
+}
+
 .Text-secondary {
   font-family: var(--font-urbanist);
 }

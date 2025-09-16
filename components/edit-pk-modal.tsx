@@ -1,7 +1,7 @@
 "use client";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,8 @@ import { FaCaretDown } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleAddPokemon } from "@/lib/actions";
+import Pokeball from "./pokeball";
+import PlaceholderPk from "./placeholder-pk";
 const pokemon = [
   {
     id: "#blast3",
@@ -42,7 +44,8 @@ const pokemon = [
 // import { Popover } from "@radix-ui/react-popover";
 export function EditPkModal() {
   const { trainer } = useTrainerContext();
-  const { EditPkModalopen, setEditPkModalOpen } = usePokeAppContext();
+  const { EditPkModalopen, setEditPkModalOpen, selectedPk } =
+    usePokeAppContext();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const handleSearchToggle = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -57,19 +60,26 @@ export function EditPkModal() {
     handleSubmit,
     trigger,
     getValues,
+    setValue,
     control,
     formState: { isSubmitting, errors },
   } = useForm<AddPkFormValues>({
     resolver: zodResolver(AddPkFormSchema),
     defaultValues: {
-      Name: "anthony",
-      Xp: 12,
+      Name: selectedPk?.name || "unknown", // prefill with selectedPk name
+      Xp: selectedPk?.exp || 0,
       // Gen: ["I"],
       // Type: ["Fire"],
       Pokemon: "lAPRAS",
       Ball: "02",
     },
   });
+  useEffect(() => {
+    updateField("Name", selectedPk?.name || "unknown");
+    updateField("Xp", selectedPk?.exp || 0);
+    updateField("Pokemon", selectedPk?.species || "cannot evolve");
+    updateField("Ball", selectedPk?.ball || "05");
+  }, [selectedPk]);
   const controls = useAnimation();
   const handleAnimateOpen = () => {
     controls.start({ height: "200px", transition: { duration: 0.3 } });
@@ -77,7 +87,13 @@ export function EditPkModal() {
   const handleAnimateClose = () => {
     controls.start({ height: 0, transition: { duration: 0.3 } });
   };
-
+  const updateField = (field: keyof AddPkFormValues, value: any) => {
+    setValue(field, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
   const onFormSubmission = async () => {};
   const [elements, setElements] = useState<string[]>([]);
   const [generations, setGenerations] = useState<string[]>([]);
@@ -99,52 +115,9 @@ export function EditPkModal() {
           toast.success("DONE");
         }}
       >
-        <div className="gap-y-1 items-center w-60 mb-5 flex flex-col flex-grow">
-          <SearchFilterButton
-            handleClick={handleSearchToggle}
-            isSearchOpen={isSearchOpen}
-          />
-
-          {isSearchOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className={clsx(
-                "w-full h-full p-2 transition-all duration-400 overflow-hidden"
-              )}
-            >
-              <VertFields>
-                <div className="">
-                  <FormLabel lblfor="gen" header="Gen" />
-
-                  <MultiSelectFilterDropdown
-                    options={[...genOptions]}
-                    type="gen"
-                    width="full"
-                    cap={0}
-                    selected={elements}
-                    onSelect={setElements}
-                  />
-                </div>
-                <div className="relative">
-                  <FormLabel lblfor="elm" header="Type" />
-
-                  <MultiSelectFilterDropdown
-                    options={[...elmOptions]}
-                    type="elm"
-                    width="full"
-                    selected={generations}
-                    onSelect={setGenerations}
-                  />
-                </div>
-              </VertFields>
-              <div className={cn("mt-5 w-full transition-all duration-400")}>
-                <Border />
-              </div>
-            </motion.div>
-          )}
-          <div className={`${!isSearchOpen ? "pt-5" : "pt-0"} w-full relative`}>
-            <FormLabel lblfor="pk" header="Add Pokemon" />
+        <div className="gap-y-0 items-center w-60 mb-5 flex flex-col flex-grow">
+          <div className={`pt-4 w-full relative`}>
+            <FormLabel lblfor="pk" header="Evolve Pokemon" />
             <Controller
               name="Pokemon"
               control={control}
@@ -165,43 +138,29 @@ export function EditPkModal() {
               />
             )}
           </div>
-
           <ImageField>
-            <Controller
-              name="Ball"
-              control={control}
-              render={({ field }) => (
-                <MultiSelectBallDropdown
-                  options={[...elmOptions]}
-                  width="full absolute left-0 top-0 "
-                  selected={field.value}
-                  onSelect={field.onChange}
-                />
-              )}
-            />
-            {errors.Ball && (
-              <FormErrorMessage message={errors?.Ball?.message || ""} />
-            )}
+            <Pokeball type={selectedPk?.ball || "05"} size={30} />
           </ImageField>
           <VertFields>
             <div className="relative w-130">
-              <FormLabel lblfor="name" header="Name" />
+              <FormLabel lblfor="name" header="Rename" />
               <Input
                 {...register("Name", { required: true })}
-                placeholder="Name"
-                id="Name"
+                id="Rename"
+                defaultValue={getValues("Name") as string}
               />
               {errors.Name && (
                 <FormErrorMessage message={errors?.Name?.message || ""} />
               )}
             </div>
             <div className="relative w-full">
-              <FormLabel lblfor="xp" header="Xp" />
+              <FormLabel lblfor="xp" header="Xp+" />
               <Input
                 {...register("Xp", { valueAsNumber: true })}
                 placeholder="Xp"
                 id="Xp"
                 type="number"
+                defaultValue={getValues("Xp") as number}
               />
               {errors.Xp && (
                 <FormErrorMessage message={errors?.Xp?.message || ""} />
@@ -212,7 +171,7 @@ export function EditPkModal() {
         <SubmitButton
           onSubmit={() => {}}
           ball="02"
-          name="Add"
+          name="Edit"
           ballPadding="20px"
         />
       </form>
@@ -244,8 +203,8 @@ const DialogWindowStyle = ({
         aria-describedby="add-pokemon-modal"
         tabIndex={-1}
         className={cn(
-          "w-100 duration-0 flex flex-col items-center gap-y-1! noSelect pb-3",
-          isSearchOpen ? "h-[650px]" : "h-[550px]"
+          "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
+          "h-[500px]"
         )}
       >
         <FormHeader mode={mode} />
@@ -276,13 +235,15 @@ const FormLabel = ({ lblfor, header }: { lblfor: string; header: string }) => {
 const ImageField = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.1 }}
+      transition={{ duration: 0.3 }}
       className="mt-6 flex justify-center relative  h-full "
     >
       <div className=" absolute -left-5 top-0 z-10">{children}</div>
-      <div className="mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300" />
+      <div className="mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300">
+        <PlaceholderPk text={"Add a pokemon"} loading={true} />
+      </div>
     </motion.div>
   );
 };
@@ -328,9 +289,9 @@ const FormHeader = ({ mode }: { mode?: "add" | "edit" }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col items-center text-[15pt]! Text-primary! font-semibold!"
+        className="ml-1 text-center flex flex-col items-center text-[15pt]! Text-primary! font-semibold!"
       >
-        <h1>{mode === "edit" ? "Edit Pokemon" : "Add Pokemon"}</h1>
+        <h1>Edit Pokemon</h1>
       </motion.div>
     </>
   );

@@ -1,10 +1,11 @@
 import { cn, getElementSprite } from "@/lib/utils";
-import React, { useState } from "react";
-import { FaCaretDown } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaCaretDown, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import * as Popover from "@radix-ui/react-popover";
 import toast from "react-hot-toast";
 import { Button } from "./button";
 import InputBar from "./input-bar";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 const OPTIONS = ["Fire", "Water", "Grass", "Electric", "Rock", "Psychic"];
 export default function Dropdown({
   onClick,
@@ -36,6 +37,7 @@ type TDropDown = {
   type?: "text" | "icon";
   selected: string;
   onSelect: (value: string) => void;
+  page?: number;
 };
 
 export function MultiSelectDropdown({
@@ -46,7 +48,13 @@ export function MultiSelectDropdown({
   onSelect,
 }: TDropDown) {
   const [open, setOpen] = useState(false);
+  const {
+    handlePkPageNext,
+    handlePkPagePrev,
 
+    PkDropdownPage,
+    maxPkDropdownPages,
+  } = usePokeAppContext();
   const toggleOption = (option: string) => {
     toast.success(option + " selected");
     onSelect(option);
@@ -57,6 +65,9 @@ export function MultiSelectDropdown({
   const handletoggleOpen = () => {
     setOpen((prev) => !prev);
   };
+  useEffect(() => {
+    toast.success("page " + (PkDropdownPage + 1));
+  }, [PkDropdownPage]);
   return (
     <>
       <Dropdown
@@ -72,7 +83,7 @@ export function MultiSelectDropdown({
             side="bottom"
             sideOffset={1}
             id={type}
-            className="absolute bg-white border rounded-md shadow-md p-1 w-56 z-50"
+            className="absolute bg-white border rounded-md shadow-md p-0 w-56 z-50"
           >
             <div className="flex flex-col gap-0">
               {options.map((option) => {
@@ -99,9 +110,44 @@ export function MultiSelectDropdown({
                 );
               })}
             </div>
+            <Pagination
+              page={PkDropdownPage}
+              maxPages={maxPkDropdownPages}
+              onClickLeft={handlePkPagePrev}
+              onClickRight={handlePkPageNext}
+            />
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
     </>
   );
 }
+
+const Pagination = ({
+  onClickLeft,
+  onClickRight,
+  page = 0,
+  maxPages,
+}: {
+  onClickLeft: () => void;
+  onClickRight: () => void;
+  page: number;
+  maxPages: number;
+}) => {
+  return (
+    <div className=" relative flex justify-between mt-2 border-t w-full bg-gray-50">
+      {page > 0 && (
+        <div className="w-20 cursor-pointer" onClick={onClickLeft}>
+          <FaCaretLeft className={cn("z-30 w-6 h-6")} />
+        </div>
+      )}
+      <div className="absolute left-1/2 -translate-x-1/2 text-[8pt] text-gray-700 italic my-1">
+        page {page + 1}
+      </div>
+
+      <div className="ml-auto flex w-20 cursor-pointer" onClick={onClickRight}>
+        <FaCaretRight className={cn("z-30 w-6 h-6 ml-auto")} />
+      </div>
+    </div>
+  );
+};
