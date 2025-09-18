@@ -91,6 +91,7 @@ type TDropDown = {
   cap?: number;
   selected: string[];
   onSelect: (value: string[]) => void;
+  handleSelect?: () => void;
 };
 
 export function MultiSelectFilterDropdown({
@@ -100,19 +101,28 @@ export function MultiSelectFilterDropdown({
   cap = 1,
   selected,
   onSelect,
+  handleSelect,
 }: TDropDown) {
   const tooMany = selected.length > cap;
   const [open, setOpen] = useState(false);
   const [displayError, setDisplayError] = useState(false);
   const handleElementClick = (option: string) => {
-    if (cap != 0) {
+    if (cap !== 0) {
       if (tooMany && !selected.includes(option)) {
         setDisplayError(true);
+        handleSelect?.();
         return;
       }
+    } else {
+      justOption(option);
+      handleSelect?.();
+      return;
     }
     toggleOption(option);
     setDisplayError(false);
+  };
+  const justOption = (option: string) => {
+    onSelect([option]);
   };
 
   const toggleOption = (option: string) => {

@@ -1,4 +1,4 @@
-import { balloptions, elmOptions } from "./data";
+import { balloptions, dummyPkData, elmOptions } from "./data";
 
 export type TTrainer = {
   id: string;
@@ -25,3 +25,4 @@ export type TPokemon = {
 
 export type Element = (typeof elmOptions)[number];
 export type TBallOption = (typeof balloptions)[number];
+export type ApiPkData = typeof dummyPkData;

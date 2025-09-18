@@ -116,7 +116,7 @@ export function EditPkModal() {
         }}
       >
         <div className="gap-y-0 items-center w-60 mb-5 flex flex-col flex-grow">
-          <div className={`pt-4 w-full relative`}>
+          <div className={`pt-4 w-full h-20 relative`}>
             <FormLabel lblfor="pk" header="Evolve Pokemon" />
             <Controller
               name="Pokemon"
@@ -204,7 +204,7 @@ const DialogWindowStyle = ({
         tabIndex={-1}
         className={cn(
           "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
-          "h-[500px]"
+          "h-[510px]"
         )}
       >
         <FormHeader mode={mode} />

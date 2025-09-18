@@ -1,5 +1,5 @@
 // hooks/useIsMobile.js
-import { useEffect, useState } from "react";
+import { SetStateAction, use, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTrainerContext } from "./contexts/TrainerContext";
 
@@ -115,4 +115,36 @@ export function useScrollStatus(debounceMs = 200) {
   }, [debounceMs]);
 
   return isScrolling;
+}
+
+export function usePreloadImage(
+  imageUrl: string | null,
+  handleLoading: React.Dispatch<SetStateAction<boolean>>
+) {
+  // const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    if (!imageUrl) return;
+    const img = new Image();
+    img.src = imageUrl;
+
+    const handleLoad = () => {
+      // toast.success("image loaded: " + imageUrl);
+
+      handleLoading(true);
+    };
+    const handleError = () => {
+      console.error("failed to load image:", imageUrl);
+      handleLoading(false);
+    };
+
+    img.onload = handleLoad;
+    img.onerror = handleError;
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [imageUrl]);
+
+  // return isLoaded;
 }

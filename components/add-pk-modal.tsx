@@ -17,7 +17,12 @@ import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
 import { MultiSelectDropdown } from "@/components/ui/dropdown";
 import { AddPkFormSchema, AddPkFormValues } from "@/lib/schemas";
-import { cn, RomanToInt } from "@/lib/utils";
+import {
+  cn,
+  generateRandomName,
+  getElementSprite,
+  RomanToInt,
+} from "@/lib/utils";
 import { elmOptions, genOptions, testPokeData } from "@/lib/data";
 import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
 import { MultiSelectFilterDropdown } from "@/components/ui/dropdown-elements";
@@ -29,22 +34,26 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleAddPokemon } from "@/lib/actions";
 import PlaceholderPk from "./placeholder-pk";
-const pokemon = [
-  {
-    id: "#blast3",
-    apiId: "9",
-    ball: "04",
-    species: "Blastoise",
-    type: ["Water", "Electric"],
-    sprite: "/placeholders/pokesprites/Blastoise.png",
-  },
-];
+import { set } from "zod";
+import { usePreloadImage } from "@/lib/hooks";
+import { select } from "framer-motion/client";
+import { UseFetchPkImg } from "@/lib/useFetchPkDetails";
+import { Element } from "@/lib/types";
+
 // import { Popover } from "@radix-ui/react-popover";
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
-  const Pokedex = require("pokeapi-js-wrapper");
-  const P = new Pokedex.Pokedex();
   const { trainer } = useTrainerContext();
-  const { AddPkModalopen, setAddPkModalOpen } = usePokeAppContext();
+  const {
+    PkDropdownEntries,
+    handleSetGenrationFilter,
+    typeFilter,
+    setTypeFilter,
+    generationFilter,
+    selectedDexPk,
+    setSelectedDexPk,
+    AddPkModalopen,
+    setAddPkModalOpen,
+  } = usePokeAppContext();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const handleSearchToggle = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -54,25 +63,40 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
       // handleAnimateClose();
     }
   };
+
+  const handleModal = () => {
+    toast.success("Closed");
+    setIsSearchOpen(false);
+    setSelectedDexPk(null);
+    setAddPkModalOpen(!AddPkModalopen);
+  };
+
   const {
     register,
     handleSubmit,
+    setValue,
     trigger,
     getValues,
     control,
+    watch,
     formState: { isSubmitting, errors },
   } = useForm<AddPkFormValues>({
     resolver: zodResolver(AddPkFormSchema),
     defaultValues: {
-      Name: "anthony",
+      Name: "",
       Xp: 12,
-      // Gen: ["I"],
-      // Type: ["Fire"],
-      Pokemon: "lAPRAS",
+      Pokemon: "",
       Ball: "02",
     },
   });
   const controls = useAnimation();
+
+  const watchedPokemon = watch("Pokemon");
+  useEffect(() => {
+    setSelectedDexPk(watchedPokemon);
+    setValue("Name", generateRandomName());
+  }, [watchedPokemon]);
+
   const handleAnimateOpen = () => {
     controls.start({ height: "200px", transition: { duration: 0.3 } });
   };
@@ -81,88 +105,39 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   };
 
   const onFormSubmission = async () => {};
-  const [elements, setElements] = useState<string[]>([]);
-  // const [generations, setGenerations] = useState<string[]>([]);
 
-  const [tempSelectedPK, setTempSelectedPK] = useState<string | null>(null);
-  const {
-    setPkDropdownEntries,
-    PkDropdownEntries,
-    setGenerationFilter,
-    setTypeFilter,
-    generationFilter,
-    typeFilter,
-  } = usePokeAppContext();
-  //   const fetchPkByName = async (name: string) => {
-  //     // toast.success("Fetching " + name + " from PokeAPI");
+  const { loadingImage, DexPrevImg, elements } = UseFetchPkImg(selectedDexPk);
 
-  //     P.getPokemonByName(name).then(function (response) {
-  //       toast.success(response.name);
-  //       console.log(response);
-  //     });
-  //   };
-
-  //   const fetchPkByGeneration = async (generations: number[]) => {
-  //     // toast.success("Fetching " + generation + " from PokeAPI");
-  // const interval = {
-  //     offset: 1,
-  //     limit: 4,
-  //   };
-  //     P.getGeneration(1, interval).then(function (response) {
-  //       toast.success(response.name);
-  //       console.log(response);
-  //     });
-  //   };
-
-  const fetchAllPK = async (page: number, limit: number) => {
-    const interval = {
-      offset: (page - 1) * limit,
-      limit: limit,
-    };
-    P.getPokemonsList(interval).then(function (response) {
-      toast.success("Fetched all pokemon");
-      const pokeList = response.results.map((pk: any) => pk.name);
-      setPkDropdownEntries(pokeList);
-      console.log(pokeList);
-    });
+  //Choose Pk Modal
+  const [choosePkModalOpen, setChoosePkModalOpen] = useState<boolean>(false);
+  const handlePkModalToggleOpen = () => {
+    setChoosePkModalOpen((prev) => !prev);
   };
-  // useEffect(() => {
-  //   // fetchPkByName("eevee");
-  //   toast.success("changing generation filter");
-  //   fetchPkByGeneration(gensAsNumber);
-  //   // toast.success("Fetching Eevee from PokeAPI");
-  // }, [generations]);
-
-  // useEffect(() => {
-  //   // fetchPkByName("eevee");
-  //   toast.success("changing types filter");
-  //   // fetchPkByGeneration(gensAsNumber);
-  //   // toast.success("Fetching Eevee from PokeAPI");
-  // }, [elements]);
-
-  useEffect(() => {
-    // fetchPkByName("eevee");
-    fetchAllPK(1, 7);
-    toast.success("changing types filter");
-    // fetchPkByGeneration(gensAsNumber);
-    // toast.success("Fetching Eevee from PokeAPI");
-  }, []);
+  const handlePkModalOpenChange = (newOpen: boolean) => {
+    setChoosePkModalOpen(newOpen);
+  };
+  const handleClickImageField = () => {
+    setChoosePkModalOpen(true);
+  };
 
   return (
     <DialogWindowStyle
       mode={mode}
       AddPkModalopen={AddPkModalopen}
-      setAddPkModalOpen={setAddPkModalOpen}
+      setAddPkModalOpen={handleModal}
       isSearchOpen={isSearchOpen}
     >
       <form
         className=" items-center flex flex-col justify-center"
         action={async () => {
+          setValue("Type", elements);
+          setValue("Sprite", DexPrevImg || "");
+
           const result = await trigger();
           if (!result) return;
           onFormSubmission?.();
           const pokeData = getValues();
-          toast.success("Added " + pokeData.Pokemon + " to your team!");
+          // toast.success("Added " + pokeData.Pokemon + " to your team!");
           await handleAddPokemon(pokeData);
           toast.success("DONE");
         }}
@@ -184,7 +159,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
             >
               <VertFields>
                 <div className="">
-                  <FormLabel lblfor="gen" header="Gen" />
+                  <FormLabel lblfor="gen" header="Generation" />
 
                   <MultiSelectFilterDropdown
                     options={[...genOptions]}
@@ -192,7 +167,8 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
                     width="full"
                     cap={0}
                     selected={generationFilter}
-                    onSelect={setGenerationFilter}
+                    onSelect={handleSetGenrationFilter}
+                    handleSelect={handleClickImageField}
                   />
                 </div>
                 <div className="relative">
@@ -212,30 +188,13 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               </div>
             </motion.div>
           )}
-          <div className={`${!isSearchOpen ? "pt-5" : "pt-0"} w-full relative`}>
-            <FormLabel lblfor="pk" header="Add Pokemon" />
-            <Controller
-              name="Pokemon"
-              control={control}
-              rules={{ required: "Please select a Pokemon" }}
-              render={({ field }) => (
-                <MultiSelectDropdown
-                  options={[...PkDropdownEntries]}
-                  width="full"
-                  selected={field.value}
-                  onSelect={field.onChange}
-                />
-              )}
-            />
-            {errors.Pokemon && (
-              <FormErrorMessage
-                message={errors?.Pokemon?.message || ""}
-                pos="right"
-              />
-            )}
-          </div>
 
-          <ImageField image={tempSelectedPK}>
+          <ImageField
+            clickhandle={handleClickImageField}
+            image={DexPrevImg}
+            isImageLoaded={loadingImage}
+            elements={elements}
+          >
             <Controller
               name="Ball"
               control={control}
@@ -252,9 +211,35 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               <FormErrorMessage message={errors?.Ball?.message || ""} />
             )}
           </ImageField>
+          <div className={`py-2 h-18  w-full relative`}>
+            <FormLabel lblfor="pk" header="Add Pokemon" />
+            <Controller
+              name="Pokemon"
+              control={control}
+              rules={{ required: "Please select a Pokemon" }}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={[...PkDropdownEntries]}
+                  width="full"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  OpenStatus={choosePkModalOpen}
+                  handletoggleOpen={handlePkModalToggleOpen}
+                  handleOpenChange={handlePkModalOpenChange}
+                />
+              )}
+            />
+            {errors.Pokemon && (
+              <FormErrorMessage
+                message={errors?.Pokemon?.message || ""}
+                pos="right"
+              />
+            )}
+          </div>
           <VertFields>
             <div className="relative w-130">
               <FormLabel lblfor="name" header="Name" />
+
               <Input
                 {...register("Name", { required: true })}
                 placeholder="Name"
@@ -326,7 +311,7 @@ const DialogWindowStyle = ({
 
 const VertFields = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex-row gap-x-3 flex w-full items-center justify-between">
+    <div className="flex-row gap-x-3 flex w-full items-center justify-center">
       {children}
     </div>
   );
@@ -345,9 +330,15 @@ const FormLabel = ({ lblfor, header }: { lblfor: string; header: string }) => {
 const ImageField = ({
   children,
   image,
+  isImageLoaded,
+  elements,
+  clickhandle,
 }: {
   children: React.ReactNode;
   image?: string | null;
+  isImageLoaded: boolean;
+  elements: string[];
+  clickhandle: () => void;
 }) => {
   return (
     <motion.div
@@ -357,8 +348,35 @@ const ImageField = ({
       className="mt-6 flex justify-center relative  h-full "
     >
       <div className="absolute -left-5 top-0 z-10">{children}</div>
-      <div className="relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300">
-        <PlaceholderPk text={"Add a pokemon"} loading={true} />
+
+      <div className="absolute -right-20 -top-2 w-20 h-20">
+        {isImageLoaded && elements && <PKCardTypes types={elements} />}
+      </div>
+      <div
+        onClick={() => {
+          clickhandle();
+        }}
+        className="relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300"
+      >
+        {!isImageLoaded && (
+          <PlaceholderPk text={"Add a pokemon"} loading={!isImageLoaded} />
+        )}
+        {isImageLoaded && image && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="absolute w-60 h-60  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          >
+            <img
+              src={image}
+              alt={"pokemon sprite"}
+              className={`
+            scale-102 hover:scale-110 
+           w-full h-full cursor-pointer absolute z-3 user-select-none pixelImage `}
+            />
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
@@ -412,3 +430,25 @@ const FormHeader = ({ mode }: { mode?: "add" | "edit" }) => {
     </>
   );
 };
+
+export function PKCardTypes({ types }: { types: string[] }) {
+  return (
+    <div className="mt-1 flex flex-col gap-0 ">
+      {types.map((type, index) => (
+        <motion.img
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            type: "spring",
+            duration: 0.2,
+            delay: 0.1 + index * 0.05,
+          }}
+          key={index}
+          src={getElementSprite(type as Element)}
+          alt={type}
+          className="w-8 h-8 object-cover z-3 user-select-none pixelImage pointer-events-none"
+        />
+      ))}
+    </div>
+  );
+}

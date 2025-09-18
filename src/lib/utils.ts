@@ -61,44 +61,98 @@ export function RomanToInt(s: string): number {
 }
 
 export function getElementSprite(element: Element) {
+  element = element.toLowerCase() as Element;
   switch (element) {
-    case "Fire":
+    case "fire":
       return "/elements/fire.svg";
-    case "Water":
+    case "water":
       return "/elements/water.svg";
-    case "Grass":
+    case "grass":
       return "/elements/grass.svg";
-    case "Electric":
+    case "electric":
       return "/elements/electric.svg";
-    case "Ice":
+    case "ice":
       return "/elements/ice.svg";
-    case "Fighting":
+    case "fighting":
       return "/elements/fighting.svg";
-    case "Poison":
+    case "poison":
       return "/elements/poison.svg";
-    case "Ground":
+    case "ground":
       return "/elements/ground.svg";
-    case "Flying":
+    case "flying":
       return "/elements/flying.svg";
-    case "Psychic":
+    case "psychic":
       return "/elements/psychic.svg";
-    case "Bug":
+    case "bug":
       return "/elements/bug.svg";
-    case "Rock":
+    case "rock":
       return "/elements/rock.svg";
-    case "Ghost":
+    case "ghost":
       return "/elements/ghost.svg";
-    case "Dragon":
+    case "dragon":
       return "/elements/dragon.svg";
-    case "Dark":
+    case "dark":
       return "/elements/dark.svg";
-    case "Steel":
+    case "steel":
       return "/elements/steel.svg";
-    case "Fairy":
+    case "fairy":
       return "/elements/fairy.svg";
-    case "Normal":
+    case "normal":
       return "/elements/normal.svg";
     default:
       return "";
   }
 }
+
+export const generateRandomName = () => {
+  const names = [
+    "Sparky",
+    "Flame",
+    "Aqua",
+    "Terra",
+    "Bolt",
+    "Shadow",
+    "Blaze",
+    "Frost",
+    "Rocky",
+    "Leafy",
+    "Storm",
+    "Ember",
+    "Wave",
+    "Glacier",
+    "Thunder",
+    "Cinder",
+    "Breeze",
+    "Nova",
+    "Echo",
+    "Zephyr",
+    "Luna",
+    "Sol",
+    "Comet",
+    "Nimbus",
+    "Aurora",
+    "Vortex",
+    "Blizzard",
+    "Inferno",
+    "Cascade",
+    "Hurricane",
+    "Tornado",
+    "Quake",
+    "Fang",
+    "Claw",
+    "Pounce",
+    "Roar",
+    "Whisker",
+    "Tailspin",
+    "Snarl",
+    "Gale",
+    "Drift",
+    "Flash",
+    "Glint",
+    "Shimmer",
+    "Twilight",
+    "Dusk",
+    "Dawn",
+  ];
+  return names[Math.floor(Math.random() * names.length)];
+};
