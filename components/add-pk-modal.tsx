@@ -69,6 +69,8 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
     setIsSearchOpen(false);
     setSelectedDexPk(null);
     setAddPkModalOpen(!AddPkModalopen);
+    setValue("Pokemon", "");
+    setUserJourney("initial");
   };
 
   const {
@@ -90,11 +92,15 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
     },
   });
   const controls = useAnimation();
-
+  const [userJourney, setUserJourney] = useState<
+    "initial" | "addpk" | "addname"
+  >("initial");
   const watchedPokemon = watch("Pokemon");
   useEffect(() => {
+    if (watchedPokemon.length === 0) return;
     setSelectedDexPk(watchedPokemon);
     setValue("Name", generateRandomName());
+    setUserJourney("addname");
   }, [watchedPokemon]);
 
   const handleAnimateOpen = () => {
@@ -126,6 +132,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
       AddPkModalopen={AddPkModalopen}
       setAddPkModalOpen={handleModal}
       isSearchOpen={isSearchOpen}
+      userJourney={userJourney}
     >
       <form
         className=" items-center flex flex-col justify-center"
@@ -236,39 +243,43 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               />
             )}
           </div>
-          <VertFields>
-            <div className="relative w-130">
-              <FormLabel lblfor="name" header="Name" />
+          {userJourney === "addname" && (
+            <VertFields>
+              <div className="relative w-130">
+                <FormLabel lblfor="name" header="Name" />
 
-              <Input
-                {...register("Name", { required: true })}
-                placeholder="Name"
-                id="Name"
-              />
-              {errors.Name && (
-                <FormErrorMessage message={errors?.Name?.message || ""} />
-              )}
-            </div>
-            <div className="relative w-full">
-              <FormLabel lblfor="xp" header="Xp" />
-              <Input
-                {...register("Xp", { valueAsNumber: true })}
-                placeholder="Xp"
-                id="Xp"
-                type="number"
-              />
-              {errors.Xp && (
-                <FormErrorMessage message={errors?.Xp?.message || ""} />
-              )}
-            </div>
-          </VertFields>
+                <Input
+                  {...register("Name", { required: true })}
+                  placeholder="Name"
+                  id="Name"
+                />
+                {errors.Name && (
+                  <FormErrorMessage message={errors?.Name?.message || ""} />
+                )}
+              </div>
+              <div className="relative w-full">
+                <FormLabel lblfor="xp" header="Xp" />
+                <Input
+                  {...register("Xp", { valueAsNumber: true })}
+                  placeholder="Xp"
+                  id="Xp"
+                  type="number"
+                />
+                {errors.Xp && (
+                  <FormErrorMessage message={errors?.Xp?.message || ""} />
+                )}
+              </div>
+            </VertFields>
+          )}
         </div>
-        <SubmitButton
-          onSubmit={() => {}}
-          ball="02"
-          name="Add"
-          ballPadding="20px"
-        />
+        {userJourney === "addname" && (
+          <SubmitButton
+            onSubmit={() => {}}
+            ball="02"
+            name="Add"
+            ballPadding="20px"
+          />
+        )}
       </form>
     </DialogWindowStyle>
   );
@@ -284,12 +295,14 @@ const DialogWindowStyle = ({
   setAddPkModalOpen,
   isSearchOpen,
   mode,
+  userJourney,
 }: {
   children: React.ReactNode;
   AddPkModalopen: boolean;
   setAddPkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSearchOpen: boolean;
   mode?: "add" | "edit";
+  userJourney?: "initial" | "addpk" | "addname";
 }) => {
   return (
     <Dialog open={AddPkModalopen} onOpenChange={setAddPkModalOpen}>
@@ -299,7 +312,13 @@ const DialogWindowStyle = ({
         tabIndex={-1}
         className={cn(
           "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
-          isSearchOpen ? "h-[600px]" : "h-[520px]"
+          isSearchOpen
+            ? userJourney === "initial"
+              ? "h-[500px]"
+              : "h-[620px]"
+            : userJourney === "initial"
+            ? "h-[400px]"
+            : "h-[520px]"
         )}
       >
         <FormHeader mode={mode} />
@@ -311,9 +330,14 @@ const DialogWindowStyle = ({
 
 const VertFields = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex-row gap-x-3 flex w-full items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="flex-row gap-x-3 flex w-full items-center justify-center"
+    >
       {children}
-    </div>
+    </motion.div>
   );
 };
 
@@ -356,7 +380,7 @@ const ImageField = ({
         onClick={() => {
           clickhandle();
         }}
-        className="relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300"
+        className="cursor-pointer relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300"
       >
         {!isImageLoaded && (
           <PlaceholderPk text={"Add a pokemon"} loading={!isImageLoaded} />

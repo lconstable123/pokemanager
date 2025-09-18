@@ -105,8 +105,9 @@ export const UseFetchPk = (P: any) => {
   };
 
   useEffect(() => {
+    toast.success(`Generation filter changed: ${generationFilter}`);
     PaginatedPkFetcher(PkDropdownPage, EntriesPerPage);
-  }, [PkDropdownPage]);
+  }, [PkDropdownPage, generationFilter]);
   //------
 
   useEffect(() => {

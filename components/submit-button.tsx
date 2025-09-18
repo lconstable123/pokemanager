@@ -1,8 +1,9 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import React from "react";
 import Pokeball from "./pokeball";
-
+import { motion } from "framer-motion";
 export default function SubmitButton({
   ball,
   name,
@@ -15,7 +16,10 @@ export default function SubmitButton({
   ballPadding?: string;
 }) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       className={`hover:-translate-x-2 transition-transform duration-300 flex flex-row gap-2 items-center h-10 w-[${ballPadding}] group`}
     >
       <Button
@@ -35,6 +39,6 @@ export default function SubmitButton({
       >
         <Pokeball type={ball} size={30} fill={true} shadow={true} />
       </div>
-    </div>
+    </motion.div>
   );
 }
