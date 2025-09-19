@@ -41,7 +41,7 @@ type TDropDown = {
 
 export function MultiSelectBallDropdown({
   options,
-  width = "50",
+  width = "20",
   selected,
   onSelect,
 }: TDropDown) {
@@ -65,11 +65,11 @@ export function MultiSelectBallDropdown({
         <Popover.Trigger className="bg-red-200 absolute" />
         <Popover.Portal>
           <Popover.Content
-            align="start"
-            side="bottom"
+            align="end"
+            side="top"
             sideOffset={1}
             id="ball"
-            className="absolute bg-white border rounded-md shadow-md p-3 w-33 z-50"
+            className="border-2  border-black/50 absolute -left-13 -top-19 bg-white rounded-md shadow-md p-1 w-10 z-50"
           >
             <div className="flex flex-wrap gap-1 items-center justify-center">
               {OPTIONS.map((option) => {

@@ -13,22 +13,37 @@ export default function Dropdown({
   onClick,
   selected = "",
   extraStyling,
+  userJourney,
 }: {
   onClick?: () => void;
   selected: string;
   extraStyling?: string;
+  userJourney?: "initial" | "addpk" | "addname";
 }) {
   return (
-    <div className="relative cursor-pointer " onClick={onClick}>
+    <div className="relative cursor-pointer" onClick={onClick}>
+      <FaCaretDown
+        className={cn(
+          "z-30 w-6 h-6 absolute left-3 top-1/2 -translate-y-1/2  "
+        )}
+      />
       <h3 className="absolute left-1/2 z-30 top-1/2 -translate-y-1/2 -translate-x-1/2">
         {selected}
       </h3>
       <FaCaretDown
         className={cn(
-          "z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  "
+          " z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  "
         )}
       />
-      <InputBar extraStyling={extraStyling} />
+      <div
+        className={cn(
+          "",
+          userJourney === "initial" &&
+            "animate-pulse border-2 border-red-300 rounded-full "
+        )}
+      >
+        <InputBar extraStyling={extraStyling} />
+      </div>
     </div>
   );
 }
@@ -43,6 +58,7 @@ type TDropDown = {
   OpenStatus?: boolean;
   handletoggleOpen?: () => void;
   handleOpenChange?: (newOpen: boolean) => void;
+  userJourney?: "initial" | "addpk" | "addname";
 };
 
 export function MultiSelectDropdown({
@@ -54,6 +70,7 @@ export function MultiSelectDropdown({
   OpenStatus,
   handletoggleOpen,
   handleOpenChange,
+  userJourney,
 }: TDropDown) {
   const {
     isMobile,
@@ -70,22 +87,28 @@ export function MultiSelectDropdown({
 
   return (
     <>
+      {userJourney === "initial" && (
+        <div className="pointer-events-none select-none text-[9pt] absolute left-12 top-[37px] opacity-35 h-4 z-30">
+          Please select a pokemon
+        </div>
+      )}
       <Dropdown
         extraStyling={`w-${width} relative`}
         selected={selected}
         onClick={handletoggleOpen}
+        userJourney={userJourney}
       />
       <Popover.Root open={OpenStatus} onOpenChange={handleOpenChange}>
-        <Popover.Trigger className="  bg-red-200 w-full  " />
+        <Popover.Trigger className="bg-red-200 w-full" />
         <Popover.Portal>
           <Popover.Content
             align="center"
             side="top"
             sideOffset={!isMobile ? -150 : -270}
             id={type}
-            className="  flex overflow-hidden  flex-col items-center pt-2  bg-white border-2 border-black rounded-md shadow-md p-0 sm:w-160 w-100  z-50"
+            className="flex overflow-hidden flex-col items-center pt-2 bg-white border-2 border-black rounded-md shadow-md p-0 sm:w-160 w-100 z-50"
           >
-            <div className=" flex flex-col  gap-0 flex-wrap sm:h-30 h-60 pb-2 items-center content-start  justify-start ">
+            <div className="flex flex-col gap-0 flex-wrap sm:h-30 h-60 pb-2 items-center content-start justify-start ">
               {!dexloading &&
                 options.map((option) => {
                   const isSelected = selected === option;
@@ -98,12 +121,12 @@ export function MultiSelectDropdown({
                       key={option}
                       onClick={() => toggleOption(option)}
                       className={cn(
-                        " text-[9pt] overflow-hidden relative border-0 w-26 h-7 flex items-center gap-0 cursor-pointer px-2 py-1 rounded hover:bg-gray-100",
+                        "text-[9pt] overflow-hidden relative border-0 w-26 h-7 flex items-center gap-0 cursor-pointer px-2 py-1 rounded hover:bg-gray-100",
                         "",
                         isSelected && "bg-gray-200 font-bold"
                       )}
                     >
-                      <span className="absolute left-1/2 -translate-x-1/2 top-1 noSelect overflow-hidden">
+                      <span className="font-semibold absolute left-1/2 -translate-x-1/2 top-1 noSelect overflow-hidden">
                         {option}
                       </span>
                     </motion.label>

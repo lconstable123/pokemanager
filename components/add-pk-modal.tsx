@@ -167,7 +167,6 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               <VertFields>
                 <div className="">
                   <FormLabel lblfor="gen" header="Generation" />
-
                   <MultiSelectFilterDropdown
                     options={[...genOptions]}
                     type="gen"
@@ -190,7 +189,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
                   />
                 </div>
               </VertFields>
-              <div className={cn("mt-5 w-full transition-all duration-400")}>
+              <div className={cn("mt-4 w-full transition-all duration-400")}>
                 <Border />
               </div>
             </motion.div>
@@ -201,6 +200,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
             image={DexPrevImg}
             isImageLoaded={loadingImage}
             elements={elements}
+            userJourney={userJourney}
           >
             <Controller
               name="Ball"
@@ -218,7 +218,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               <FormErrorMessage message={errors?.Ball?.message || ""} />
             )}
           </ImageField>
-          <div className={`py-2 h-18  w-full relative`}>
+          <div className={`py-2 h-17  w-full relative`}>
             <FormLabel lblfor="pk" header="Add Pokemon" />
             <Controller
               name="Pokemon"
@@ -233,6 +233,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
                   OpenStatus={choosePkModalOpen}
                   handletoggleOpen={handlePkModalToggleOpen}
                   handleOpenChange={handlePkModalOpenChange}
+                  userJourney={userJourney}
                 />
               )}
             />
@@ -311,7 +312,7 @@ const DialogWindowStyle = ({
         aria-describedby="add-pokemon-modal"
         tabIndex={-1}
         className={cn(
-          "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
+          "w-100 border-2  border-black duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
           isSearchOpen
             ? userJourney === "initial"
               ? "h-[500px]"
@@ -357,12 +358,14 @@ const ImageField = ({
   isImageLoaded,
   elements,
   clickhandle,
+  userJourney,
 }: {
   children: React.ReactNode;
   image?: string | null;
   isImageLoaded: boolean;
   elements: string[];
   clickhandle: () => void;
+  userJourney?: "initial" | "addpk" | "addname";
 }) => {
   return (
     <motion.div
@@ -383,7 +386,11 @@ const ImageField = ({
         className="cursor-pointer relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300"
       >
         {!isImageLoaded && (
-          <PlaceholderPk text={"Add a pokemon"} loading={!isImageLoaded} />
+          <PlaceholderPk
+            text={"Add a pokemon"}
+            loading={!isImageLoaded}
+            userJourney={userJourney}
+          />
         )}
         {isImageLoaded && image && (
           <motion.div
