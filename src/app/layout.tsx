@@ -10,6 +10,7 @@ import NavBar from "../../components/nav-bar";
 import TrainerContextProvider, {
   TrainerContext,
 } from "@/lib/contexts/TrainerContext";
+import DexContextProvider from "@/lib/contexts/DexContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,18 +47,20 @@ export default function RootLayout({
       >
         <Toaster position="top-center" />
         <PokeAppContextProvider>
-          <Canvas>
-            <TrainerContextProvider>
-              <MainWindow>
-                <NavBar
-                  isBackEnabled={true}
-                  isProfileEnabled={true}
-                  Navlink="/"
-                />
-                <div className="flex-grow">{children}</div>
-              </MainWindow>
-            </TrainerContextProvider>
-          </Canvas>
+          <DexContextProvider>
+            <Canvas>
+              <TrainerContextProvider>
+                <MainWindow>
+                  <NavBar
+                    isBackEnabled={true}
+                    isProfileEnabled={true}
+                    Navlink="/"
+                  />
+                  <div className="flex-grow">{children}</div>
+                </MainWindow>
+              </TrainerContextProvider>
+            </Canvas>
+          </DexContextProvider>
         </PokeAppContextProvider>
         <BG />
       </body>

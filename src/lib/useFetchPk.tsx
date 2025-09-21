@@ -15,6 +15,8 @@ export const UseFetchPk = (P: any) => {
   const [generationFilter, setGenerationFilter] = useState<string[]>([]);
   const [typeFilter, setTypeFilter] = useState<string[]>([]);
   const [lastpage, setLastPage] = useState(false);
+
+  //-------------------------handlers
   const handleSetGenrationFilter = (gens: string[]) => {
     setGenerationFilter(gens);
     setPkDropdownPage(1); //reset page to 1 when filter changes
@@ -26,41 +28,6 @@ export const UseFetchPk = (P: any) => {
   };
   const handlePkPagePrev = () => {
     setPkDropdownPage((prev) => Math.max(1, prev - 1));
-  };
-  const fetchPkByGeneration = async (
-    generations: string[]
-  ): Promise<string[]> => {
-    try {
-      //prep data
-      const gensAsNumber = generationFilter.map((gen) => RomanToInt(gen));
-      //fetch by gen
-      const response = await P.getGeneration(gensAsNumber);
-      const allPk = response.map((gen: any) => gen.pokemon_species);
-      const allPknames = allPk.map((pkGen: any) =>
-        pkGen.map((pk: any) => pk.name)
-      );
-
-      return allPknames.flat();
-    } catch (error) {
-      console.error("Error fetching generation data:", error);
-      return [];
-    }
-  };
-
-  const sliceByGen = (gen: number) => {
-    const genRanges: { [key: number]: [number, number] } = {
-      1: [1, 151],
-      2: [152, 251],
-      3: [252, 386],
-      4: [387, 493],
-      5: [494, 649],
-      6: [650, 721],
-      7: [722, 809],
-      8: [810, 898],
-      9: [899, 1010],
-    };
-
-    return genRanges[gen] || [1, 151];
   };
 
   const fetchAllPK = async (page: number, limit: number): Promise<string[]> => {
@@ -96,19 +63,12 @@ export const UseFetchPk = (P: any) => {
     }
   };
 
-  const checkListingEnd = (limit: number, arr: any[]) => {
-    if (arr.length < limit) {
-      setLastPage(true);
-    } else {
-      setLastPage(false);
-    }
-  };
-
+  //-------------------------filter effects
   useEffect(() => {
     toast.success(`Generation filter changed: ${generationFilter}`);
     PaginatedPkFetcher(PkDropdownPage, EntriesPerPage);
   }, [PkDropdownPage, generationFilter]);
-  //------
+  //-------------------------initial fetch
 
   useEffect(() => {
     setDexLoading(true);
@@ -118,7 +78,31 @@ export const UseFetchPk = (P: any) => {
       setIsDexFetchCancelled(true);
     };
   }, []);
-  //------
+  //-------------------------helper functions
+
+  const sliceByGen = (gen: number) => {
+    const genRanges: { [key: number]: [number, number] } = {
+      1: [1, 151],
+      2: [152, 251],
+      3: [252, 386],
+      4: [387, 493],
+      5: [494, 649],
+      6: [650, 721],
+      7: [722, 809],
+      8: [810, 898],
+      9: [899, 1010],
+    };
+
+    return genRanges[gen] || [1, 151];
+  };
+
+  const checkListingEnd = (limit: number, arr: any[]) => {
+    if (arr.length < limit) {
+      setLastPage(true);
+    } else {
+      setLastPage(false);
+    }
+  };
 
   return {
     handlePkPageNext,
@@ -135,3 +119,23 @@ export const UseFetchPk = (P: any) => {
     dexloading,
   };
 };
+
+// const fetchPkByGeneration = async (
+//   generations: string[]
+// ): Promise<string[]> => {
+//   try {
+//     //prep data
+//     const gensAsNumber = generationFilter.map((gen) => RomanToInt(gen));
+//     //fetch by gen
+//     const response = await P.getGeneration(gensAsNumber);
+//     const allPk = response.map((gen: any) => gen.pokemon_species);
+//     const allPknames = allPk.map((pkGen: any) =>
+//       pkGen.map((pk: any) => pk.name)
+//     );
+
+//     return allPknames.flat();
+//   } catch (error) {
+//     console.error("Error fetching generation data:", error);
+//     return [];
+//   }
+// };

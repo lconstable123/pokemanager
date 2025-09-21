@@ -6,9 +6,10 @@ import toast from "react-hot-toast";
 import { usePreloadImage } from "./hooks";
 import { usePokeAppContext } from "./contexts/PokeAppContext";
 import { Element } from "./types";
+import { useDexContext } from "./contexts/DexContext";
 
 export const UseFetchPkImg = (selectedDexPk: any) => {
-  const { P } = usePokeAppContext();
+  const { P } = useDexContext();
   const [DexPrevImg, setSelectedDexPrevImg] = useState<string | null>(null);
   const [loadingImage, setLoadingImage] = useState(false);
   const [elements, setElements] = useState<string[]>([]);

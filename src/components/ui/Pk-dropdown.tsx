@@ -3,50 +3,11 @@ import { cn, getElementSprite } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import { FaCaretDown, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import * as Popover from "@radix-ui/react-popover";
-import toast from "react-hot-toast";
-import { Button } from "./button";
 import InputBar from "./input-bar";
 import { motion } from "framer-motion";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-const OPTIONS = ["Fire", "Water", "Grass", "Electric", "Rock", "Psychic"];
-export default function Dropdown({
-  onClick,
-  selected = "",
-  extraStyling,
-  userJourney,
-}: {
-  onClick?: () => void;
-  selected: string;
-  extraStyling?: string;
-  userJourney?: "initial" | "addpk" | "addname";
-}) {
-  return (
-    <div className="relative cursor-pointer" onClick={onClick}>
-      <FaCaretDown
-        className={cn(
-          "z-30 w-6 h-6 absolute left-3 top-1/2 -translate-y-1/2  "
-        )}
-      />
-      <h3 className="absolute left-1/2 z-30 top-1/2 -translate-y-1/2 -translate-x-1/2">
-        {selected}
-      </h3>
-      <FaCaretDown
-        className={cn(
-          " z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  "
-        )}
-      />
-      <div
-        className={cn(
-          "",
-          userJourney === "initial" &&
-            "animate-pulse border-2 border-red-300 rounded-full "
-        )}
-      >
-        <InputBar extraStyling={extraStyling} />
-      </div>
-    </div>
-  );
-}
+import { useDexContext } from "@/lib/contexts/DexContext";
+import toast from "react-hot-toast";
 
 type TDropDown = {
   options: string[];
@@ -61,7 +22,7 @@ type TDropDown = {
   userJourney?: "initial" | "addpk" | "addname";
 };
 
-export function MultiSelectDropdown({
+export function PkDropdownAndModal({
   options,
   width = "50",
   type = "text",
@@ -72,16 +33,18 @@ export function MultiSelectDropdown({
   handleOpenChange,
   userJourney,
 }: TDropDown) {
+  const { isMobile } = usePokeAppContext();
+
   const {
-    isMobile,
     handlePkPageNext,
     handlePkPagePrev,
     dexloading,
     PkDropdownPage,
     maxPkDropdownPages,
-  } = usePokeAppContext();
+  } = useDexContext();
   const toggleOption = (option: string) => {
     onSelect(option);
+
     handletoggleOpen?.();
   };
 
@@ -92,7 +55,7 @@ export function MultiSelectDropdown({
           Please select a pokemon
         </div>
       )}
-      <Dropdown
+      <PkDropdown
         extraStyling={`w-${width} relative`}
         selected={selected}
         onClick={handletoggleOpen}
@@ -108,7 +71,7 @@ export function MultiSelectDropdown({
             id={type}
             className="flex overflow-hidden flex-col items-center pt-2 bg-white border-2 border-black rounded-md shadow-md p-0 sm:w-160 w-100 z-50"
           >
-            <div className="flex flex-col gap-0 flex-wrap sm:h-30 h-60 pb-2 items-center content-start justify-start ">
+            <div className="flex flex-col gap-y-1 flex-wrap sm:h-30 h-60 pb-2 items-center content-start justify-start ">
               {!dexloading &&
                 options.map((option) => {
                   const isSelected = selected === option;
@@ -121,13 +84,13 @@ export function MultiSelectDropdown({
                       key={option}
                       onClick={() => toggleOption(option)}
                       className={cn(
-                        "text-[9pt] overflow-hidden relative border-0 w-26 h-7 flex items-center gap-0 cursor-pointer px-2 py-1 rounded hover:bg-gray-100",
+                        "text-[9pt] overflow-hidden relative border-0 w-26 h-6 flex items-center gap-0 cursor-pointer px-2 py-1 rounded hover:bg-gray-100",
                         "",
                         isSelected && "bg-gray-200 font-bold"
                       )}
                     >
                       <span className="font-semibold absolute left-1/2 -translate-x-1/2 top-1 noSelect overflow-hidden">
-                        {option}
+                        {option.slice(0, 9)}
                       </span>
                     </motion.label>
                   );
@@ -188,3 +151,42 @@ const Loader = () => {
     </motion.div>
   );
 };
+
+export default function PkDropdown({
+  onClick,
+  selected = "",
+  extraStyling,
+  userJourney,
+}: {
+  onClick?: () => void;
+  selected: string;
+  extraStyling?: string;
+  userJourney?: "initial" | "addpk" | "addname";
+}) {
+  return (
+    <div className="relative cursor-pointer" onClick={onClick}>
+      <FaCaretDown
+        className={cn(
+          "z-30 w-6 h-6 absolute left-3 top-1/2 -translate-y-1/2  "
+        )}
+      />
+      <h3 className="absolute left-1/2 z-30 top-1/2 -translate-y-1/2 -translate-x-1/2">
+        {selected}
+      </h3>
+      <FaCaretDown
+        className={cn(
+          " z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  "
+        )}
+      />
+      <div
+        className={cn(
+          "",
+          userJourney === "initial" &&
+            "animate-pulse border-2 border-red-300 rounded-full "
+        )}
+      >
+        <InputBar extraStyling={extraStyling} />
+      </div>
+    </div>
+  );
+}

@@ -15,46 +15,37 @@ import { Label } from "@radix-ui/react-label";
 import FormErrorMessage from "./form-error-message";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
-import { MultiSelectDropdown } from "@/components/ui/dropdown";
-import { AddPkFormSchema, AddPkFormValues } from "@/lib/schemas";
+
+import { EditPkFormSchema, EditPkFormValues } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-import { elmOptions, genOptions, testPokeData } from "@/lib/data";
-import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
-import { MultiSelectFilterDropdown } from "@/components/ui/dropdown-elements";
-import clsx from "clsx";
+import { testPokeData } from "@/lib/data";
+
 import toast from "react-hot-toast";
-import { motion, useAnimation } from "framer-motion";
-import { FaCaretDown } from "react-icons/fa";
+
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleAddPokemon } from "@/lib/actions";
 import Pokeball from "./pokeball";
-import PlaceholderPk from "./placeholder-pk";
-const pokemon = [
-  {
-    id: "#blast3",
-    apiId: "9",
-    ball: "04",
-    species: "Blastoise",
-    type: ["Water", "Electric"],
-    sprite: "/placeholders/pokesprites/Blastoise.png",
-  },
-];
+
+import DeleteButton from "./delete-button";
+import {
+  FormHeader,
+  FormLabel,
+  PokeImageField,
+  VertFields,
+} from "./pkForm-elements";
+import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 
 // import { Popover } from "@radix-ui/react-popover";
 export function EditPkModal() {
+  //-------------------------derived states
   const { trainer } = useTrainerContext();
   const { EditPkModalopen, setEditPkModalOpen, selectedPk } =
     usePokeAppContext();
+
+  //--------------------------- local states
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const handleSearchToggle = () => {
-    setIsSearchOpen(!isSearchOpen);
-    if (!isSearchOpen) {
-      // handleAnimateOpen();
-    } else {
-      // handleAnimateClose();
-    }
-  };
+
   const {
     register,
     handleSubmit,
@@ -63,31 +54,17 @@ export function EditPkModal() {
     setValue,
     control,
     formState: { isSubmitting, errors },
-  } = useForm<AddPkFormValues>({
-    resolver: zodResolver(AddPkFormSchema),
+  } = useForm<EditPkFormValues>({
+    resolver: zodResolver(EditPkFormSchema),
     defaultValues: {
       Name: selectedPk?.name || "unknown", // prefill with selectedPk name
       Xp: selectedPk?.exp || 0,
-      // Gen: ["I"],
-      // Type: ["Fire"],
-      Pokemon: "lAPRAS",
-      Ball: "02",
+      Pokemon: "Lapras",
     },
   });
-  useEffect(() => {
-    updateField("Name", selectedPk?.name || "unknown");
-    updateField("Xp", selectedPk?.exp || 0);
-    updateField("Pokemon", selectedPk?.species || "cannot evolve");
-    updateField("Ball", selectedPk?.ball || "05");
-  }, [selectedPk]);
-  const controls = useAnimation();
-  const handleAnimateOpen = () => {
-    controls.start({ height: "200px", transition: { duration: 0.3 } });
-  };
-  const handleAnimateClose = () => {
-    controls.start({ height: 0, transition: { duration: 0.3 } });
-  };
-  const updateField = (field: keyof AddPkFormValues, value: any) => {
+
+  //-------------------------event handlers
+  const updateField = (field: keyof EditPkFormValues, value: any) => {
     setValue(field, value, {
       shouldValidate: true,
       shouldDirty: true,
@@ -95,8 +72,17 @@ export function EditPkModal() {
     });
   };
   const onFormSubmission = async () => {};
-  const [elements, setElements] = useState<string[]>([]);
-  const [generations, setGenerations] = useState<string[]>([]);
+  //effects
+  useEffect(() => {
+    updateField("Name", selectedPk?.name || "unknown");
+    updateField("Xp", selectedPk?.exp || 0);
+    updateField("Pokemon", selectedPk?.species || "cannot evolve");
+    updateField("Type", selectedPk?.type || [""]);
+    updateField("Trainer", trainer?.id || "");
+    updateField("Sprite", selectedPk?.sprite || "");
+    updateField("id", selectedPk?.id || "");
+  }, [selectedPk]);
+
   return (
     <DialogWindowStyle
       AddPkModalopen={EditPkModalopen}
@@ -123,7 +109,7 @@ export function EditPkModal() {
               control={control}
               rules={{ required: "Please select a Pokemon" }}
               render={({ field }) => (
-                <MultiSelectDropdown
+                <PkDropdownAndModal
                   options={[...testPokeData]}
                   width="full"
                   selected={field.value}
@@ -138,9 +124,16 @@ export function EditPkModal() {
               />
             )}
           </div>
-          <ImageField>
+
+          <PokeImageField
+            clickhandle={() => {}}
+            image={selectedPk?.sprite || ""}
+            isImageLoaded={true}
+            elements={selectedPk?.type || []}
+            userJourney={"addpk"}
+          >
             <Pokeball type={selectedPk?.ball || "05"} size={30} />
-          </ImageField>
+          </PokeImageField>
           <VertFields>
             <div className="relative w-130">
               <FormLabel lblfor="name" header="Rename" />
@@ -168,21 +161,23 @@ export function EditPkModal() {
             </div>
           </VertFields>
         </div>
-        <SubmitButton
-          onSubmit={() => {}}
-          ball="02"
-          name="Edit"
-          ballPadding="20px"
-        />
+        <div className="flex gap-3">
+          <DeleteButton handleDelete={() => {}} />
+          <SubmitButton
+            onSubmit={() => {}}
+            ball="02"
+            name="delete"
+            ballPadding="20px"
+            style="noball"
+            type="submit"
+            colorStyle="submit"
+          />
+        </div>
       </form>
     </DialogWindowStyle>
   );
 }
 
-const Border = () => {
-  return <hr className="relative border-1 w-full " />;
-};
-//------------------------------------------------------------------------------------
 const DialogWindowStyle = ({
   children,
   AddPkModalopen,
@@ -211,88 +206,5 @@ const DialogWindowStyle = ({
         {children}
       </DialogContent>
     </Dialog>
-  );
-};
-
-const VertFields = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="flex-row gap-x-3 flex w-full items-center justify-between">
-      {children}
-    </div>
-  );
-};
-
-const FormLabel = ({ lblfor, header }: { lblfor: string; header: string }) => {
-  return (
-    <Label className="" htmlFor={lblfor}>
-      <h3 className="text-md font-bold text-[10pt] tracking-wider my-1 ">
-        {header}
-      </h3>
-    </Label>
-  );
-};
-
-const ImageField = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-      className="mt-6 flex justify-center relative  h-full "
-    >
-      <div className=" absolute -left-5 top-0 z-10">{children}</div>
-      <div className="mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300">
-        <PlaceholderPk text={"Add a pokemon"} loading={true} />
-      </div>
-    </motion.div>
-  );
-};
-
-const SearchFilterButton = ({
-  handleClick,
-  isSearchOpen,
-}: {
-  handleClick: () => void;
-  isSearchOpen: boolean;
-}) => {
-  return (
-    <div
-      onClick={handleClick}
-      className="group relative mt-6 mb-0 w-full px-10 flex items-center cursor-pointer"
-    >
-      <Border />
-      <h3 className=" transition-all duration-100 absolute top-0 group-hover:scale-105 scale-100 -translate-y-1/2 left-1/2 -translate-x-1/2 text-[9pt] bg-white border-2 rounded-full px-2 py-1 font-bold">
-        Search Filter
-      </h3>
-      <FaCaretDown
-        className={cn(
-          "transition-all duration-100  group-hover:scale-105 scale-100 z-30 w-4 h-4 absolute right-9 top-1/2 -translate-y-1/2 border-2 border-black rounded-full bg-white ",
-          isSearchOpen ? "rotate-180" : "rotate-0"
-        )}
-      />
-      <FaCaretDown
-        className={cn(
-          "transition-all duration-100  group-hover:scale-105 scale-100 z-30 w-4 h-4 absolute left-9 top-1/2 -translate-y-1/2 border-2 border-black rounded-full bg-white ",
-          isSearchOpen ? "rotate-180" : "rotate-0"
-        )}
-      />
-    </div>
-  );
-};
-
-const FormHeader = ({ mode }: { mode?: "add" | "edit" }) => {
-  return (
-    <>
-      <DialogHeader></DialogHeader>
-      <DialogTitle className="hidden">Trainer Info</DialogTitle>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="ml-1 text-center flex flex-col items-center text-[15pt]! Text-primary! font-semibold!"
-      >
-        <h1>Edit Pokemon</h1>
-      </motion.div>
-    </>
   );
 };

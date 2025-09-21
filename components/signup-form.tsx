@@ -62,7 +62,7 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
           <FormErrorMessage message="Password is not the same" />
         </div>
       </div>
-      <SubmitButton ball="02" name="Submit" onSubmit={() => {}} />
+      <SubmitButton type="submit" ball="02" name="Submit" onSubmit={() => {}} />
     </form>
   );
 }

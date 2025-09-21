@@ -148,3 +148,19 @@ export function usePreloadImage(
 
   // return isLoaded;
 }
+
+export const UseDisableScroll = (time = 500) => {
+  const scrollContainer = (document.scrollingElement ||
+    document.documentElement) as HTMLElement;
+
+  // Temporarily disable smooth scrolling to prevent auto-scroll during animation
+
+  scrollContainer.style.scrollBehavior = "auto";
+  scrollContainer.style.overflow = "hidden";
+
+  // Optionally restore it after animation (e.g. after 500ms)
+  setTimeout(() => {
+    scrollContainer.style.overflow = "auto";
+    scrollContainer.style.scrollBehavior = "smooth";
+  }, time);
+};
