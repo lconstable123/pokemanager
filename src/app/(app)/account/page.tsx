@@ -5,22 +5,10 @@ import { motion, Reorder, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { Element, TPokemon } from "@/lib/types";
 import { getElementSprite } from "@/lib/utils";
-
-import LineupBar from "../../../../components/lineup-bar";
-import { useEffect, useState } from "react";
-import { b, tr } from "framer-motion/client";
-import WindowBg from "../../../../components/window-bg/window-bg";
+import { useEffect } from "react";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-import toast from "react-hot-toast";
-const features = [
-  "Full Stack with Next",
-  "Optimistic Frontend",
-  "Next-Auth",
-  "Prisma and Postgres",
-];
 
 export default function Home() {
-  const { isMobile, isSmall } = useIsMobile();
   const { lineUp, trainer, slots, isReordering } = useTrainerContext();
 
   return (
@@ -29,6 +17,7 @@ export default function Home() {
         {slots.map((slotId, index) => (
           <div key={slotId} className="relative">
             <GridNumber index={index} isReordering={isReordering} />
+            {/* <span className="text-[7pt]">{slotId}</span> */}
             <PokemonCard
               key={slotId}
               pokemon={lineUp[index]}
@@ -106,6 +95,8 @@ export function PokemonCard({
   return (
     <motion.div
       layout="position"
+      key={id}
+      id={id}
       layoutScroll
       custom={lineUpPos}
       initial={{ opacity: 0 }}
@@ -134,8 +125,7 @@ export function PkCardImage({
   highlighted: boolean;
   index: number;
 }) {
-  const { isReordering, ballShiftMode, slots, isShaking, setIsShaking } =
-    useTrainerContext();
+  const { isReordering, ballShiftMode, slots } = useTrainerContext();
 
   const spriteAnimationControls = useAnimation();
 
@@ -196,7 +186,7 @@ export function PKCardDetails({ pokemon }: { pokemon: TPokemon }) {
       <hr className="border-1 mb-[2px] border-gray-300 " />
       <p className="secondary-p-styling  mb-1">
         <span className="text-[9pt]! border-2 border-gray-300 bg-gray-100 rounded-full px-2 text-center">
-          lvl {pokemon.level}
+          lvl {pokemon.exp}
         </span>
         {" " + pokemon.species}
       </p>
@@ -232,10 +222,12 @@ function BackBubble({ editing = false }: { editing?: boolean }) {
 
 function AddBubble() {
   const { setAddPkModalOpen } = usePokeAppContext();
+
   return (
     <div
       onClick={() => {
-        toast.success("Opening add Pokémon modal");
+        // toast.success("Opening add Pokémon modal");
+
         setAddPkModalOpen(true);
       }}
       className="cursor-pointer transition-all  hover:bg-gray-100 bg-white duration-700  absolute noSelect inset-0 flex justify-center items-center z-1 border-4 border-gray-200  rounded-full"

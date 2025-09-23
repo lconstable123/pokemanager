@@ -1,7 +1,7 @@
 "use client";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,23 +10,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import * as Popover from "@radix-ui/react-popover";
-import { Label } from "@radix-ui/react-label";
 import FormErrorMessage from "./form-error-message";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
-
 import { EditPkFormSchema, EditPkFormValues } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-import { testPokeData } from "@/lib/data";
-
 import toast from "react-hot-toast";
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleAddPokemon } from "@/lib/actions";
 import Pokeball from "./pokeball";
-
 import DeleteButton from "./delete-button";
 import {
   FormHeader,
@@ -35,23 +27,45 @@ import {
   VertFields,
 } from "./pkForm-elements";
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
+import { flushSync } from "react-dom";
+import { useDexContext } from "@/lib/contexts/DexContext";
+import { UseFetchPkImg } from "@/lib/useFetchPkDetails";
 
-// import { Popover } from "@radix-ui/react-popover";
 export function EditPkModal() {
-  //-------------------------derived states
-  const { trainer } = useTrainerContext();
-  const { EditPkModalopen, setEditPkModalOpen, selectedPk } =
-    usePokeAppContext();
+  //---------------------------------------------------------------------------------derived states
 
-  //--------------------------- local states
+  const { trainer, handleEditPokemon, handleDeletePokemon } =
+    useTrainerContext();
+
+  const {
+    EditPkModalopen,
+    setEditPkModalOpen,
+    selectedPk,
+    setSelectedPk,
+    evolutions,
+    isInspectingLineup,
+    setIsInspectingLineup,
+  } = usePokeAppContext();
+
+  const { selectedDexPk, setSelectedDexPk, isLoadingEvolutions } =
+    useDexContext();
+
+  const { loadingImage, DexPrevImg, elements, handleImageReset } =
+    UseFetchPkImg(selectedDexPk);
+
+  //-------------------------------------------------------------------------------- local states
+
+  const [choosePkModalOpen, setChoosePkModalOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  //-------------------------------------------------------------------------------- form
   const {
     register,
     handleSubmit,
     trigger,
     getValues,
     setValue,
+    watch,
     control,
     formState: { isSubmitting, errors },
   } = useForm<EditPkFormValues>({
@@ -59,11 +73,20 @@ export function EditPkModal() {
     defaultValues: {
       Name: selectedPk?.name || "unknown", // prefill with selectedPk name
       Xp: selectedPk?.exp || 0,
-      Pokemon: "Lapras",
+      Pokemon: "",
+      Sprite: selectedPk?.sprite || "",
     },
   });
 
-  //-------------------------event handlers
+  //--------------------------------------------------------------------------------------event handlers
+
+  const handlePkModalToggleOpen = () => {
+    setChoosePkModalOpen((prev) => !prev);
+  };
+  const handlePkModalOpenChange = (newOpen: boolean) => {
+    setChoosePkModalOpen(newOpen);
+  };
+
   const updateField = (field: keyof EditPkFormValues, value: any) => {
     setValue(field, value, {
       shouldValidate: true,
@@ -71,34 +94,83 @@ export function EditPkModal() {
       shouldTouch: true,
     });
   };
-  const onFormSubmission = async () => {};
-  //effects
+
+  const onFormSubmission = async () => {
+    flushSync(() => {
+      handleDeselectPk();
+      setEditPkModalOpen(false);
+    });
+    setEditPkModalOpen(false);
+  };
+
+  const handleDeselectPk = () => {
+    // toast.success("deselecting pk");
+    handleImageReset();
+    setSelectedPk(null);
+    setSelectedDexPk(null);
+  };
+
+  //---------------------------------------------------------effects
+
+  //update pokeDex Api on evolution selection change
+
+  const watchedPokemon = watch("Pokemon");
+
+  useEffect(() => {
+    if (watchedPokemon.length === 0) return;
+    setSelectedDexPk(watchedPokemon);
+  }, [watchedPokemon]);
+
+  //update form fields on global selection change
+
   useEffect(() => {
     updateField("Name", selectedPk?.name || "unknown");
     updateField("Xp", selectedPk?.exp || 0);
-    updateField("Pokemon", selectedPk?.species || "cannot evolve");
+    updateField("Pokemon", selectedPk?.species || "");
     updateField("Type", selectedPk?.type || [""]);
     updateField("Trainer", trainer?.id || "");
     updateField("Sprite", selectedPk?.sprite || "");
-    updateField("id", selectedPk?.id || "");
+    updateField("Id", selectedPk?.id || "");
+    updateField("Ball", selectedPk?.ball || "");
+    updateField("Type", selectedPk?.type || []);
   }, [selectedPk]);
+
+  //update image field on Pokedex fetch
+
+  useEffect(() => {
+    updateField("Sprite", DexPrevImg || selectedPk?.sprite);
+  }, [DexPrevImg]);
+
+  //---------------------------------------------------------jsx
 
   return (
     <DialogWindowStyle
       AddPkModalopen={EditPkModalopen}
-      setAddPkModalOpen={setEditPkModalOpen}
+      setAddPkModalOpen={(e) => {
+        handleDeselectPk();
+        setEditPkModalOpen(e);
+      }}
       isSearchOpen={isSearchOpen}
     >
       <form
         className=" items-center flex flex-col justify-center"
         action={async () => {
+          const pokeData1 = getValues();
+          console.log(pokeData1);
           const result = await trigger();
-          if (!result) return;
-          onFormSubmission?.();
+          if (!result) {
+            toast.error("Please fix the errors.");
+            const formErrors = getValues(); // optional
+            console.log("Zod validation failed");
+            console.log(errors); // from useForm().formState.errors
+            toast.error("Validation failed. Check form fields.");
+            return;
+          }
           const pokeData = getValues();
-          toast.success("Added " + pokeData.Pokemon + " to your team!");
-          await handleAddPokemon(pokeData);
-          toast.success("DONE");
+          console.log(pokeData);
+          handleImageReset();
+          await onFormSubmission?.();
+          await handleEditPokemon?.(pokeData);
         }}
       >
         <div className="gap-y-0 items-center w-60 mb-5 flex flex-col flex-grow">
@@ -107,13 +179,26 @@ export function EditPkModal() {
             <Controller
               name="Pokemon"
               control={control}
-              rules={{ required: "Please select a Pokemon" }}
               render={({ field }) => (
                 <PkDropdownAndModal
-                  options={[...testPokeData]}
+                  options={evolutions}
                   width="full"
                   selected={field.value}
-                  onSelect={field.onChange}
+                  onSelect={(e) => {
+                    setIsInspectingLineup(false);
+                    field.onChange(e);
+                  }}
+                  userJourney={
+                    isLoadingEvolutions
+                      ? "loading"
+                      : evolutions.length <= 0
+                      ? "no-evolution"
+                      : "addpk"
+                  }
+                  OpenStatus={choosePkModalOpen}
+                  handletoggleOpen={handlePkModalToggleOpen}
+                  handleOpenChange={handlePkModalOpenChange}
+                  type={"evolution"}
                 />
               )}
             />
@@ -127,9 +212,11 @@ export function EditPkModal() {
 
           <PokeImageField
             clickhandle={() => {}}
-            image={selectedPk?.sprite || ""}
-            isImageLoaded={true}
-            elements={selectedPk?.type || []}
+            image={isInspectingLineup ? selectedPk?.sprite : DexPrevImg || ""}
+            isImageLoaded={isInspectingLineup ? true : loadingImage}
+            elements={
+              isInspectingLineup ? selectedPk?.type || [] : elements || []
+            }
             userJourney={"addpk"}
           >
             <Pokeball type={selectedPk?.ball || "05"} size={30} />
@@ -162,11 +249,19 @@ export function EditPkModal() {
           </VertFields>
         </div>
         <div className="flex gap-3">
-          <DeleteButton handleDelete={() => {}} />
+          <DeleteButton
+            handleDelete={async () => {
+              const pokeData = getValues();
+              await handleDeletePokemon?.(pokeData);
+              await onFormSubmission?.();
+            }}
+          />
           <SubmitButton
-            onSubmit={() => {}}
+            onSubmit={() => {
+              toast.success("submitting form");
+            }}
             ball="02"
-            name="delete"
+            name="update"
             ballPadding="20px"
             style="noball"
             type="submit"
@@ -191,18 +286,23 @@ const DialogWindowStyle = ({
   isSearchOpen: boolean;
   mode?: "add" | "edit";
 }) => {
+  const descriptionId =
+    mode === "add" ? "add-pokemon-modal" : "edit-pokemon-modal";
   return (
     <Dialog open={AddPkModalopen} onOpenChange={setAddPkModalOpen}>
       <DialogTrigger asChild></DialogTrigger>
       <DialogContent
-        aria-describedby="add-pokemon-modal"
+        aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
           "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
           "h-[510px]"
         )}
       >
-        <FormHeader mode={mode} />
+        <FormHeader mode={"edit"} />
+        <DialogDescription id={descriptionId} className="sr-only">
+          Edit the selected Pokémon's details.
+        </DialogDescription>
         {children}
       </DialogContent>
     </Dialog>

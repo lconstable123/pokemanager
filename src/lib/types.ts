@@ -13,12 +13,10 @@ export type TLineUp = TPokemon[];
 
 export type TPokemon = {
   id: string;
-  // apiId: string;
   ball: string;
   name: string;
   species: string;
   type: Element[];
-  level: number;
   exp: number;
   sprite: string;
 };

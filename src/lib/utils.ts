@@ -4,6 +4,10 @@ import { Element } from "./types";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 export function getTrainerSprite(avatar: number) {
   switch (avatar) {
     case 1:

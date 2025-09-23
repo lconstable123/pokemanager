@@ -141,7 +141,11 @@ function MoreDetails() {
           More details
         </Button>
       </DialogTrigger>
-      <DialogContent tabIndex={-1} className="gap-y-2! noSelect pb-9">
+      <DialogContent
+        aria-describedby="more-details-modal"
+        tabIndex={-1}
+        className="gap-y-2! noSelect pb-9"
+      >
         <DialogHeader></DialogHeader>
         <DialogTitle className=" flex items-center gap-3 text-[15pt]! Text-primary! font-semibold!">
           <div className="h-4 w-4">
@@ -149,7 +153,10 @@ function MoreDetails() {
           </div>
           Stack
         </DialogTitle>
-        <DialogDescription className="text-[9pt]! pt-2 pb-2">
+        <DialogDescription
+          id="more-details-modal"
+          className="text-[9pt]! pt-2 pb-2"
+        >
           I have used GPT and GitHub Copilot for reference, bugfixes, and
           boilerplate. <br />
           <br />

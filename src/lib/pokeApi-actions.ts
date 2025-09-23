@@ -3,7 +3,7 @@ import { ApiPkData } from "./types";
 export const FetchPkDetails = async (
   P: any,
   pkname: string,
-  detail: "imgFront" | "imgBack" | "elements" | "baseXp"
+  detail: "imgFront" | "imgBack" | "elements" | "baseXp" | "forms"
 ): Promise<string | string[] | number | null> => {
   if (!pkname) return null;
   // setLoadingImage(true);
@@ -18,7 +18,10 @@ export const FetchPkDetails = async (
     if (detail === "elements") {
       return response.types.map((type) => type.type.name) || null;
     }
-
+    if (detail === "forms") {
+      console.log(response);
+      return response.forms.map((form) => form.name) || null;
+    }
     return null;
   } catch (error) {
     throw new Error(

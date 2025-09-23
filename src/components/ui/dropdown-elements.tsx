@@ -4,16 +4,13 @@ import React, { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 import * as Popover from "@radix-ui/react-popover";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
-import { Button } from "./button";
 import clsx from "clsx";
 import InputBar from "./input-bar";
 import { elmOptions } from "@/lib/data";
 import { Element } from "@/lib/types";
-const OPTIONS = ["Fire", "Water", "Grass", "Electric", "Rock", "Psychic"];
+
 export default function Dropdown({
   onClick,
-  // selected = [""],
   extraStyling,
   selectedElm = [],
   type = "elm",

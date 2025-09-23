@@ -33,13 +33,12 @@ export const AddPkFormSchema = z.object({
   Pokemon: z.string().min(1, { message: "Please select a Pokemon" }),
 
   Ball: BallSchema,
-  Sprite: z.url("Invalid URL"),
+  // Sprite: z.url("Invalid URL"),
+  Sprite: z.string().min(1, { message: "Sprite URL required" }),
   Trainer: z.string().min(1, { message: "Trainer ID required" }),
 });
-export const EditPkFormSchema = AddPkFormSchema.omit({
-  Ball: true,
-}).extend({
-  id: z.string().min(1, { message: "ID required" }),
+export const EditPkFormSchema = AddPkFormSchema.extend({
+  Id: z.string().min(1, { message: "ID required" }),
 });
 
 export type AddPkFormValues = z.infer<typeof AddPkFormSchema>;

@@ -12,20 +12,20 @@ import toast from "react-hot-toast";
 type TDropDown = {
   options: string[];
   width?: string;
-  type?: "text" | "icon";
   selected: string;
   onSelect: (value: string) => void;
   page?: number;
   OpenStatus?: boolean;
   handletoggleOpen?: () => void;
   handleOpenChange?: (newOpen: boolean) => void;
-  userJourney?: "initial" | "addpk" | "addname";
+  userJourney?: "initial" | "addpk" | "addname" | "no-evolution" | "loading";
+  type?: "evolution" | "dex";
 };
 
 export function PkDropdownAndModal({
   options,
   width = "50",
-  type = "text",
+  type = "dex",
   selected,
   onSelect,
   OpenStatus,
@@ -55,12 +55,29 @@ export function PkDropdownAndModal({
           Please select a pokemon
         </div>
       )}
+      {userJourney === "no-evolution" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2, delay: 0.1 }}
+          className="pointer-events-none select-none text-[9pt] absolute left-[80px] top-[42px] opacity-75 h-4 z-30"
+        >
+          cannot evolve
+        </motion.div>
+      )}
+      {userJourney === "loading" && (
+        <div className="pointer-events-none select-none text-[9pt] absolute left-[80px] top-[42px] opacity-75 h-4 z-30">
+          loading...
+        </div>
+      )}
+
       <PkDropdown
         extraStyling={`w-${width} relative`}
         selected={selected}
         onClick={handletoggleOpen}
         userJourney={userJourney}
       />
+
       <Popover.Root open={OpenStatus} onOpenChange={handleOpenChange}>
         <Popover.Trigger className="bg-red-200 w-full" />
         <Popover.Portal>
@@ -69,9 +86,17 @@ export function PkDropdownAndModal({
             side="top"
             sideOffset={!isMobile ? -150 : -270}
             id={type}
-            className="flex overflow-hidden flex-col items-center pt-2 bg-white border-2 border-black rounded-md shadow-md p-0 sm:w-160 w-100 z-50"
+            className={cn(
+              `flex overflow-hidden flex-col items-center  bg-white border-2 border-black rounded-md shadow-md p-0  z-50`,
+              type === "dex" ? "sm:w-160 w-100 pt-2" : "w-full h-full pt-0"
+            )}
           >
-            <div className="flex flex-col gap-y-1 flex-wrap sm:h-30 h-60 pb-2 items-center content-start justify-start ">
+            <div
+              className={cn(
+                "flex flex-col gap-y-1 flex-wrap  pb-2 items-center content-start justify-start ",
+                type === "dex" ? "sm:h-30 h-60" : "w-full h-full"
+              )}
+            >
               {!dexloading &&
                 options.map((option) => {
                   const isSelected = selected === option;
@@ -97,12 +122,14 @@ export function PkDropdownAndModal({
                 })}
               {dexloading && <Loader />}
             </div>
-            <Pagination
-              page={PkDropdownPage}
-              maxPages={maxPkDropdownPages}
-              onClickLeft={handlePkPagePrev}
-              onClickRight={handlePkPageNext}
-            />
+            {type === "dex" && (
+              <Pagination
+                page={PkDropdownPage}
+                maxPages={maxPkDropdownPages}
+                onClickLeft={handlePkPagePrev}
+                onClickRight={handlePkPageNext}
+              />
+            )}
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
@@ -161,21 +188,33 @@ export default function PkDropdown({
   onClick?: () => void;
   selected: string;
   extraStyling?: string;
-  userJourney?: "initial" | "addpk" | "addname";
+  userJourney?: "initial" | "addpk" | "addname" | "no-evolution" | "loading";
 }) {
+  const disabled: boolean =
+    userJourney === "no-evolution" || userJourney === "loading";
   return (
-    <div className="relative cursor-pointer" onClick={onClick}>
+    <div
+      className={cn(
+        "relative cursor-pointer",
+        disabled && "cursor-default select-none pointer-events-none"
+      )}
+      onClick={onClick}
+    >
       <FaCaretDown
         className={cn(
-          "z-30 w-6 h-6 absolute left-3 top-1/2 -translate-y-1/2  "
+          "transition-all duration-500 z-30 w-6 h-6 absolute left-3 top-1/2 -translate-y-1/2  ",
+          disabled && "opacity-50"
         )}
       />
-      <h3 className="absolute left-1/2 z-30 top-1/2 -translate-y-1/2 -translate-x-1/2">
-        {selected}
-      </h3>
+      {!disabled && (
+        <h3 className="absolute left-1/2 z-30 top-1/2 -translate-y-1/2 -translate-x-1/2">
+          {selected}
+        </h3>
+      )}
       <FaCaretDown
         className={cn(
-          " z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  "
+          "transition-all duration-500 z-30 w-6 h-6 absolute right-3 top-1/2 -translate-y-1/2  ",
+          userJourney === "no-evolution" && "opacity-50"
         )}
       />
       <div

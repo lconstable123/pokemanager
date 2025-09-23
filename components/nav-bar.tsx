@@ -86,11 +86,17 @@ function TrainerModal() {
       <DialogTrigger asChild>
         <ProfileButton handleClick={handleOpen} sprite={trainerSprite} />
       </DialogTrigger>
-      <DialogContent tabIndex={-1} className="w-90 gap-y-2! noSelect pb-9">
+      <DialogContent
+        aria-describedby="trainer-info-modal"
+        tabIndex={-1}
+        className="w-90 gap-y-2! noSelect pb-9"
+      >
         <DialogHeader></DialogHeader>
 
         <DialogTitle className="hidden">Trainer Info</DialogTitle>
-
+        <DialogDescription id="trainer-info-modal" className="sr-only">
+          Edit the selected Pokémon's details.
+        </DialogDescription>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

@@ -33,7 +33,7 @@ export const UseFetchPk = (P: any) => {
   const fetchAllPK = async (page: number, limit: number): Promise<string[]> => {
     const gensAsNumber = generationFilter.map((gen) => RomanToInt(gen))[0];
     const genOffset = sliceByGen(gensAsNumber)[0] - 1;
-    toast.success(`Fetching ${genOffset} onwards`);
+    // toast.success(`Fetching ${genOffset} onwards`);
     const interval = {
       offset: (page - 1) * limit + genOffset,
       limit: limit,
@@ -65,7 +65,7 @@ export const UseFetchPk = (P: any) => {
 
   //-------------------------filter effects
   useEffect(() => {
-    toast.success(`Generation filter changed: ${generationFilter}`);
+    // toast.success(`Generation filter changed: ${generationFilter}`);
     PaginatedPkFetcher(PkDropdownPage, EntriesPerPage);
   }, [PkDropdownPage, generationFilter]);
   //-------------------------initial fetch
@@ -119,23 +119,3 @@ export const UseFetchPk = (P: any) => {
     dexloading,
   };
 };
-
-// const fetchPkByGeneration = async (
-//   generations: string[]
-// ): Promise<string[]> => {
-//   try {
-//     //prep data
-//     const gensAsNumber = generationFilter.map((gen) => RomanToInt(gen));
-//     //fetch by gen
-//     const response = await P.getGeneration(gensAsNumber);
-//     const allPk = response.map((gen: any) => gen.pokemon_species);
-//     const allPknames = allPk.map((pkGen: any) =>
-//       pkGen.map((pk: any) => pk.name)
-//     );
-
-//     return allPknames.flat();
-//   } catch (error) {
-//     console.error("Error fetching generation data:", error);
-//     return [];
-//   }
-// };

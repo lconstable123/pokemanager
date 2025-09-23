@@ -25,10 +25,7 @@ import toast from "react-hot-toast";
 import { motion, useAnimation } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleAddPokemon } from "@/lib/actions";
-import PlaceholderPk from "./placeholder-pk";
 import { UseFetchPkImg } from "@/lib/useFetchPkDetails";
-import { Element } from "@/lib/types";
 import {
   Border,
   FormHeader,
@@ -39,11 +36,15 @@ import {
 } from "./pkForm-elements";
 import { useDexContext } from "@/lib/contexts/DexContext";
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
+import { flushSync } from "react-dom";
 
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
-  //------------------------- derived states
-  const { trainer } = useTrainerContext();
-  const { AddPkModalopen, setAddPkModalOpen } = usePokeAppContext();
+  //------------------------------------------------------------------------ derived states
+
+  const { trainer, handleAddPokemon } = useTrainerContext();
+
+  const { AddPkModalopen, setAddPkModalOpen, setSelectedPk } =
+    usePokeAppContext();
 
   const {
     PkDropdownEntries,
@@ -55,15 +56,17 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
     setSelectedDexPk,
   } = useDexContext();
 
-  //--------------------------- local states
+  //-------------------------------------------------------------------------- local states
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const controls = useAnimation();
-  const { loadingImage, DexPrevImg, elements } = UseFetchPkImg(selectedDexPk);
   const [choosePkModalOpen, setChoosePkModalOpen] = useState<boolean>(false);
   const [userJourney, setUserJourney] = useState<
     "initial" | "addpk" | "addname"
   >("initial");
-  //---form state
+
+  //------------------------------------------------------------------------------form state
+
   const {
     register,
     handleSubmit,
@@ -82,42 +85,68 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
       Ball: "02",
     },
   });
-  //-------------------------------------------------------handles
+
+  //----------------------------------------------------------------------handles
+
   const handleSearchToggle = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
   // When modal is closed, reset everything
   const handleModal = () => {
-    toast.success("Closed");
+    handleDeselectPk();
+  };
+
+  const onFormSubmission = async () => {
+    flushSync(() => {
+      setAddPkModalOpen(false);
+    });
+    // toast.success("closing modal");
+  };
+
+  // internal pk selection modal
+  const handlePkModalToggleOpen = () => {
+    setChoosePkModalOpen((prev) => !prev);
+  };
+
+  const handlePkModalOpenChange = (newOpen: boolean) => {
+    setChoosePkModalOpen(newOpen);
+  };
+
+  // if image is selected open modal
+  const handleClickImageField = () => {
+    setChoosePkModalOpen(true);
+  };
+
+  const handleDeselectPk = () => {
+    // toast.success("deselecting pk");
     setIsSearchOpen(false);
     setSelectedDexPk(null);
     setAddPkModalOpen(!AddPkModalopen);
     setValue("Pokemon", "");
     setUserJourney("initial");
+    handleImageReset();
   };
 
-  const onFormSubmission = async () => {};
-
-  const handlePkModalToggleOpen = () => {
-    setChoosePkModalOpen((prev) => !prev);
-  };
-  const handlePkModalOpenChange = (newOpen: boolean) => {
-    setChoosePkModalOpen(newOpen);
-  };
-  const handleClickImageField = () => {
-    setChoosePkModalOpen(true);
-  };
+  //-------------------------------------------------------------------------effects
 
   // When pokemon is selected from dropdown, set random name and change journey to addname
+
   const watchedPokemon = watch("Pokemon");
+
   useEffect(() => {
     if (watchedPokemon.length === 0) return;
-
     setSelectedDexPk(watchedPokemon);
     setValue("Name", generateRandomName());
     setUserJourney("addname");
   }, [watchedPokemon]);
+
+  // fetch new pokedex image and elements
+
+  const { loadingImage, DexPrevImg, elements, handleImageReset } =
+    UseFetchPkImg(selectedDexPk);
+
+  //---------------------------------------------------------jsx
 
   return (
     <DialogWindowStyle
@@ -135,11 +164,12 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
           setValue("Trainer", trainer?.id || "");
           const result = await trigger();
           if (!result) return;
-          onFormSubmission?.();
           const pokeData = getValues();
+          console.log(pokeData);
+          handleAddPokemon?.(pokeData);
+          handleDeselectPk();
+          onFormSubmission?.();
           // toast.success("Added " + pokeData.Pokemon + " to your team!");
-          await handleAddPokemon(pokeData);
-          toast.success("DONE");
         }}
       >
         <div className="gap-y-0 items-center w-60 mb-5 flex flex-col flex-grow">
@@ -297,11 +327,13 @@ const DialogWindowStyle = ({
   mode?: "add" | "edit";
   userJourney?: "initial" | "addpk" | "addname";
 }) => {
+  const descriptionId =
+    mode === "add" ? "add-pokemon-modal" : "edit-pokemon-modal";
   return (
     <Dialog open={AddPkModalopen} onOpenChange={setAddPkModalOpen}>
       <DialogTrigger asChild></DialogTrigger>
       <DialogContent
-        aria-describedby="add-pokemon-modal"
+        aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
           "w-100 border-2  border-black duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
@@ -315,6 +347,9 @@ const DialogWindowStyle = ({
         )}
       >
         <FormHeader mode={mode} />
+        <DialogDescription id={descriptionId} className="sr-only">
+          Add a new Pokémon to your team.
+        </DialogDescription>
         {children}
       </DialogContent>
     </Dialog>
