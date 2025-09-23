@@ -6,38 +6,40 @@ import { cn } from "@/lib/utils";
 import DirectionNav from "./direction-nav";
 import { motion, useAnimation } from "framer-motion";
 import { Label } from "@/components/ui/label";
-import { timeOffset_1, timeOffset_2 } from "@/lib/constants";
+import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 type SelectTrainerProps = {
   mode: "sign-up" | "sign-in";
 };
 export default function SelectTrainer({ mode }: SelectTrainerProps) {
   const trainerlength = mode === "sign-up" ? 9 : 2;
-  const timeOffset3 = timeOffset_2 * 1000 + 900;
+  // const timeOffset3 = timeOffset_2 * 1000 + 900;
   const trainers = Array.from({ length: trainerlength }, (_, i) =>
     i.toString()
   );
-  const [selectedTrainer, setSelectedTrainer] = useState(0);
+  const { selectedFormTrainer, setSelectedFormTrainer } = usePokeAppContext();
+  // const [selectedTrainer, setSelectedTrainer] = useState(0);
   const [engaged, setEngaged] = useState(false);
   const [localTransitionSpeed, setLocalTransitionSpeed] = useState(400);
   const trainerFrameWidth = 210;
   const trainerFrameGap = 30;
   const trainerWidth = trainerFrameWidth - trainerFrameGap;
-  const trainerOffset = trainerFrameWidth * selectedTrainer;
+  const trainerOffset = trainerFrameWidth * selectedFormTrainer;
 
   const handleClick = (e: React.MouseEvent<HTMLElement>, index: number) => {
     e.preventDefault();
     e.stopPropagation();
-    setSelectedTrainer((prev) => {
-      setLocalTransitionSpeed(2700 * Math.abs(prev - index) * 0.1);
+    setLocalTransitionSpeed(2700 * Math.abs(selectedFormTrainer - index) * 0.1);
+    setSelectedFormTrainer((prev) => {
       return index;
     });
   };
   if (mode === "sign-up") {
     useEffect(() => {
       const timer = setTimeout(() => {
-        setSelectedTrainer(1);
+        setSelectedFormTrainer(1);
         setEngaged(true);
-      }, timeOffset3);
+      }, timeOffset_3 * 1000 + 800);
       return () => clearTimeout(timer);
     }, []);
   }
@@ -62,8 +64,8 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
         {mode === "sign-up" && (
           <DirectionNav
             direction="left"
-            trainer={selectedTrainer}
-            handleSetTrainer={setSelectedTrainer}
+            trainer={selectedFormTrainer}
+            handleSetTrainer={setSelectedFormTrainer}
             trainerAmt={trainers.length}
             isEngaged={engaged}
           />
@@ -98,7 +100,7 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
             </div>
           ))}
           <TrainerBg
-            selectedTrainer={selectedTrainer}
+            selectedTrainer={selectedFormTrainer}
             localTransitionSpeed={localTransitionSpeed}
           />
         </TrainerFrame>
@@ -106,8 +108,8 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
         {mode === "sign-up" && (
           <DirectionNav
             direction="right"
-            trainer={selectedTrainer}
-            handleSetTrainer={setSelectedTrainer}
+            trainer={selectedFormTrainer}
+            handleSetTrainer={setSelectedFormTrainer}
             trainerAmt={trainers.length}
             isEngaged={engaged}
           />
@@ -117,7 +119,7 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
       {mode === "sign-up" && (
         <SelectTrainerNav
           trainers={trainers}
-          selectedTrainer={selectedTrainer}
+          selectedTrainer={selectedFormTrainer}
           handleClick={handleClick}
           isEngaged={engaged}
         />

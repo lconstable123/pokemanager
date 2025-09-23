@@ -22,7 +22,8 @@ type AppContextType = {
   setSelectedPk: React.Dispatch<React.SetStateAction<TPokemon | null>>;
   handleSelectPk: (pokemon: TPokemon) => void;
   evolutions: string[];
-
+  selectedFormTrainer: number;
+  setSelectedFormTrainer: React.Dispatch<React.SetStateAction<number>>;
   setEvolutions: React.Dispatch<React.SetStateAction<string[]>>;
   isInspectingLineup: boolean;
   setIsInspectingLineup: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,6 +44,7 @@ export default function PokeAppContextProvider({
   const [isLoadingEvolutions, setIsLoadingEvolutions] = useState(false);
   const modalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isInspectingLineup, setIsInspectingLineup] = useState(true);
+  const [selectedFormTrainer, setSelectedFormTrainer] = useState(0);
   // const { handleFetchEvolution } = useDexContext();
   //------------------------------------------------Selection of Pokémon from list
   const handleSelectPk = (pokemon: TPokemon) => {
@@ -89,7 +91,8 @@ export default function PokeAppContextProvider({
         handleSelectPk,
         evolutions,
         setEvolutions,
-
+        selectedFormTrainer,
+        setSelectedFormTrainer,
         isInspectingLineup,
         setIsInspectingLineup,
       }}

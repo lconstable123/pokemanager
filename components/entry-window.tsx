@@ -3,7 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import SignUpForm from "./signup-form";
 import SignInForm from "./signin-form";
-import { timeOffset_1, timeOffset_2 } from "@/lib/constants";
+import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
 import SelectTrainer from "./select-trainer";
 
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
@@ -40,7 +40,7 @@ function WelcomeForm({ mode }: welcomeTextProps) {
       <motion.div
         initial={{ translateX: -40, opacity: 0 }}
         animate={{ translateX: 0, opacity: 1 }}
-        transition={{ delay: timeOffset_2, duration: 0.4 }}
+        transition={{ delay: timeOffset_3, duration: 0.4 }}
         exit={{ opacity: 0 }}
         className=" pb-0 sm:pb-0 -translate-x-0 z-3 px-10 w-80 "
       >
@@ -72,7 +72,7 @@ function FormHeaderText({ mode }: { mode: "sign-up" | "sign-in" }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ delay: timeOffset_2, duration: 0.8 }}
+        transition={{ delay: timeOffset_3, duration: 0.8 }}
         className=" my-0!  pt-2 pb-3 sm:pb-5! pointer-events-none text-[12pt]! 2xl:text-[12pt]! "
       >
         Enter your details to get started.

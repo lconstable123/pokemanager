@@ -17,6 +17,8 @@ import Pokeball from "./pokeball";
 
 import toast from "react-hot-toast";
 import SubmitButton from "./submit-button";
+import { Delete } from "lucide-react";
+import DeleteButton from "./delete-button";
 
 type TNavBar = {
   isBackEnabled?: boolean;
@@ -58,7 +60,7 @@ function ProfileButton({
       onClick={() => {
         handleClick();
       }}
-      className="hover:scale-110 scale-100 transition-all border-0 border-gray-700 relative overflow-hidden w-11 h-11 rounded-full bg-red-300"
+      className="hover:scale-110 scale-100 transition-all border-1 border-gray-700 relative overflow-hidden w-11 h-11 rounded-full bg-red-300"
     >
       <img
         src={sprite}
@@ -77,6 +79,7 @@ function TrainerModal() {
     toast.success("Profile modal opened");
     setModalOpen(true);
   };
+
   const handleClose = () => {
     toast.success("Profile modal closed");
     setModalOpen(false);
@@ -89,8 +92,22 @@ function TrainerModal() {
       <DialogContent
         aria-describedby="trainer-info-modal"
         tabIndex={-1}
-        className="w-90 gap-y-2! noSelect pb-9"
+        className="border-3  border-black bg-yellow-100 overflow-hidden w-80 flex justify-center items-center flex-col gap-y-1! noSelect pb-2 "
       >
+        <div className="absolute bottom-0 ditheredGrad w-full h-20 -z-10 opacity-20 " />
+        <div className="absolute top-0 rotate-180 ditheredGrad w-full h-20 -z-10 opacity-20 " />
+        {/* .bg1 {
+  background-image: url("/pokebg_2.jpg");
+  background-size: 40px auto;
+}
+.ditheredGradRed {
+  background-image: url("/ditheredgrad.jpg");
+  background-size: auto 100%;
+}
+.ditheredGrad {
+  background-image: url("/ditheredgrad_bw.jpg");
+  background-size: auto 100%;
+} */}
         <DialogHeader></DialogHeader>
 
         <DialogTitle className="hidden">Trainer Info</DialogTitle>
@@ -101,18 +118,18 @@ function TrainerModal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className=" flex flex-col items-center gap-1 text-[15pt]! Text-primary! font-semibold!"
+          className=" flex flex-col items-center text-center text-[14pt]! gap-1 Text-primary! font-semibold!"
         >
-          <h1>TRAINER INFO</h1>
-          <h2 className="mt-3 text-[15pt]!">{trainer.name}</h2>
-          <h2 className="text-[12pt]!">{trainer.email}</h2>
+          <h1 className="text-3xl!  p-1 rounded-2xl">TRAINER INFO</h1>
+          <h2 className="font-bold! mt-3 text-[15pt]!">{trainer.name}</h2>
+          <h2 className=" text-[12pt]!">{trainer.email}</h2>
         </motion.div>
-        <div className="text-[9pt]! pt-3 pb-0 items-center flex flex-col gap-3 justify-center">
+        <div className="text-[9pt]! pt-4 pb-0 items-center flex flex-col gap-1 justify-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2, delay: 0.1 }}
-            className="mb-5 border-0 border-gray-700 relative overflow-hidden w-50 h-50 rounded-full bg-gray-300"
+            transition={{ duration: 0.2, delay: 0.0 }}
+            className="mb-5 border-10 ring-2 ring-yellow-400/40 border-yellow-200 relative overflow-hidden w-50 h-50 rounded-full bg-yellow-300/70"
           >
             <img
               src={trainerSprite}
@@ -120,7 +137,20 @@ function TrainerModal() {
               className="pixelImage absolute object-cover -top-15 w-100 h-100"
             />
           </motion.div>
-          <SubmitButton onSubmit={() => {}} ball="02" name="Logout" />
+          <div className=" px-4 py-2 rounded-full flex gap-2">
+            <SubmitButton
+              style={"noball"}
+              onSubmit={() => {}}
+              ball="02"
+              name="Logout"
+            />
+            <DeleteButton
+              handleDelete={() => {
+                toast.success("Account deletion initiated");
+                // Add account deletion logic here
+              }}
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

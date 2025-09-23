@@ -2,7 +2,6 @@
 import React from "react";
 import Pokeball from "./pokeball";
 import { motion } from "framer-motion";
-import { del, style } from "framer-motion/client";
 import { Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {

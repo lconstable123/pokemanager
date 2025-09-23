@@ -160,3 +160,25 @@ export const generateRandomName = () => {
   ];
   return names[Math.floor(Math.random() * names.length)];
 };
+
+export const generateRandomTrainer = () => {
+  const names = ["Ash", "Misty", "Brock", "Red", "Gary", "Jessie", "James"];
+  const randomTrainer = names[Math.floor(Math.random() * names.length)];
+  const randomEmail =
+    randomTrainer.toLowerCase() +
+    Math.floor(Math.random() * 1000).toString() +
+    "@example.com";
+  const randomPassword = generatePassword();
+  return { randomTrainer, randomEmail, randomPassword };
+};
+
+function generatePassword(length = 6) {
+  const chars =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    password += chars[randomIndex];
+  }
+  return password;
+}
