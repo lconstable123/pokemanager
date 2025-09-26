@@ -252,14 +252,12 @@ export function EditPkModal() {
           <DeleteButton
             handleDelete={async () => {
               const pokeData = getValues();
-              await handleDeletePokemon?.(pokeData);
               await onFormSubmission?.();
+              await handleDeletePokemon?.(pokeData.Id);
             }}
           />
           <SubmitButton
-            onSubmit={() => {
-              toast.success("submitting form");
-            }}
+            onSubmit={() => {}}
             ball="02"
             name="update"
             ballPadding="20px"
@@ -295,10 +293,12 @@ const DialogWindowStyle = ({
         aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
-          "w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
+          "border-3  border-black bg-blue-50 w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
           "h-[510px]"
         )}
       >
+        <div className="absolute bottom-0 ditheredGrad w-full h-20 -z-10 opacity-15 " />
+        <div className="absolute top-0 rotate-180 ditheredGrad w-full h-20 -z-10 opacity-15 " />
         <FormHeader mode={"edit"} />
         <DialogDescription id={descriptionId} className="sr-only">
           Edit the selected Pokémon's details.

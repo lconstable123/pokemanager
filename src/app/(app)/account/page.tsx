@@ -4,9 +4,11 @@ import { useIsMobile } from "@/lib/hooks";
 import { motion, Reorder, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { Element, TPokemon } from "@/lib/types";
-import { getElementSprite } from "@/lib/utils";
+import { cn, getElementSprite } from "@/lib/utils";
 import { useEffect } from "react";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import WindowBg from "../../../../components/window-bg/window-bg";
+import { toast } from "react-hot-toast";
 
 export default function Home() {
   const { lineUp, trainer, slots, isReordering } = useTrainerContext();
@@ -15,13 +17,21 @@ export default function Home() {
     <WholeSection>
       <PokeGrid>
         {slots.map((slotId, index) => (
-          <div key={slotId} className="relative">
-            <GridNumber index={index} isReordering={isReordering} />
+          <div key={slotId.id} className="relative">
+            <GridNumber
+              index={index}
+              isReordering={isReordering}
+              status={lineUp[index] !== undefined}
+            />
             {/* <span className="text-[7pt]">{slotId}</span> */}
             <PokemonCard
-              key={slotId}
-              pokemon={lineUp[index]}
-              id={slotId}
+              key={slotId.id}
+              pokemon={
+                slotId.id.startsWith("empty")
+                  ? undefined
+                  : (lineUp[index] as TPokemon)
+              }
+              id={slotId.id}
               lineUpPos={index}
             />
           </div>
@@ -34,7 +44,7 @@ export default function Home() {
 //---------------------------------------------------
 function PokeGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className=" px-2 sm:px-7 lg:px-20  rounded-3xl  w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
+    <div className=" px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
       {children}
     </div>
   );
@@ -43,24 +53,27 @@ function PokeGrid({ children }: { children: React.ReactNode }) {
 function GridNumber({
   index,
   isReordering,
+  status,
 }: {
   index: number;
   isReordering?: boolean;
+  status: boolean;
 }) {
   return (
     <div
       className={`${
-        isReordering ? "opacity-100" : "opacity-0"
+        isReordering ? (status ? "opacity-100" : "opacity-0") : "opacity-0"
       } transition-opacity duration-500 noSelect z-1 absolute  -top-2 left-0 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-2 font-black border-yellow-300 text-yellow-700 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-yellow-100`}
     >
       {index + 1}
+      {/* {status} */}
     </div>
   );
 }
 
 function WholeSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className="relative mb-30  sm:mb-3 mt-5 flex justify-center">
+    <section className=" relative mb-30 sm:mb-3 mt-5 flex justify-center ">
       {children}
     </section>
   );
@@ -105,6 +118,7 @@ export function PokemonCard({
       className="h-45 relative flex flex-col items-center gap-0"
       onClick={() => handleBallClick?.(lineUpPos)}
     >
+      {/* <span className="text-[8pt]">{pokemon?.id}</span> */}
       <PkCardImage
         pokemon={pokemon}
         highlighted={ballEdit === lineUpPos}
@@ -213,7 +227,7 @@ function PKCardTypes({ types }: { types: Element[] }) {
 function BackBubble({ editing = false }: { editing?: boolean }) {
   return (
     <div
-      className={` transition-all duration-700 absolute m-1 noSelect inset-0 z-1  rounded-full ${
+      className={` transition-all outline-3 outline-gray-200 duration-700 absolute m-1 noSelect inset-0 z-1  rounded-full ${
         editing ? "bg-gray-100 scale-70 " : "bg-gray-200 scale-100"
       }`}
     />
@@ -222,15 +236,25 @@ function BackBubble({ editing = false }: { editing?: boolean }) {
 
 function AddBubble() {
   const { setAddPkModalOpen } = usePokeAppContext();
+  const { isReordering } = useTrainerContext();
 
   return (
     <div
       onClick={() => {
+        if (isReordering) {
+          toast.error("Finish reordering before adding a Pokémon");
+          return;
+        } else {
+          setAddPkModalOpen(true);
+        }
         // toast.success("Opening add Pokémon modal");
-
-        setAddPkModalOpen(true);
       }}
-      className="cursor-pointer transition-all  hover:bg-gray-100 bg-white duration-700  absolute noSelect inset-0 flex justify-center items-center z-1 border-4 border-gray-200  rounded-full"
+      className={cn(
+        " transition-all  hover:bg-gray-100 bg-white duration-700  absolute noSelect inset-0 flex justify-center items-center z-1 border-4 border-gray-200  rounded-full",
+        isReordering
+          ? "opacity-30 pointer-events-none"
+          : "cursor-pointer opacity-100"
+      )}
     >
       <FaPlus className="m-auto w-7 h-7 text-gray-400" />
     </div>

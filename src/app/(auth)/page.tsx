@@ -26,8 +26,9 @@ export default function Home() {
     <WholeSection>
       <TopSection>
         <WelcomeText />
-        {!isMobile && <AppPreview isMobile={false} />}
+        {/* {!isMobile && <AppPreview isMobile={false} />} */}
       </TopSection>
+
       <BottomSection>
         <Features
           features={features}
@@ -45,11 +46,11 @@ export default function Home() {
 
 function TopSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className="w-full ml-7 mr-10 h-full flex flex-col justify-center ">
+    <section className="pt-8 sm:max-w-140 md:max-w-160 lg:max-w-170 2xl:max-w-200  ml-7 mr-10 h-full flex flex-col justify-center ">
       <div
         className={cn(
-          " text-center flex flex-col items-center gap-0 sm:gap-9 justify-center sm:flex-row ",
-          " pb-7 translate-y-5 z-10"
+          " text-center flex flex-col-reverse  items-center  gap-4 ms:gap-5 lg:gap-9 justify-center lg:flex-row ",
+          " pb-1 sm:pb-7 translate-y-1 z-10"
         )}
       >
         {children}
@@ -68,7 +69,7 @@ function BottomSection({ children }: { children: React.ReactNode }) {
 
 function WholeSection({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-10 h-full flex flex-col items-center justify-center">
+    <div className="mx-5  h-full flex flex-col items-center justify-center">
       {children}
     </div>
   );
@@ -76,13 +77,13 @@ function WholeSection({ children }: { children: React.ReactNode }) {
 
 function WelcomeText() {
   return (
-    <section className="max-w-90 sm:max-w-120 sm:pb:0  flex flex-col  justify-center items-center">
+    <section className="max-w-90  sm:pb:0  flex flex-col  justify-center items-center">
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ delay: timeOffset_1, duration: 0.6 }}
-        className="w-full mx-2 my-0 py-0 leading-12! sm:leading-8! text-[40pt]! sm:text-[28pt]! md:text-[27pt]! "
+        transition={{ duration: 0.8 }}
+        className="noSelect  w-full mx-2 mb-1 sm:mb-1 lg:mb-1 py-0 leading-12! sm:leading-11! text-[40pt]! sm:text-[37pt]!  "
       >
         POKEMON MANAGER
       </motion.h1>
@@ -91,18 +92,19 @@ function WelcomeText() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ delay: timeOffset_2, duration: 1.5 }}
-        className="w-full my-0 pt-3 sm:pt-2 pb-6 text-[13pt]! sm:text-[11pt]! md:text-[12pt]! 2xl:text-[15pt]! "
+        transition={{ delay: timeOffset_1, duration: 2 }}
+        className="noSelect w-full my-0 pt-1 sm:pt-1 pb-6 text-[13pt]!   "
       >
         Take care of your ultimate lineup.
       </motion.h2>
       <motion.div
-        initial={{ scale: 0, opacity: 0 }}
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0 }}
         transition={{
-          delay: timeOffset_1,
-          stiffness: 100,
+          ease: "easeOut",
+          delay: timeOffset_3,
+          stiffness: 50,
           type: "spring",
           damping: 20,
         }}

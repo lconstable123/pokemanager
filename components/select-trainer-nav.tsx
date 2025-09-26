@@ -19,7 +19,7 @@ export default function SelectTrainerNav({
           <div
             key={trainer}
             onClick={(e) => handleClick?.(e, index)}
-            className={`transition-quick px-1 py-3 group cursor-pointer ${
+            className={`transition-quick px-1 py-3 group cursor-pointer  ${
               !isEngaged ? "opacity-0" : "opacity-100"
             } `}
           >

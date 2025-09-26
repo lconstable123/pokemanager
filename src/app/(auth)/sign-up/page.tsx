@@ -5,10 +5,12 @@ import WindowBg from "../../../../components/window-bg/window-bg";
 import EntryWindow from "../../../../components/entry-window";
 import Canvas from "../../../../components/canvas";
 import EntryContent from "../../../../components/entry-window";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 export default function Page() {
+  const { isMobile } = usePokeAppContext();
   return (
     <section className="flex flex-col items-center justify-center h-full ">
-      <EntryContent mode="sign-up" />
+      <EntryContent mode="sign-up" isMobile={isMobile} />
       <WindowBg image="Pikachu" />
     </section>
   );

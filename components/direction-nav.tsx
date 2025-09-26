@@ -31,14 +31,14 @@ export default function DirectionNav({
     return (
       <button
         onClick={(e) => handleClick(e, "right")}
-        className={`cursor-pointer py-12 transition-quick ${
+        className={`transition-quick animate-pulsing cursor-pointer py-20  ${
           !isEngaged ? "opacity-0" : "opacity-100"
         } `}
       >
         <BiSolidRightArrow
           width={20}
           height={20}
-          className="text-gray-700 cursor-pointer"
+          className="text-gray-700 cursor-pointer "
         />
       </button>
     );
@@ -46,14 +46,14 @@ export default function DirectionNav({
     return (
       <button
         onClick={(e) => handleClick(e, "left")}
-        className={`cursor-pointer py-12 transition-quick ${
+        className={`cursor-pointer animate-pulsing py-20 transition-quick ${
           !isEngaged ? "opacity-0" : "opacity-100"
         } `}
       >
         <BiSolidLeftArrow
           width={20}
           height={20}
-          className="text-gray-700 cursor-pointer"
+          className="text-gray-700 cursor-pointer "
         />
       </button>
     );

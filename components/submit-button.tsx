@@ -38,7 +38,7 @@ export default function SubmitButton({
         type={type}
         className={cn(
           " w-30 h-8 transition-all duration-300 active:scale-90",
-          style === "ball" ? "group-hover:translate-x-1" : " ",
+          style === "ball" ? "group-hover:-translate-x-1" : " ",
           colorStyle === "delete" &&
             "bg-red-500 hover:bg-red-600 text-white border-red-200",
           colorStyle === "submit" &&
@@ -46,7 +46,7 @@ export default function SubmitButton({
           colorStyle === "urgent" &&
             "bg-red-600 hover:bg-red-500 text-white border-yellow-200",
           colorStyle === "default" &&
-            "bg-blue-500 hover:bg-blue-600 text-white border-blue-200"
+            "bg-yellow-100 text-yellow-900 border-yellow-400  "
         )}
       >
         <span
@@ -60,7 +60,7 @@ export default function SubmitButton({
           className={cn(
             " h-9 w-9 transition-transform duration-300 scale-100",
             style === "ball"
-              ? "group-hover:translate-x-4"
+              ? "group-hover:translate-x-1"
               : "group-hover:scale-110  "
           )}
         >

@@ -40,7 +40,7 @@ export const PokeImageField = ({
         onClick={() => {
           clickhandle();
         }}
-        className="cursor-pointer relative mt-1 border-0 border-gray-700 overflow-hidden w-50 h-50 rounded-full bg-gray-300"
+        className="border-2  ring-blue-200 border-blue-100 ring-3  cursor-pointer relative mt-1   overflow-hidden w-50 h-50 rounded-full bg2 "
       >
         {!isImageLoaded && (
           <PlaceholderPk
@@ -60,7 +60,7 @@ export const PokeImageField = ({
               src={image}
               alt={"pokemon sprite"}
               className={`
-            scale-102 hover:scale-110 
+            scale-102 animate-breathing hover:scale-110 
            w-full h-full cursor-pointer absolute z-3 user-select-none pixelImage `}
             />
           </motion.div>

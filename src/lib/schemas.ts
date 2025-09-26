@@ -56,7 +56,7 @@ export const UserFormSchemaFull = z
     email: z
       .string()
       .min(5, { message: "Email is too short" })
-      .max(20, { message: "Email is too long" }),
+      .max(30, { message: "Email is too long" }),
     name: z
       .string()
       .min(2, { message: "Name is too short" })
@@ -82,3 +82,18 @@ export const UserFormSchema = UserFormSchemaFull.transform(
 
 export type UserFormInput = z.infer<typeof UserFormSchemaFull>;
 export type UserFormData = z.infer<typeof UserFormSchema>;
+
+export const SignInFormSchema = z.object({
+  email: z
+    .string()
+    .min(5, { message: "Email is too short" })
+    .max(30, { message: "Email is too long" }),
+  password: z
+    .string()
+    .min(3, { message: "Password is too short" })
+    .max(15, { message: "Password is too long" }),
+});
+
+export type SignInFormData = z.infer<typeof SignInFormSchema>;
+
+// =================================================================== Settings Schemas

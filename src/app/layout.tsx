@@ -11,6 +11,7 @@ import TrainerContextProvider, {
   TrainerContext,
 } from "@/lib/contexts/TrainerContext";
 import DexContextProvider from "@/lib/contexts/DexContext";
+import { FetchTrainerById } from "@/lib/actions";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,11 +36,13 @@ export const metadata: Metadata = {
   description: "Created by Luke Constable",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const trainer = await FetchTrainerById("cmfzap9n10000u7wc6xa2ed0h");
+  // const lineUp = trainer?.trainer?.lineup ?? [];
   return (
     <html lang="en" className="">
       <body
@@ -48,18 +51,18 @@ export default function RootLayout({
         <Toaster position="top-center" />
         <PokeAppContextProvider>
           <DexContextProvider>
-            <Canvas>
-              <TrainerContextProvider>
+            <TrainerContextProvider trainerFromServer={trainer?.trainer}>
+              <Canvas>
                 <MainWindow>
                   <NavBar
                     isBackEnabled={true}
                     isProfileEnabled={true}
                     Navlink="/"
                   />
-                  <div className="flex-grow">{children}</div>
+                  <div className="flex-grow ">{children}</div>
                 </MainWindow>
-              </TrainerContextProvider>
-            </Canvas>
+              </Canvas>
+            </TrainerContextProvider>
           </DexContextProvider>
         </PokeAppContextProvider>
         <BG />

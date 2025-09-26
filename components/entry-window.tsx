@@ -9,13 +9,14 @@ import SelectTrainer from "./select-trainer";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 type welcomeTextProps = {
   mode: "sign-up" | "sign-in";
+  isMobile: boolean;
 };
 
 export default function EntryContent({ mode }: welcomeTextProps) {
   const { isMobile } = usePokeAppContext();
   return (
     <FormStyle>
-      <WelcomeForm mode={mode} />
+      <WelcomeForm mode={mode} isMobile={isMobile} />
       {!isMobile && <SelectTrainer mode={mode} />}
     </FormStyle>
   );
@@ -26,23 +27,27 @@ export default function EntryContent({ mode }: welcomeTextProps) {
 function FormStyle({ children }: { children: React.ReactNode }) {
   return (
     <section className="h-full flex flex-col items-center justify-center w-full">
-      <div className="mt-3 sm:mt-0 mb-5 relative w-full px-10  md:px-20  flex flex-col sm:flex-row justify-around items-center">
+      <div className="mt-3 sm:mt-0 mb-5 relative px-10  md:px-40  flex flex-col sm:flex-row justify-around items-center">
         {children}
       </div>
     </section>
   );
 }
 
-function WelcomeForm({ mode }: welcomeTextProps) {
+function WelcomeForm({ mode, isMobile }: welcomeTextProps) {
   return (
-    <div className="relative flex flex-col justify-center text-center items-center ">
+    <div className="relative  flex flex-col justify-center text-center items-center ">
       <FormHeaderText mode={mode} />
       <motion.div
-        initial={{ translateX: -40, opacity: 0 }}
+        initial={
+          !isMobile
+            ? { translateX: -40, opacity: 0 }
+            : { translateX: 0, opacity: 0 }
+        }
         animate={{ translateX: 0, opacity: 1 }}
         transition={{ delay: timeOffset_3, duration: 0.4 }}
         exit={{ opacity: 0 }}
-        className=" pb-0 sm:pb-0 -translate-x-0 z-3 px-10 w-80 "
+        className="pb-0 sm:pb-0 -translate-x-0 z-3 px-10 w-80 sm:w-90 "
       >
         {mode === "sign-up" ? (
           <SignUpForm timeOffset={timeOffset_2} />
@@ -64,11 +69,11 @@ function FormHeaderText({ mode }: { mode: "sign-up" | "sign-in" }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ delay: timeOffset_1, duration: 0.6 }}
-        className="  my-0! py-0! text-[20pt]! 2xl:text-[26pt]!"
+        className="pb-3 sm:pb-5!  my-0! py-0! text-[20pt]! 2xl:text-[26pt]!"
       >
         {mode === "sign-up" ? "Welcome, trainer!" : "Welcome back, trainer!"}
       </motion.h1>
-      <motion.h2
+      {/* <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -76,7 +81,7 @@ function FormHeaderText({ mode }: { mode: "sign-up" | "sign-in" }) {
         className=" my-0!  pt-2 pb-3 sm:pb-5! pointer-events-none text-[12pt]! 2xl:text-[12pt]! "
       >
         Enter your details to get started.
-      </motion.h2>
+      </motion.h2> */}
     </>
   );
 }

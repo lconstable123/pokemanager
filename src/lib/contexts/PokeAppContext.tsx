@@ -41,11 +41,10 @@ export default function PokeAppContextProvider({
   const [EditPkModalopen, setEditPkModalOpen] = useState(false);
   const [selectedPk, setSelectedPk] = useState<TPokemon | null>(null);
   const [evolutions, setEvolutions] = useState<string[]>([]);
-  const [isLoadingEvolutions, setIsLoadingEvolutions] = useState(false);
   const modalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isInspectingLineup, setIsInspectingLineup] = useState(true);
   const [selectedFormTrainer, setSelectedFormTrainer] = useState(0);
-  // const { handleFetchEvolution } = useDexContext();
+
   //------------------------------------------------Selection of Pokémon from list
   const handleSelectPk = (pokemon: TPokemon) => {
     if (selectedPk && EditPkModalopen) {

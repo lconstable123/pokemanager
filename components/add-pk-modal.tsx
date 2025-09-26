@@ -37,6 +37,7 @@ import {
 import { useDexContext } from "@/lib/contexts/DexContext";
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 import { flushSync } from "react-dom";
+import { AddPokemon } from "@/lib/actions";
 
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   //------------------------------------------------------------------------ derived states
@@ -167,6 +168,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
           const pokeData = getValues();
           console.log(pokeData);
           handleAddPokemon?.(pokeData);
+          // const error = await AddPokemon(pokeData);
           handleDeselectPk();
           onFormSubmission?.();
           // toast.success("Added " + pokeData.Pokemon + " to your team!");
@@ -336,7 +338,7 @@ const DialogWindowStyle = ({
         aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
-          "w-100 border-2  border-black duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
+          "w-100 border-3  border-black bg-blue-50 duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
           isSearchOpen
             ? userJourney === "initial"
               ? "h-[500px]"
@@ -346,6 +348,8 @@ const DialogWindowStyle = ({
             : "h-[520px]"
         )}
       >
+        <div className="absolute bottom-0 ditheredGrad w-full h-20 -z-10 opacity-15 " />
+        <div className="absolute top-0 rotate-180 ditheredGrad w-full h-20 -z-10 opacity-15 " />
         <FormHeader mode={mode} />
         <DialogDescription id={descriptionId} className="sr-only">
           Add a new Pokémon to your team.

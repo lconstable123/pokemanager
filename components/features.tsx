@@ -60,8 +60,8 @@ export default function Features({
       transition: {
         delay: initialDelay + custom * delayBetweenItems,
         type: "spring" as const,
-        stiffness: 800,
-        duration: 0.3,
+        stiffness: 400,
+        duration: 1,
 
         damping: 20,
       },
@@ -83,7 +83,7 @@ export default function Features({
       {features.map((feature, index) => (
         <li
           key={index}
-          className="flex flex-col sm:flex-row items-center gap-x-1 gap-y-3 sm:gap-0 group "
+          className="flex flex-col sm:flex-row items-center gap-x-1 gap-y-3 sm:gap-1 group "
         >
           <motion.div
             initial="hidden"
@@ -114,8 +114,8 @@ export default function Features({
 
 function FeaturesBar({ children }: { children: React.ReactNode }) {
   return (
-    <section className=" mb-7 sm:mb-5 flex flex-col gap-0 items-center justify-start">
-      <ul className="flex gap-1 sm:gap-5 text-center justify-center mb-4 sm:mb-2 flex-wrap ">
+    <section className=" mb-7 sm:mb-7 flex flex-col gap-0 items-center justify-start">
+      <ul className="flex gap-1 sm:gap-7 text-center justify-center mb-4 sm:mb-5 flex-wrap ">
         {children}
       </ul>
       <motion.div
@@ -154,7 +154,7 @@ function MoreDetails() {
         </DialogTitle>
         <DialogDescription
           id="more-details-modal"
-          className="text-[9pt]! pt-2 pb-2"
+          className=" tracking-wide text-[9pt]! pt-2 pb-2"
         >
           I have used GPT and GitHub Copilot for reference, bugfixes, and
           boilerplate. <br />

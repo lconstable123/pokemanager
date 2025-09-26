@@ -7,18 +7,27 @@ import { useIsMobile } from "@/lib/hooks";
 import { AddPkModal } from "../../../../components/add-pk-modal";
 
 import { EditPkModal } from "../../../../components/edit-pk-modal";
+import WindowBg from "../../../../components/window-bg/window-bg";
+import NavBar from "../../../../components/nav-bar";
+import TrainerContextProvider from "@/lib/contexts/TrainerContext";
+import DexContextProvider from "@/lib/contexts/DexContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { isMobile, isSmall } = useIsMobile();
   return (
     <>
+      {/* <DexContextProvider>
+        <TrainerContextProvider>
+          <NavBar isBackEnabled={true} isProfileEnabled={true} Navlink="/" /> */}
       <AddPkModal mode="add" />
       <EditPkModal />
-      {/* <AddPkModal mode="edit" /> */}
+
+      <WindowBg image="Charizard" pos="mid" />
       {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
       {children}
       {!isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
-      {/* <WindowBg image="Snorlax" /> */}
+      {/* </TrainerContextProvider>
+      </DexContextProvider> */}
     </>
   );
 }

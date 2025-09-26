@@ -1,21 +1,25 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { UseDisableScroll } from "./hooks";
 import toast from "react-hot-toast";
 import { OptimisticAction } from "./contexts/TrainerContext";
 import { TLineUp, TPokemon } from "./types";
 import { usePokeAppContext } from "./contexts/PokeAppContext";
 import { useDexContext } from "./contexts/DexContext";
+import { RearrangePokemon } from "./actions";
 type TuseBallReorder = {
-  setOptimisticLineup: (action: OptimisticAction) => void;
-  optimisticLineUp: TPokemon[];
-  setServerLineUp: React.Dispatch<React.SetStateAction<TLineUp>>;
+  setUiLineUp: React.Dispatch<React.SetStateAction<TLineUp>>;
+  uiLineUp: TLineUp;
+  optimisticLineUp: TLineUp;
+  // setOptimisticLineup: (action: OptimisticAction) => void;
 };
 export default function useBallReorder({
-  setOptimisticLineup,
-  setServerLineUp,
+  setUiLineUp,
+  uiLineUp,
   optimisticLineUp,
-}: TuseBallReorder) {
+}: // optimisticLineUp,
+// setOptimisticLineup,
+TuseBallReorder) {
   //---------------------------------------------------------------derived states
 
   const { handleSelectPk, setEvolutions } = usePokeAppContext();
@@ -25,21 +29,17 @@ export default function useBallReorder({
 
   const [isReordering, setReordering] = useState(false);
   const [ballLayoutEnabled] = useState(true);
-  const [isRearranging, startRearranging] = useTransition();
   const [ballEdit, setBallEdit] = useState<number | null>(null);
   const [ballShiftMode, setBallShiftMode] = useState<"select" | "shift">(
     "select"
   );
   //--------------------------------------------------------------handlers
+  const [isRearranging, startRearranging] = useTransition();
 
-  const handleReorder = (fromIndex: number, toIndex: number) => {
+  const handleReorder = async (fromIndex: number, toIndex: number) => {
     startRearranging(() => {
       UseDisableScroll(300); // disable scroll for 300ms during animation
-      setOptimisticLineup({
-        action: "rearrange",
-        payload: { fromIndex, toIndex },
-      });
-      setServerLineUp((prev) => {
+      setUiLineUp((prev) => {
         const tempFromTrainer = prev[fromIndex];
         const tempToTrainer = prev[toIndex];
         return prev.map((pokemon, index) => {
@@ -48,8 +48,23 @@ export default function useBallReorder({
           return pokemon;
         });
       });
+      // setOptimisticLineup({
+      //   action: "rearrange",
+      //   payload: { fromIndex, toIndex },
+      // });
     });
   };
+
+  // useEffect(() => {
+  //   if (!isReordering) {
+  //     const RearrangePokemon = async () => {
+  //       await RearrangePokemon();
+  //     };
+  //     RearrangePokemon();
+  //     //trigger the setOptimistil lineup to update the lineup in db
+  //     toast.success("Rearranged!");
+  //   }
+  // }, [isReordering]);
 
   const handleToggleReorder = () => {
     setReordering((prev) => {
@@ -90,6 +105,10 @@ export default function useBallReorder({
       }
     }
   };
+
+  // useEffect(() => {
+  //   setUiLineUp(optimisticLineUp);
+  // }, [optimisticLineUp]);
 
   // const handleDisableBallLayout = (time: number) => {
   //   setBallLayoutEnabled(false);

@@ -12,6 +12,7 @@ import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { select } from "framer-motion/client";
 import { useScrollStatus } from "@/lib/hooks";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import { cn } from "@/lib/utils";
 type TLineupBar = {
   reorderable: boolean;
   isMobile: boolean;
@@ -52,11 +53,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
       handleBallBounce();
     }
   }, [isReordering]);
-  // const isScrolling = useScrollStatus();
-  // const [layoutEnabled, setLayoutEnabled] = useState(true);
-  // useEffect(() => {
-  //   setLayoutEnabled(!isScrolling);
-  // }, [isScrolling]);
+
   return (
     <nav className="  z-30 pt-6 pb-5  fixed sm:absolute w-full bottom-10 sm:bottom-0  flex flex-col-reverse sm:flex-row gap-2 sm:gap-5 items-center justify-center ">
       {isMobile && (
@@ -78,7 +75,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: index * 0.05 }}
-              key={lineupBall}
+              key={lineupBall.id}
               className={clsx(" w-7 h-7 mx-0", {})}
             >
               {lineUp[index] ? (
@@ -86,7 +83,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
                   layout
                   layoutScroll
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  key={lineupBall}
+                  key={lineupBall.id}
                   custom={index}
                   animate={controls}
                   onClick={() => handleBallClick?.(index)}
@@ -104,13 +101,13 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
                   />
 
                   <Pokeball
-                    type={lineUp[index].ball}
+                    type={lineUp[index].ball ?? 1}
                     fill={true}
                     hoverAnim={true}
                   />
                 </motion.div>
               ) : (
-                <AddBall />
+                <AddBall isReordering={isReordering} />
               )}
             </motion.div>
           );
@@ -148,12 +145,18 @@ function LineUpArrow() {
 }
 
 //empty ball slot
-function AddBall() {
+function AddBall({ isReordering }: { isReordering: boolean }) {
   const { setAddPkModalOpen } = usePokeAppContext();
   return (
     <div
       onClick={() => setAddPkModalOpen(true)}
-      className="cursor-pointer bg-gray-400 hover:bg-yellow-200 transition-all duration-200  flex items-center justify-center rounded-full"
+      className={cn(
+        " bg-gray-400 hover:bg-yellow-200 transition-all",
+        "duration-600 flex items-center justify-center rounded-full",
+        !isReordering
+          ? "cursor-pointer opacity-100"
+          : "pointer-events-none opacity-60"
+      )}
     >
       <span className=" text-lg text-center font-bold text-white">+</span>
     </div>

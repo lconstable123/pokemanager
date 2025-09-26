@@ -8,6 +8,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import { set } from "zod";
 type SelectTrainerProps = {
   mode: "sign-up" | "sign-in";
 };
@@ -20,27 +21,43 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
   const { selectedFormTrainer, setSelectedFormTrainer } = usePokeAppContext();
   // const [selectedTrainer, setSelectedTrainer] = useState(0);
   const [engaged, setEngaged] = useState(false);
+  const [bgAnimating, setBgAnimating] = useState(true);
   const [localTransitionSpeed, setLocalTransitionSpeed] = useState(400);
   const trainerFrameWidth = 210;
   const trainerFrameGap = 30;
   const trainerWidth = trainerFrameWidth - trainerFrameGap;
   const trainerOffset = trainerFrameWidth * selectedFormTrainer;
-
+  const calculateTransitionSpeed = (index: number) => {
+    return 2700 * Math.abs(selectedFormTrainer - index) * 0.1;
+  };
   const handleClick = (e: React.MouseEvent<HTMLElement>, index: number) => {
     e.preventDefault();
     e.stopPropagation();
-    setLocalTransitionSpeed(2700 * Math.abs(selectedFormTrainer - index) * 0.1);
+    setLocalTransitionSpeed(calculateTransitionSpeed(index));
     setSelectedFormTrainer((prev) => {
       return index;
     });
   };
+  //if sign up mode, display prof Oak and then Ash after delay
   if (mode === "sign-up") {
     useEffect(() => {
+      setBgAnimating(false);
+      setLocalTransitionSpeed(0);
+      setSelectedFormTrainer(0);
       const timer = setTimeout(() => {
+        setBgAnimating(true);
+        setLocalTransitionSpeed(500);
         setSelectedFormTrainer(1);
         setEngaged(true);
-      }, timeOffset_3 * 1000 + 800);
+      }, timeOffset_3 * 1000);
       return () => clearTimeout(timer);
+    }, []);
+  }
+  if (mode === "sign-in") {
+    useEffect(() => {
+      setBgAnimating(false);
+      setLocalTransitionSpeed(0);
+      setSelectedFormTrainer(0);
     }, []);
   }
 
@@ -49,8 +66,12 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ delay: 0, duration: 0.3 }}
-      className={`mb-0 sm:mb-0 h-full  flex flex-col`}
+      transition={{
+        type: "tween",
+
+        duration: 0.3,
+      }}
+      className={`mb-0 sm:mb-0 h-full  flex flex-col z-50`}
     >
       <Label
         className={`transition-quick self-center ${
@@ -72,7 +93,10 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
         )}
         <TrainerFrame trainerFrameWidth={trainerFrameWidth}>
           {trainers.map((trainer, index) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
               key={trainer}
               style={{
                 width: trainerWidth,
@@ -97,11 +121,12 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
                 width={350}
                 height={350}
               />
-            </div>
+            </motion.div>
           ))}
           <TrainerBg
             selectedTrainer={selectedFormTrainer}
-            localTransitionSpeed={localTransitionSpeed}
+            localTransitionSpeed={0}
+            isAnimating={bgAnimating}
           />
         </TrainerFrame>
 
@@ -131,14 +156,24 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
 function TrainerBg({
   selectedTrainer,
   localTransitionSpeed,
+  isAnimating,
 }: {
   selectedTrainer: number;
   localTransitionSpeed: number;
+  isAnimating?: boolean;
 }) {
   const Bg1controls = useAnimation();
   const Bg2controls = useAnimation();
   // const duration = localTransitionSpeed * 0.0005;
-  const duration = 0.4;
+  let durationIn: number, durationOut: number;
+  if (isAnimating) {
+    durationIn = 0.4;
+    durationOut = 0.2;
+  } else {
+    durationIn = 0;
+    durationOut = 0;
+  }
+
   const trainerColors = [
     { bg1: "bg-green-400", bg2: "bg-green-300", bg3: "bg-green-200" },
     { bg1: "bg-blue-400", bg2: "bg-blue-300", bg3: "bg-blue-200" },
@@ -160,11 +195,11 @@ function TrainerBg({
     await Promise.all([
       Bg1controls.start({
         height: 120,
-        transition: { delay: 0.1, duration: duration, ease: "easeOut" },
+        transition: { delay: 0.1, duration: durationIn, ease: "easeOut" },
       }),
       Bg2controls.start({
         height: 200,
-        transition: { duration: duration, ease: "easeOut" },
+        transition: { duration: durationIn, ease: "easeOut" },
       }),
     ]);
   };
@@ -173,25 +208,25 @@ function TrainerBg({
     await Promise.all([
       Bg1controls.start({
         height: 0,
-        transition: { duration: 0.2, ease: "easeIn" },
+        transition: { duration: durationOut, ease: "easeIn" },
       }),
       Bg2controls.start({
         height: 0,
-        transition: { delay: 0.1, duration: 0.2, ease: "easeIn" },
+        transition: { delay: 0.1, duration: durationOut, ease: "easeIn" },
       }),
     ]);
   };
 
   useEffect(() => {
-    const run = async () => {
-      await AnimateOut().then(() =>
-        setSelectedTrainerColors(
-          trainerColors[selectedTrainer % trainerColors.length]
-        )
-      );
-      await AnimateIn();
-    };
-    if (!firstTime) run();
+    // const run = async () => {
+    //   await AnimateOut().then(() =>
+    //     setSelectedTrainerColors(
+    //       trainerColors[selectedTrainer % trainerColors.length]
+    //     )
+    //   );
+    //   await AnimateIn();
+    // };
+    // if (!firstTime) run();
     // const timer = setTimeout(() => {
     //   // AnimateIn();
     // }, 2);

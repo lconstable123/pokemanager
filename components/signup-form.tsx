@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Nav from "./nav";
@@ -24,10 +24,13 @@ import {
 import { ZodSchema } from "zod/v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
+import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
   const router = useRouter();
   const { selectedFormTrainer } = usePokeAppContext();
+  const { handleSignUp } = useTrainerContext();
+
   //---------------------------------------------------------------handles
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,17 +71,18 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
     <form
       action={async () => {
         const id = uuidv4();
-        const values = getValues();
         updateField("avatar", selectedFormTrainer);
         updateField("id", id);
-        console.log(values);
-        console.log(errors);
+        const values = getValues();
+        // console.log(errors);
         const isValid = await trigger();
+        // console.log(values);
         if (!isValid) {
           toast.error("Please fix the errors in the form.");
           return;
         }
-        toast.success("Successfully signed in!");
+        // toast.success("Successfully signed in!");
+        handleSignUp(values);
         // validate, send request, etc.
         router.push("/account");
       }}
@@ -86,7 +90,7 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
       className="flex flex-col items-center justify-center "
     >
       {isMobile && <SelectTrainer mode={"sign-up"} />}
-      <div className=" mb-6 w-full items-center justify-end text-right grid grid-rows-4 grid-cols-[1fr_4fr] gap-y-5 gap-x-4">
+      <div className=" mb-6 w-full items-center justify-end text-right grid grid-rows-4 grid-cols-[1fr_4fr] gap-y-3 gap-x-4">
         <Label className="justify-self-end " htmlFor="name">
           Name
         </Label>

@@ -4,7 +4,6 @@ export const initialTrainerData: TTrainer = {
   id: "1",
   name: "Ash",
   email: "ash.ketchum@example.com",
-  age: 10,
   avatar: 1,
   lineup: [
     {

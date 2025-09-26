@@ -10,19 +10,19 @@ export default function Nav({
   items: { name: string; ball: string; href: string }[];
 }) {
   return (
-    <nav className="my-5 sm:my:0 flex flex-col sm:flex-row gap-4 sm:gap-4 justify-center">
+    <nav className="mb-6 my-0 sm:my-0 md:my-0 flex flex-col sm:flex-row gap-4 sm:gap-5 animate-pulsing-subtle justify-center">
       {items.map((item, index) => {
         return (
           <div
-            className=" flex not-even:flex-row even:flex-row-reverse gap-2 items-center h-8 group"
+            className=" flex not-even:flex-row even:flex-row-reverse gap-1.5 items-center h-8 group"
             key={index}
           >
             <div
               className={cn(
                 " h-full transition-transform duration-300",
                 index % 2 === 0
-                  ? "group-hover:-translate-x-4"
-                  : "group-hover:translate-x-4"
+                  ? "group-hover:-translate-x-1"
+                  : "group-hover:translate-x-1"
               )}
             >
               <Pokeball type={item.ball} size={30} fill={true} shadow={true} />
@@ -31,10 +31,10 @@ export default function Nav({
               <Button
                 key={item.name}
                 className={cn(
-                  " w-25 h-8transition-transform duration-300 active:scale-90",
+                  " w-25 h-8 transition-transform duration-300 bg-yellow-100 text-yellow-900 border-yellow-400 active:scale-90",
                   index % 2 === 0
-                    ? "group-hover:-translate-x-1"
-                    : "group-hover:translate-x-1"
+                    ? "group-hover:translate-x-1 "
+                    : "group-hover:-translate-x-1 "
                 )}
               >
                 {item.name}

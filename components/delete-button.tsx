@@ -14,10 +14,10 @@ export default function DeleteButton({
   );
   const handleClick = () => {
     if (deleteState === "initial") {
-      toast.success("displaying cofnirm");
+      // toast.success("displaying cofnirm");
       setDeleteState("confirm");
     } else {
-      toast.success("Deleted!");
+      // toast.success("Deleted!");
       handleDelete?.();
     }
   };

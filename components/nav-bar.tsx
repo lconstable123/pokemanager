@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import BackButton from "./back-button";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { getTrainerSprite } from "@/lib/utils";
+import { cn, getTrainerSprite } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   Dialog,
@@ -19,6 +19,8 @@ import toast from "react-hot-toast";
 import SubmitButton from "./submit-button";
 import { Delete } from "lucide-react";
 import DeleteButton from "./delete-button";
+import { DeleteTrainer } from "@/lib/actions";
+import { TTrainer } from "@/lib/types";
 
 type TNavBar = {
   isBackEnabled?: boolean;
@@ -32,14 +34,20 @@ export default function NavBar({
   Navlink = "/",
 }: TNavBar) {
   const { trainer } = useTrainerContext();
+  const { handleToggleBadServer, badServer } = useTrainerContext();
   return (
     <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
       {isBackEnabled && <BackButton />}
-
+      <button
+        className={cn("border-3", badServer ? "bg-red-200" : "bg-green-200")}
+        onClick={handleToggleBadServer}
+      >
+        toggle bad server
+      </button>
       {isProfileEnabled && (
         <div className="flex items-center gap-3">
-          <h3 className="text-[10pt]  italic font-light">
-            Welcome back, {trainer.name}.
+          <h3 className="text-[10pt]  italic font-light noSelect">
+            Welcome back, {trainer?.name || "MissingNo"}.
           </h3>
           <TrainerModal />
         </div>
@@ -60,7 +68,7 @@ function ProfileButton({
       onClick={() => {
         handleClick();
       }}
-      className="hover:scale-110 scale-100 transition-all border-1 border-gray-700 relative overflow-hidden w-11 h-11 rounded-full bg-red-300"
+      className="noSelect hover:scale-110 scale-100 transition-all border-1 border-gray-700 relative overflow-hidden w-11 h-11 rounded-full bg-red-300"
     >
       <img
         src={sprite}
@@ -72,16 +80,23 @@ function ProfileButton({
 }
 
 function TrainerModal() {
-  const { trainer } = useTrainerContext();
-  const trainerSprite = getTrainerSprite(trainer.avatar);
+  const { trainer, setTrainer, handleSignOut } = useTrainerContext();
+  const SafeTrainer: TTrainer = trainer ?? {
+    id: "unknown",
+    name: "Unknown",
+    email: "unknown@example.com",
+    avatar: 1,
+    lineup: [],
+  };
+  const trainerSprite = getTrainerSprite(SafeTrainer.avatar || 1);
   const [Modalopen, setModalOpen] = useState(false);
   const handleOpen = () => {
-    toast.success("Profile modal opened");
+    // toast.success("Profile modal opened");
     setModalOpen(true);
   };
 
   const handleClose = () => {
-    toast.success("Profile modal closed");
+    // toast.success("Profile modal closed");
     setModalOpen(false);
   };
   return (
@@ -96,23 +111,12 @@ function TrainerModal() {
       >
         <div className="absolute bottom-0 ditheredGrad w-full h-20 -z-10 opacity-20 " />
         <div className="absolute top-0 rotate-180 ditheredGrad w-full h-20 -z-10 opacity-20 " />
-        {/* .bg1 {
-  background-image: url("/pokebg_2.jpg");
-  background-size: 40px auto;
-}
-.ditheredGradRed {
-  background-image: url("/ditheredgrad.jpg");
-  background-size: auto 100%;
-}
-.ditheredGrad {
-  background-image: url("/ditheredgrad_bw.jpg");
-  background-size: auto 100%;
-} */}
+
         <DialogHeader></DialogHeader>
 
         <DialogTitle className="hidden">Trainer Info</DialogTitle>
         <DialogDescription id="trainer-info-modal" className="sr-only">
-          Edit the selected Pokémon's details.
+          Trainer info.
         </DialogDescription>
         <motion.div
           initial={{ opacity: 0 }}
@@ -121,8 +125,8 @@ function TrainerModal() {
           className=" flex flex-col items-center text-center text-[14pt]! gap-1 Text-primary! font-semibold!"
         >
           <h1 className="text-3xl!  p-1 rounded-2xl">TRAINER INFO</h1>
-          <h2 className="font-bold! mt-3 text-[15pt]!">{trainer.name}</h2>
-          <h2 className=" text-[12pt]!">{trainer.email}</h2>
+          <h2 className="font-bold! mt-3 text-[15pt]!">{SafeTrainer.name}</h2>
+          <h2 className=" text-[12pt]!">{SafeTrainer.email}</h2>
         </motion.div>
         <div className="text-[9pt]! pt-4 pb-0 items-center flex flex-col gap-1 justify-center">
           <motion.div
@@ -134,20 +138,28 @@ function TrainerModal() {
             <img
               src={trainerSprite}
               alt="Trainer"
-              className="pixelImage absolute object-cover -top-15 w-100 h-100"
+              className="pixelImage animate-breathing absolute object-cover -top-15 w-100 h-100"
             />
           </motion.div>
           <div className=" px-4 py-2 rounded-full flex gap-2">
             <SubmitButton
+              type={"button"}
               style={"noball"}
-              onSubmit={() => {}}
+              onClick={() => {
+                handleSignOut();
+              }}
               ball="02"
               name="Logout"
             />
             <DeleteButton
-              handleDelete={() => {
+              handleDelete={async () => {
                 toast.success("Account deletion initiated");
-                // Add account deletion logic here
+                const error = await DeleteTrainer(SafeTrainer.email);
+                if (error) {
+                  toast.success(error.message);
+                } else {
+                  toast.success("Account deleted successfully");
+                }
               }}
             />
           </div>

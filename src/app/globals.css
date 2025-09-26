@@ -56,6 +56,14 @@ body {
   background-image: url("/pokebg_2.jpg");
   background-size: 40px auto;
 }
+.bg2 {
+  background-image: linear-gradient(
+      rgba(128, 128, 128, 0.3),
+      rgba(128, 128, 128, 0.3)
+    ),
+    url("/pokebg_3.png");
+  background-size: 40px auto;
+}
 .ditheredGradRed {
   background-image: url("/ditheredgrad.jpg");
   background-size: auto 100%;
@@ -63,6 +71,17 @@ body {
 .ditheredGrad {
   background-image: url("/ditheredgrad_bw.jpg");
   background-size: auto 100%;
+}
+
+.blackBars {
+  background: repeating-linear-gradient(
+    to bottom,
+    black 0,
+    black 4px,
+    transparent 4px,
+    transparent 40px
+  );
+  background-size: 100% 900px; /* Adjust height to fit exactly 5 bars */
 }
 
 .softShadow {
@@ -113,7 +132,7 @@ h2 {
 }
 
 .imageFrame {
-  @apply border-2 border-gray-600 rounded-lg;
+  @apply border-2 outline-2 ring-gray-400 border-gray-500 rounded-2xl;
   box-shadow: var(--shadow-mid) 0 rgba(0, 0, 0, 0.2);
 }
 .pixelImage {
@@ -161,6 +180,40 @@ h2 {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none !important; /* Chrome, Safari, Opera */
+}
+
+@keyframes breathing {
+  0% {
+    transform: translateY(-1);
+  }
+  100% {
+    transform: translateY(2);
+  }
+}
+@keyframes pulsing {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.3);
+  }
+}
+@keyframes pulsing-soft {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.04);
+  }
+}
+.animate-breathing {
+  animation: breathing 0.5s steps(4) infinite alternate;
+}
+.animate-pulsing {
+  animation: pulsing 1s infinite alternate 2s;
+}
+.animate-pulsing-subtle {
+  animation: pulsing-soft 1s infinite alternate 0.4s;
 }
 
 :root {
