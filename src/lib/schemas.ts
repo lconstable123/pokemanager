@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { Infer, z } from "zod";
 import { elmOptions, genOptions, balloptions } from "./data";
 import { Element } from "./types";
 
@@ -34,7 +34,7 @@ export const AddPkFormSchema = z.object({
       });
     }),
   Pokemon: z.string().min(1, { message: "Please select a Pokemon" }),
-
+  Order: z.number().min(1, { message: "Order must be at least 1" }),
   Ball: BallSchema,
   // Sprite: z.url("Invalid URL"),
   Sprite: z.string().min(1, { message: "Sprite URL required" }),
@@ -95,5 +95,21 @@ export const SignInFormSchema = z.object({
 });
 
 export type SignInFormData = z.infer<typeof SignInFormSchema>;
-
+export type ServerTrainer = Infer<typeof UserFormSchema> & { lineup: string };
 // =================================================================== Settings Schemas
+export const TPokemonSchema = z.object({
+  id: z.string(),
+  ball: z.string(),
+  name: z.string(),
+  species: z.string(),
+  type: z.array(z.string()), // or z.string() if Element is a string union
+  exp: z.number(),
+  sprite: z.string(),
+});
+
+// 2️⃣ Schema for TLineUp
+export const TLineUpSchema = z.array(TPokemonSchema);
+
+// 3️⃣ Optional: Type inference
+export type TPokemonZ = z.infer<typeof TPokemonSchema>;
+export type TLineUpZ = z.infer<typeof TLineUpSchema>;

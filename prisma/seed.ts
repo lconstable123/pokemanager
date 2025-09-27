@@ -8,6 +8,7 @@ const seedPkData = [
     species: "Pikachu",
     ball: "01",
     exp: 23,
+    order: 1,
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
     types: '["Electric"]',
@@ -15,6 +16,7 @@ const seedPkData = [
 ];
 const seedTrainerData = [
   {
+    id: "testId",
     name: "Ash",
     email: "ash.ketchum@example.com",
     avatar: 1,

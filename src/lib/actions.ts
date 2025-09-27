@@ -4,6 +4,7 @@ import {
   AddPkFormSchema,
   EditPkFormSchema,
   SignInFormSchema,
+  TLineUpSchema,
   UserFormSchema,
 } from "./schemas";
 
@@ -16,15 +17,24 @@ import { get } from "http";
 import { Trainer } from "@/generated/prisma/wasm";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
+import { line } from "framer-motion/client";
 export const FetchTrainerById = async (
   id: string
 ): Promise<{ trainer: ServerTrainerWithLineup | null; error: string }> => {
   try {
     const trainer = await prisma.trainer.findFirst({
-      where: { id: id },
-      include: { lineup: true },
+      where: { id },
+      include: {
+        lineup: {
+          orderBy: { order: "asc" },
+        },
+      },
     });
     if (!trainer) return { trainer: null, error: "Trainer not found" };
+    console.log(
+      "Fetched trainer with lineup:",
+      trainer.lineup.flat().join(", ")
+    );
     return { trainer, error: "" };
   } catch (error) {
     console.error("Error fetching trainer by ID:", error);
@@ -57,6 +67,7 @@ export const AddPokemon = async (data: unknown, id: string) => {
     ball: newPk.Ball as string,
     sprite: newPk.Sprite,
     userId: newPk.Trainer,
+    order: newPk.Order,
   };
 
   // insert into db
@@ -93,7 +104,7 @@ export const EditPokemon = async (
     return { message: error.flat().join(", ") };
   }
   const newPk = validated.data;
-  const pokemonData: Omit<TServerPK, "id" | "ball" | "userId"> = {
+  const pokemonData: Omit<TServerPK, "id" | "ball" | "userId" | "order"> = {
     name: newPk.Name,
     species: newPk.Pokemon,
     exp: newPk.Xp,
@@ -133,9 +144,33 @@ export const DeletePokemon = async (
   return null;
 };
 
-export const RearrangePokemon = async () => {
+//--------------------------------------------------------------------ReArrange PK
+export const RearrangePokemon = async (data: unknown) => {
   await sleep(500);
+  console.log("Rearranging lineup on server:", data);
+  const ValidLineup = TLineUpSchema.safeParse(data);
 
+  if (!ValidLineup.success) {
+    console.error("Invalid lineup:", ValidLineup.error);
+    // revalidatePath("/", "layout");
+    return { message: "Invalid lineup" };
+  }
+  const lineUpData = ValidLineup.data;
+
+  try {
+    await prisma.$transaction(
+      lineUpData.map((pokemon, index) =>
+        prisma.pokemon.update({
+          where: { id: pokemon.id },
+          data: { order: index }, // set new order
+        })
+      )
+    );
+  } catch (error) {
+    console.error("Error rearranging pokemon:", error);
+    revalidatePath("/", "layout");
+    return { message: "Failed to rearrange pokemon" };
+  }
   console.log("Rearranging pokemon");
   revalidatePath("/", "layout");
   return null;

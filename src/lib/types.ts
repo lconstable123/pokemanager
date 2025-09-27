@@ -11,8 +11,7 @@ export type TTrainer = {
 };
 
 export type TLineUp = TPokemon[];
-// export type TPokemon2 = typeof Prisma.pokemon;
-// export type TTrainer2 = typeof Prisma.trainer;
+
 export type TPokemon = {
   id: string;
   ball: string;

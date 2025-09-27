@@ -11,27 +11,24 @@ import WindowBg from "../../../../components/window-bg/window-bg";
 import { toast } from "react-hot-toast";
 
 export default function Home() {
-  const { lineUp, trainer, slots, isReordering } = useTrainerContext();
+  const { lineUp, trainer, slots, isReordering, uiLineup } =
+    useTrainerContext();
 
   return (
     <WholeSection>
       <PokeGrid>
-        {slots.map((slotId, index) => (
-          <div key={slotId.id} className="relative">
+        {slots.map((slot, index) => (
+          <div key={slot.id} className="relative">
             <GridNumber
               index={index}
               isReordering={isReordering}
-              status={lineUp[index] !== undefined}
+              status={slot.empty}
             />
-            {/* <span className="text-[7pt]">{slotId}</span> */}
+            <span className="absolute text-[8pt] opacity-30">{slot.id}</span>
             <PokemonCard
-              key={slotId.id}
-              pokemon={
-                slotId.id.startsWith("empty")
-                  ? undefined
-                  : (lineUp[index] as TPokemon)
-              }
-              id={slotId.id}
+              // key={uiLineup[index]?.id || slot.id}
+              pokemon={slot.empty ? undefined : (uiLineup[index] as TPokemon)}
+              id={uiLineup[index]?.id || slot.id}
               lineUpPos={index}
             />
           </div>
@@ -62,7 +59,7 @@ function GridNumber({
   return (
     <div
       className={`${
-        isReordering ? (status ? "opacity-100" : "opacity-0") : "opacity-0"
+        isReordering ? (!status ? "opacity-100" : "opacity-20") : "opacity-0"
       } transition-opacity duration-500 noSelect z-1 absolute  -top-2 left-0 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-2 font-black border-yellow-300 text-yellow-700 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-yellow-100`}
     >
       {index + 1}
@@ -107,7 +104,7 @@ export function PokemonCard({
 
   return (
     <motion.div
-      layout="position"
+      layout="preserve-aspect"
       key={id}
       id={id}
       layoutScroll
@@ -118,7 +115,7 @@ export function PokemonCard({
       className="h-45 relative flex flex-col items-center gap-0"
       onClick={() => handleBallClick?.(lineUpPos)}
     >
-      {/* <span className="text-[8pt]">{pokemon?.id}</span> */}
+      <span className="text-[8pt] text-red-400">{id}</span>
       <PkCardImage
         pokemon={pokemon}
         highlighted={ballEdit === lineUpPos}

@@ -7,19 +7,22 @@ import { TLineUp, TPokemon } from "./types";
 import { usePokeAppContext } from "./contexts/PokeAppContext";
 import { useDexContext } from "./contexts/DexContext";
 import { RearrangePokemon } from "./actions";
+import { sleep } from "./utils";
+import { is } from "zod/v4/locales";
 type TuseBallReorder = {
-  setUiLineUp: React.Dispatch<React.SetStateAction<TLineUp>>;
-  uiLineUp: TLineUp;
+  setLineupRearrange: React.Dispatch<React.SetStateAction<TLineUp>>;
+  lineupRearrange: TLineUp;
   optimisticLineUp: TLineUp;
-  // setOptimisticLineup: (action: OptimisticAction) => void;
+  setOptimisticLineup: (action: OptimisticAction) => void;
+  badServer?: boolean;
 };
 export default function useBallReorder({
-  setUiLineUp,
-  uiLineUp,
+  setLineupRearrange,
+  lineupRearrange,
   optimisticLineUp,
-}: // optimisticLineUp,
-// setOptimisticLineup,
-TuseBallReorder) {
+  setOptimisticLineup,
+  badServer,
+}: TuseBallReorder) {
   //---------------------------------------------------------------derived states
 
   const { handleSelectPk, setEvolutions } = usePokeAppContext();
@@ -35,40 +38,49 @@ TuseBallReorder) {
   );
   //--------------------------------------------------------------handlers
   const [isRearranging, startRearranging] = useTransition();
+  const [uiEdit, setuiEdit] = useState(false);
+  //set the ui LineUp to either the optimisticLineUp or the Temporay rearanging Mode
+  //if we're in reordering mode, or not, but still reararrange, show rearranging ui, otherwise the optimistic
+  const uiLineup = uiEdit ? lineupRearrange : optimisticLineUp;
 
-  const handleReorder = async (fromIndex: number, toIndex: number) => {
+  const handleReorderConfirmation = async () => {
     startRearranging(() => {
-      UseDisableScroll(300); // disable scroll for 300ms during animation
-      setUiLineUp((prev) => {
-        const tempFromTrainer = prev[fromIndex];
-        const tempToTrainer = prev[toIndex];
-        return prev.map((pokemon, index) => {
-          if (index === fromIndex) return tempToTrainer;
-          if (index === toIndex) return tempFromTrainer;
-          return pokemon;
-        });
-      });
-      // setOptimisticLineup({
-      //   action: "rearrange",
-      //   payload: { fromIndex, toIndex },
-      // });
+      setOptimisticLineup({ action: "commit", payload: lineupRearrange });
     });
+    // toast.success(!badServer ? "good data" : "bad-data-insertion-test");
+
+    const error = await RearrangePokemon(
+      !badServer ? lineupRearrange : "bad-data-insertion-test"
+    );
+    if (error) {
+      toast.error("Error rearranging: " + error);
+      setLineupRearrange(optimisticLineUp);
+    } else {
+      toast.success("Rearranged on server!");
+    }
+    setuiEdit(false);
   };
 
-  // useEffect(() => {
-  //   if (!isReordering) {
-  //     const RearrangePokemon = async () => {
-  //       await RearrangePokemon();
-  //     };
-  //     RearrangePokemon();
-  //     //trigger the setOptimistil lineup to update the lineup in db
-  //     toast.success("Rearranged!");
-  //   }
-  // }, [isReordering]);
+  const handleReorder = async (fromIndex: number, toIndex: number) => {
+    setuiEdit(true);
+    UseDisableScroll(300); // disable scroll for 300ms during animation
+    setLineupRearrange((prev) => {
+      const tempFromTrainer = prev[fromIndex];
+      const tempToTrainer = prev[toIndex];
+      return prev.map((pokemon, index) => {
+        if (index === fromIndex) return tempToTrainer;
+        if (index === toIndex) return tempFromTrainer;
+        return pokemon;
+      });
+    });
+  };
 
   const handleToggleReorder = () => {
     setReordering((prev) => {
       if (prev) {
+        setTimeout(() => {
+          handleReorderConfirmation();
+        }, 0);
         resetShifting();
       }
       return !prev;
@@ -106,19 +118,6 @@ TuseBallReorder) {
     }
   };
 
-  // useEffect(() => {
-  //   setUiLineUp(optimisticLineUp);
-  // }, [optimisticLineUp]);
-
-  // const handleDisableBallLayout = (time: number) => {
-  //   setBallLayoutEnabled(false);
-  //   setTimeout(() => {
-  //     toast.success("disabling layout");
-  //     toast.success("enabling layout");
-  //     setBallLayoutEnabled(true);
-  //   }, time);
-  // };
-
   return {
     ballEdit,
     handleReorder,
@@ -127,5 +126,6 @@ TuseBallReorder) {
     handleToggleReorder,
     handleBallClick,
     ballLayoutEnabled,
+    uiLineup,
   };
 }

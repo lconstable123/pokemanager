@@ -41,7 +41,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const trainer = await FetchTrainerById("cmfzap9n10000u7wc6xa2ed0h");
+  const trainer = await FetchTrainerById("testId");
   // const lineUp = trainer?.trainer?.lineup ?? [];
   return (
     <html lang="en" className="">

@@ -34,4 +34,5 @@ model Pokemon {
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  order     Int      @default(0)
 }

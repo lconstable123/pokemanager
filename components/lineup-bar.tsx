@@ -9,7 +9,7 @@ import clsx from "clsx";
 import nav from "./nav";
 import { motion, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { select } from "framer-motion/client";
+import { line, select } from "framer-motion/client";
 import { useScrollStatus } from "@/lib/hooks";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
     isReordering,
     handleToggleReorder,
     handleBallClick,
+    uiLineup,
     ballLayoutEnabled,
   } = useTrainerContext();
   const controls = useAnimation();
@@ -78,12 +79,12 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
               key={lineupBall.id}
               className={clsx(" w-7 h-7 mx-0", {})}
             >
-              {lineUp[index] ? (
+              {!lineupBall.empty ? (
                 <motion.div
                   layout
                   layoutScroll
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  key={lineupBall.id}
+                  key={uiLineup[index]?.id || lineupBall.id}
                   custom={index}
                   animate={controls}
                   onClick={() => handleBallClick?.(index)}
@@ -100,11 +101,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
                     )}
                   />
 
-                  <Pokeball
-                    type={lineUp[index].ball ?? 1}
-                    fill={true}
-                    hoverAnim={true}
-                  />
+                  <Pokeball type={"01"} fill={true} hoverAnim={true} />
                 </motion.div>
               ) : (
                 <AddBall isReordering={isReordering} />

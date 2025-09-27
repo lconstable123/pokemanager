@@ -23,6 +23,7 @@ import { AddPokemon, AddTrainer, DeletePokemon, EditPokemon } from "../actions";
 import useBallReorder from "../useBallReorder";
 import { v4 as uuidv4 } from "uuid";
 import { start } from "repl";
+import { set } from "zod";
 
 type TrainerContextType = {
   trainer: TTrainer | null;
@@ -34,13 +35,11 @@ type TrainerContextType = {
         name: string;
       }
   )[];
-  slots: (
-    | TPokemon
-    | {
-        id: string;
-        name: string;
-      }
-  )[];
+  slots: {
+    id: string;
+    name: string;
+    empty: boolean;
+  }[];
   ballEdit: number | null;
   ballShiftMode: "select" | "shift";
   isReordering: boolean;
@@ -60,15 +59,17 @@ type TrainerContextType = {
   handleSignIn: (trainer: TTrainer) => void;
   handleToggleBadServer: () => void;
   badServer: boolean;
-  // uiLineUp: TLineUp;
-  // setUiLineUp: React.Dispatch<React.SetStateAction<TLineUp>>;
+  // lineupRearrange: TLineUp;
+  uiLineup: TLineUp;
+  // setLineupRearrange: React.Dispatch<React.SetStateAction<TLineUp>>;
 };
 export type OptimisticAction =
   | { action: "add"; payload: TPokemon }
   | { action: "edit"; payload: Partial<TPokemon> & { id: string } }
   | { action: "delete"; payload: { id: string } }
   | { action: "rearrange"; payload: { fromIndex: number; toIndex: number } }
-  | { action: "clear"; payload: null };
+  | { action: "clear"; payload: null }
+  | { action: "commit"; payload: TLineUp };
 //-----------------
 export const TrainerContext = createContext<TrainerContextType | null>(null);
 
@@ -86,6 +87,12 @@ export default function TrainerContextProvider({
     return (
       trainerFromServer?.lineup.map((pk) => ({
         ...pk,
+        id: pk.id,
+        name: pk.name,
+        sprite: pk.sprite,
+        ball: pk.ball,
+        species: pk.species,
+        exp: pk.exp,
         type: JSON.parse(pk.types) as Element[],
       })) || []
     );
@@ -104,6 +111,7 @@ export default function TrainerContextProvider({
   const [trainer, setTrainer] = useState<TTrainer | null>(initialTrainer);
   // const [serverLineUp, setServerLineUp] = useState<TLineUp>(initialLineUp);
   const [badServer, setBadServer] = useState(false);
+
   //---------------------------------------------------------------------Optimistic UI Lineup
   const [optimisticLineUp, setOptimisticLineup] = useOptimistic<
     TPokemon[],
@@ -134,6 +142,9 @@ export default function TrainerContextProvider({
         console.log(updated);
         return updated;
       }
+      case "commit":
+        console.log("committing");
+        return payload;
       case "clear":
         console.log("clearing lineup");
         return [];
@@ -142,32 +153,32 @@ export default function TrainerContextProvider({
         return state;
     }
   });
-  const [uiLineUp, setUiLineUp] = useState<TLineUp>(initialLineUp);
-  // const Pks = [...optimisticLineUp];
 
+  const [lineupRearrange, setLineupRearrange] =
+    useState<TLineUp>(optimisticLineUp);
   //---------------------------------------------------------------------Optimistic UI Trainer
-
-  useEffect(() => {
-    // setUiLineUp(initialLineUp);
-    toast.success("Lineup loaded from server");
-  }, [initialLineUp]);
-
-  // const handleSetUiLineUp = (newLineUp: TLineUp) => {
-  //   // setUiLineUp(newLineUp);
-  // };
 
   const handleCalculateSlots = (lineUp: TPokemon[]) => {
     return Array.from({ length: 6 }, (_, i) =>
       lineUp[i]
-        ? lineUp[i]
-        : { id: "empty" + (i + 1), name: "Empty Slot " + (i + 1) }
+        ? { id: lineUp[i].id, name: lineUp[i].name, empty: false }
+        : { id: "empty" + (i + 1), name: "Empty Slot " + (i + 1), empty: true }
     );
   };
+
+  // lineup that is rearranged on front-end and manually synced to server
+  // const [lineupRearrange, setLineupRearrange] =
+  //   useState<TLineUp>(initialLineUp);
+
+  // useEffect(() => {
+  //   toast.success("flag");
+  // }, [lineupRearrange]);
+
+  // derive the slots from the optimisticLineUp
 
   const [isPending, startTransition] = useTransition();
   const [isPendingClear, startTransitionClear] = useTransition();
   const [addPkTransition, startAddPkTransition] = useTransition();
-  const slots = handleCalculateSlots(uiLineUp);
 
   //---------------------------------------------------------------------Ball Logic
   const {
@@ -178,13 +189,18 @@ export default function TrainerContextProvider({
     handleToggleReorder,
     handleBallClick,
     ballLayoutEnabled,
+    uiLineup,
   } = useBallReorder({
-    uiLineUp,
-    setUiLineUp,
+    //ball reorder inputs
+
     optimisticLineUp,
-    // setOptimisticLineup,
+    setOptimisticLineup,
+    badServer,
+    lineupRearrange,
+    setLineupRearrange,
   });
 
+  const slots = handleCalculateSlots(uiLineup);
   //---------------------------------------------------------------------ADD PK
 
   const handleAddPokemon = async (Pk: AddPkFormValues) => {
@@ -201,6 +217,8 @@ export default function TrainerContextProvider({
     startAddPkTransition(() => {
       setOptimisticLineup({ action: "add", payload: UIPk });
     });
+    // handleUpdateDynamicLineup(optimisticLineUp);
+    setLineupRearrange(optimisticLineUp);
     const error = await AddPokemon(
       !badServer ? Pk : "invalid-id-to-test-error",
       Id
@@ -227,6 +245,7 @@ export default function TrainerContextProvider({
       sprite: Pk.Sprite,
     };
     setOptimisticLineup({ action: "edit", payload: UIPk });
+    setLineupRearrange(optimisticLineUp);
     const error = await EditPokemon(
       !badServer ? Pk : "invalid-id-to-test-error"
     );
@@ -243,6 +262,7 @@ export default function TrainerContextProvider({
     startTransition(() => {
       setOptimisticLineup({ action: "delete", payload: { id: id } });
     });
+    setLineupRearrange(optimisticLineUp);
     const error = await DeletePokemon(
       !badServer ? id : "invalid-id-to-test-error"
     );
@@ -313,8 +333,9 @@ export default function TrainerContextProvider({
         handleSignIn,
         handleToggleBadServer,
         badServer,
-        // uiLineUp,
-        // setUiLineUp,
+        // lineupRearrange,
+        // setLineupRearrange,
+        uiLineup,
       }}
     >
       {children}

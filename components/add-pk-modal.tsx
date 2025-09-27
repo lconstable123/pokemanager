@@ -38,11 +38,12 @@ import { useDexContext } from "@/lib/contexts/DexContext";
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 import { flushSync } from "react-dom";
 import { AddPokemon } from "@/lib/actions";
+import { set } from "zod";
 
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   //------------------------------------------------------------------------ derived states
 
-  const { trainer, handleAddPokemon } = useTrainerContext();
+  const { trainer, handleAddPokemon, uiLineup } = useTrainerContext();
 
   const { AddPkModalopen, setAddPkModalOpen, setSelectedPk } =
     usePokeAppContext();
@@ -163,6 +164,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
           setValue("Type", elements);
           setValue("Sprite", DexPrevImg || "");
           setValue("Trainer", trainer?.id || "");
+          setValue("Order", uiLineup.length || 0);
           const result = await trigger();
           if (!result) return;
           const pokeData = getValues();
