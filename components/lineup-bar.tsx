@@ -13,6 +13,7 @@ import { line, select } from "framer-motion/client";
 import { useScrollStatus } from "@/lib/hooks";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { cn } from "@/lib/utils";
+import { is } from "zod/v4/locales";
 type TLineupBar = {
   reorderable: boolean;
   isMobile: boolean;
@@ -28,6 +29,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
     handleBallClick,
     uiLineup,
     ballLayoutEnabled,
+    isTransitionUi,
   } = useTrainerContext();
   const controls = useAnimation();
 
@@ -63,6 +65,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
       )}
       {reorderable && (
         <PokeButton
+          disabled={isTransitionUi}
           text="Reorder"
           type="action"
           onClick={handleToggleReorder}

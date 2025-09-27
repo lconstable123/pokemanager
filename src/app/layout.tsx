@@ -12,6 +12,7 @@ import TrainerContextProvider, {
 } from "@/lib/contexts/TrainerContext";
 import DexContextProvider from "@/lib/contexts/DexContext";
 import { FetchTrainerById } from "@/lib/actions";
+import PsyduckServer from "../../components/psyduck-server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,7 @@ export default async function RootLayout({
           <DexContextProvider>
             <TrainerContextProvider trainerFromServer={trainer?.trainer}>
               <Canvas>
+                <PsyduckServer />
                 <MainWindow>
                   <NavBar
                     isBackEnabled={true}

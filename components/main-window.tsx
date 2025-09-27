@@ -9,7 +9,7 @@ export default function MainWindow({
 }) {
   // const dimensions = " ";
   return (
-    <main className="border-2 border-black outline-3 outline-red-800  hardShadow flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] overflow-hidden rounded-none sm:rounded-2xl">
+    <main className="border-3 border-black outline-4 outline-red-800  hardShadow flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] overflow-hidden rounded-none sm:rounded-2xl">
       <FrameBar />
 
       <div

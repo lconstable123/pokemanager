@@ -1,14 +1,13 @@
 "use client";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { UseDisableScroll } from "./hooks";
 import toast from "react-hot-toast";
-import { OptimisticAction } from "./contexts/TrainerContext";
-import { TLineUp, TPokemon } from "./types";
+
+import { OptimisticAction, TLineUp, TPokemon } from "./types";
 import { usePokeAppContext } from "./contexts/PokeAppContext";
 import { useDexContext } from "./contexts/DexContext";
 import { RearrangePokemon } from "./actions";
-import { sleep } from "./utils";
-import { is } from "zod/v4/locales";
+
 type TuseBallReorder = {
   setLineupRearrange: React.Dispatch<React.SetStateAction<TLineUp>>;
   lineupRearrange: TLineUp;
@@ -36,24 +35,27 @@ export default function useBallReorder({
   const [ballShiftMode, setBallShiftMode] = useState<"select" | "shift">(
     "select"
   );
-  //--------------------------------------------------------------handlers
   const [isRearranging, startRearranging] = useTransition();
   const [uiEdit, setuiEdit] = useState(false);
-  //set the ui LineUp to either the optimisticLineUp or the Temporay rearanging Mode
-  //if we're in reordering mode, or not, but still reararrange, show rearranging ui, otherwise the optimistic
   const uiLineup = uiEdit ? lineupRearrange : optimisticLineUp;
+  //--------------------------------------------------------------handlers
 
+  //on first toggle of reorder button, sync ui with optimistic
+  const handleInitialRearrangingUiSync = () => {
+    setLineupRearrange(optimisticLineUp);
+  };
+
+  //on end toggle of reorder button, confirm and send to server
   const handleReorderConfirmation = async () => {
     startRearranging(() => {
       setOptimisticLineup({ action: "commit", payload: lineupRearrange });
     });
-    // toast.success(!badServer ? "good data" : "bad-data-insertion-test");
 
     const error = await RearrangePokemon(
       !badServer ? lineupRearrange : "bad-data-insertion-test"
     );
     if (error) {
-      toast.error("Error rearranging: " + error);
+      // toast.error("Error rearranging on server");
       setLineupRearrange(optimisticLineUp);
     } else {
       toast.success("Rearranged on server!");
@@ -75,16 +77,18 @@ export default function useBallReorder({
     });
   };
 
+  //on press of button, toggle reorder mode
   const handleToggleReorder = () => {
-    setReordering((prev) => {
-      if (prev) {
-        setTimeout(() => {
-          handleReorderConfirmation();
-        }, 0);
-        resetShifting();
-      }
-      return !prev;
-    });
+    if (isReordering) {
+      resetShifting();
+      setTimeout(() => {
+        // toast.success("Reorder mode off, saving changes...");
+        handleReorderConfirmation();
+      }, 0);
+    } else {
+      handleInitialRearrangingUiSync();
+    }
+    setReordering(!isReordering);
   };
 
   const resetShifting = () => {
@@ -92,6 +96,7 @@ export default function useBallReorder({
     setBallShiftMode("select");
   };
 
+  // ball / pokemon interaction handler, sometimes rearrange, sometimes enter modal
   const handleBallClick = async (selectedBallIndex?: number) => {
     //reorder mode toggled
     if (isReordering && selectedBallIndex !== undefined) {
@@ -109,9 +114,7 @@ export default function useBallReorder({
     } else {
       const selectedPk = optimisticLineUp[selectedBallIndex ?? 0] || null;
       handleSelectPk(selectedPk);
-      // toast.success("Selected Pokémon: " + selectedPk?.species);
       if (selectedPk) {
-        // toast.success("Fetching evolution for: " + selectedPk.species);
         const evolutions = await handleFetchEvolution(selectedPk.species);
         setEvolutions(evolutions);
       }

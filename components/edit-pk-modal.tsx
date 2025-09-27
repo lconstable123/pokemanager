@@ -157,12 +157,13 @@ export function EditPkModal() {
         action={async () => {
           const pokeData1 = getValues();
           console.log(pokeData1);
+          updateField("Order", selectedPk?.order || 0);
+          console.log("order " + (selectedPk?.order || 0));
           const result = await trigger();
           if (!result) {
             toast.error("Please fix the errors.");
-            const formErrors = getValues(); // optional
             console.log("Zod validation failed");
-            console.log(errors); // from useForm().formState.errors
+            console.log(errors);
             toast.error("Validation failed. Check form fields.");
             return;
           }

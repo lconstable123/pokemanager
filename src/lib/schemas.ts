@@ -34,7 +34,7 @@ export const AddPkFormSchema = z.object({
       });
     }),
   Pokemon: z.string().min(1, { message: "Please select a Pokemon" }),
-  Order: z.number().min(1, { message: "Order must be at least 1" }),
+  Order: z.number().min(0, { message: "Order must be at least 0" }),
   Ball: BallSchema,
   // Sprite: z.url("Invalid URL"),
   Sprite: z.string().min(1, { message: "Sprite URL required" }),

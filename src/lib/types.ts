@@ -20,6 +20,7 @@ export type TPokemon = {
   type: Element[];
   exp: number;
   sprite: string;
+  order: number;
 };
 
 export type Element = (typeof elmOptions)[number];
@@ -29,3 +30,13 @@ export type TServerPK = Omit<Pokemon, "createdAt" | "updatedAt">;
 export type ServerTrainerWithLineup = Prisma.TrainerGetPayload<{
   include: { lineup: true };
 }>;
+
+//---------------------------------------------------------Optimistic UI types
+
+export type OptimisticAction =
+  | { action: "add"; payload: TPokemon }
+  | { action: "edit"; payload: Partial<TPokemon> & { id: string } }
+  | { action: "delete"; payload: { id: string } }
+  | { action: "rearrange"; payload: { fromIndex: number; toIndex: number } }
+  | { action: "clear"; payload: null }
+  | { action: "commit"; payload: TLineUp };

@@ -24,7 +24,7 @@ export default function Home() {
               isReordering={isReordering}
               status={slot.empty}
             />
-            <span className="absolute text-[8pt] opacity-30">{slot.id}</span>
+            {/* <span className="absolute text-[8pt] opacity-30">{slot.id}</span> */}
             <PokemonCard
               // key={uiLineup[index]?.id || slot.id}
               pokemon={slot.empty ? undefined : (uiLineup[index] as TPokemon)}
@@ -115,7 +115,7 @@ export function PokemonCard({
       className="h-45 relative flex flex-col items-center gap-0"
       onClick={() => handleBallClick?.(lineUpPos)}
     >
-      <span className="text-[8pt] text-red-400">{id}</span>
+      {/* <span className="text-[8pt] text-red-400">{id}</span> */}
       <PkCardImage
         pokemon={pokemon}
         highlighted={ballEdit === lineUpPos}
