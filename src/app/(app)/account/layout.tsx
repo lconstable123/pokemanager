@@ -16,9 +16,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { isMobile, isSmall } = useIsMobile();
   return (
     <>
-      {/* <DexContextProvider>
-        <TrainerContextProvider>
-          <NavBar isBackEnabled={true} isProfileEnabled={true} Navlink="/" /> */}
       <AddPkModal mode="add" />
       <EditPkModal />
 
@@ -26,8 +23,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
       {children}
       {!isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
-      {/* </TrainerContextProvider>
-      </DexContextProvider> */}
     </>
   );
 }

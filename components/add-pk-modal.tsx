@@ -225,7 +225,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
           <PokeImageField
             clickhandle={handleClickImageField}
             image={DexPrevImg}
-            isImageLoaded={loadingImage}
+            isUrlLoaded={loadingImage}
             elements={elements}
             userJourney={userJourney}
           >

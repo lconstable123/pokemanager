@@ -21,6 +21,7 @@ import { line } from "framer-motion/client";
 export const FetchTrainerById = async (
   id: string
 ): Promise<{ trainer: ServerTrainerWithLineup | null; error: string }> => {
+  // await sleep(2000);
   try {
     const trainer = await prisma.trainer.findFirst({
       where: { id },

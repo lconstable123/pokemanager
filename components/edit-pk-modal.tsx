@@ -30,6 +30,7 @@ import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 import { flushSync } from "react-dom";
 import { useDexContext } from "@/lib/contexts/DexContext";
 import { UseFetchPkImg } from "@/lib/useFetchPkDetails";
+import { motion } from "framer-motion";
 
 export function EditPkModal() {
   //---------------------------------------------------------------------------------derived states
@@ -214,13 +215,23 @@ export function EditPkModal() {
           <PokeImageField
             clickhandle={() => {}}
             image={isInspectingLineup ? selectedPk?.sprite : DexPrevImg || ""}
-            isImageLoaded={isInspectingLineup ? true : loadingImage}
+            isUrlLoaded={
+              isInspectingLineup ? selectedPk?.sprite !== "" : loadingImage
+            }
             elements={
               isInspectingLineup ? selectedPk?.type || [] : elements || []
             }
             userJourney={"addpk"}
           >
-            <Pokeball type={selectedPk?.ball || "05"} size={30} />
+            {selectedPk?.ball && (
+              <motion.div
+                initial={{ scale: 0.1, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Pokeball type={selectedPk?.ball || "05"} size={30} />
+              </motion.div>
+            )}
           </PokeImageField>
           <VertFields>
             <div className="relative w-130">

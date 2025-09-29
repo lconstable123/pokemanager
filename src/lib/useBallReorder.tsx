@@ -14,6 +14,8 @@ type TuseBallReorder = {
   optimisticLineUp: TLineUp;
   setOptimisticLineup: (action: OptimisticAction) => void;
   badServer?: boolean;
+  setServerError?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleServerError: () => void;
 };
 export default function useBallReorder({
   setLineupRearrange,
@@ -21,6 +23,7 @@ export default function useBallReorder({
   optimisticLineUp,
   setOptimisticLineup,
   badServer,
+  handleServerError,
 }: TuseBallReorder) {
   //---------------------------------------------------------------derived states
 
@@ -56,6 +59,7 @@ export default function useBallReorder({
     );
     if (error) {
       // toast.error("Error rearranging on server");
+      handleServerError();
       setLineupRearrange(optimisticLineUp);
     } else {
       toast.success("Rearranged on server!");
@@ -130,5 +134,6 @@ export default function useBallReorder({
     handleBallClick,
     ballLayoutEnabled,
     uiLineup,
+    isRearranging,
   };
 }

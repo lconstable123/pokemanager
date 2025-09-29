@@ -6,9 +6,10 @@ import Nav from "../../../components/nav";
 import AppPreview from "../../../components/app-preview";
 import { motion } from "framer-motion";
 
-import { useIsMobile } from "@/lib/hooks";
+import { useFontsLoaded, useIsMobile } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
+import LoadingContent from "../../../components/loading-content";
 const features = [
   "Full Stack with Next",
   "Optimistic Frontend",
@@ -22,26 +23,37 @@ const navItems = [
 
 export default function Home() {
   const { isMobile, isSmall } = useIsMobile();
+  const fontsLoaded = useFontsLoaded();
   return (
     <WholeSection>
-      <TopSection>
-        <WelcomeText />
-        {/* {!isMobile && <AppPreview isMobile={false} />} */}
-      </TopSection>
+      {fontsLoaded ? (
+        <>
+          <TopSection>
+            <WelcomeText />
+          </TopSection>
 
-      <BottomSection>
-        <Features
-          features={features}
-          initialDelay={timeOffset_1}
-          delayBetweenItems={0.1}
-        />
-        {isMobile && <AppPreview isMobile={true} />}
-      </BottomSection>
+          <BottomSection>
+            <Features
+              features={features}
+              initialDelay={timeOffset_1}
+              delayBetweenItems={0.1}
+            />
+            {isMobile && <AppPreview isMobile={true} />}
+          </BottomSection>
+        </>
+      ) : (
+        <div>
+          <LoadingContent />
+        </div>
+      )}
       <WindowBg image="Snorlax" />
     </WholeSection>
   );
 }
 
+{
+  /* //  {!isMobile && <AppPreview isMobile={false} />}     */
+}
 //---------------------------------------------------
 
 function TopSection({ children }: { children: React.ReactNode }) {

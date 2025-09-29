@@ -47,7 +47,6 @@
 }
 
 body {
-  /* color: var(--foreground); */
   colour: black;
   font-family: var(--font-inter);
 }
@@ -64,6 +63,24 @@ body {
     url("/pokebg_3.png");
   background-size: 40px auto;
 }
+.bg3 {
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.3)
+    ),
+    url("/pokebg_3.png");
+  background-size: 40px auto;
+}
+
+.bg4 {
+  background-image: linear-gradient(
+      rgba(0, 255, 255, 0.1),
+      rgba(0, 255, 255, 0.1)
+    ),
+    url("/pokebg_5.png");
+  background-size: 40px auto;
+}
+
 .ditheredGradRed {
   background-image: url("/ditheredgrad.jpg");
   background-size: auto 100%;
@@ -85,7 +102,7 @@ body {
 }
 
 .softShadow {
-  box-shadow: var(--shadow-deep) 4 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-close) 0 rgba(0, 0, 0, 0.2);
 }
 .hardShadow {
   box-shadow: var(--shadow-mid) 0 rgba(0, 0, 0, 0.2);
@@ -96,7 +113,7 @@ body {
 }
 
 .softSVGShadow {
-  filter: drop-shadow(var(--shadow-close) 0 rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(var(--shadow-close) 0 rgba(0, 0, 0, 0.2));
 }
 
 .Text-secondary {
@@ -132,7 +149,7 @@ h2 {
 }
 
 .imageFrame {
-  @apply border-2 outline-2 ring-gray-400 border-gray-500 rounded-2xl;
+  @apply border-2 outline-2 ring-gray-400 border-gray-500 rounded-lg;
   box-shadow: var(--shadow-mid) 0 rgba(0, 0, 0, 0.2);
 }
 .pixelImage {
@@ -205,6 +222,65 @@ h2 {
   100% {
     transform: scale(1.04);
   }
+}
+@keyframes rocking {
+  0% {
+    transform: rotate(-0deg);
+  }
+
+  100% {
+    transform: rotate(7deg);
+  }
+}
+
+@keyframes expand {
+  0% {
+    scale: 100;
+  }
+  100% {
+    scale: 102%;
+  }
+}
+
+@keyframes travel {
+  0% {
+    transform: translateX(-20px);
+  }
+
+  100% {
+    transform: translateX(-100px);
+  }
+}
+@keyframes bad-travel {
+  0% {
+    transform: translateX(-20px);
+  }
+
+  80% {
+    transform: translateX(-90px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-70px) scale(1.11);
+    opacity: 0;
+  }
+}
+.animate-travel {
+  transform-origin: center;
+  animation: travel 1.3s linear infinite;
+}
+
+.animate-bad-travel {
+  transform-origin: center;
+  animation: bad-travel 1s linear infinite;
+}
+
+.animate-expand {
+  animation: expand 0.5s steps(4) infinite alternate;
+}
+
+.animate-rocking {
+  animation: rocking 0.1s infinite linear alternate;
 }
 .animate-breathing {
   animation: breathing 0.5s steps(4) infinite alternate;

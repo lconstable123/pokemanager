@@ -38,17 +38,17 @@ export default function NavBar({
   return (
     <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
       {isBackEnabled && <BackButton />}
-      <button
+      {/* <button
         className={cn("border-3", badServer ? "bg-red-200" : "bg-green-200")}
         onClick={handleToggleBadServer}
       >
         toggle bad server
-      </button>
+      </button> */}
       {isProfileEnabled && (
         <div className="flex items-center gap-3">
-          <h3 className="text-[10pt]  italic font-light noSelect">
+          {/* <h3 className="text-[10pt]  italic font-light noSelect">
             Welcome back, {trainer?.name || "MissingNo"}.
-          </h3>
+          </h3> */}
           <TrainerModal />
         </div>
       )}
@@ -68,12 +68,15 @@ function ProfileButton({
       onClick={() => {
         handleClick();
       }}
-      className="noSelect hover:scale-110 scale-100 transition-all border-1 border-gray-700 relative overflow-hidden w-11 h-11 rounded-full bg-red-300"
+      className={cn(
+        " origin-top-right noSelect hover:scale-140 scale-100 transition-all border-2 ring-2 ring-red-200 border-gray-700 relative overflow-hidden w-10 h-10 rounded-full bg-red-300"
+        // "hover:w-30 hover:h-30"
+      )}
     >
       <img
         src={sprite}
         alt="Trainer"
-        className="absolute object-cover -top-3 w-20 h-20"
+        className="not-hover:pixelImage absolute object-cover -top-3 w-20 h-20"
       />
     </div>
   );
@@ -133,7 +136,7 @@ function TrainerModal() {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2, delay: 0.0 }}
-            className="mb-5 border-10 ring-2 ring-yellow-400/40 border-yellow-200 relative overflow-hidden w-50 h-50 rounded-full bg-yellow-300/70"
+            className="mb-5 border-10 ring-2 ring-yellow-400/40 border-yellow-200 relative overflow-hidden w-50 h-50 rounded-full bg4"
           >
             <img
               src={trainerSprite}

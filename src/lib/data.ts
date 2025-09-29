@@ -1,71 +1,75 @@
 import { TTrainer } from "./types";
 
-export const initialTrainerData: TTrainer = {
-  id: "1",
-  name: "Ash",
-  email: "ash.ketchum@example.com",
-  avatar: 1,
-  lineup: [
-    {
-      id: "#blast1",
-      ball: "04",
-      name: "Michael",
-      species: "Blastoise",
-      type: ["water", "electric"],
+export const Urls_1 = [
+  "/pokebg_2.jpg",
+  "/ditheredgrad.jpg",
+  "/placeholders/slowpoke.png",
+  "/08 - Snorlax.svg",
+  "/pokeballs/pokeball-02.svg",
+  "/pokeballs/pokeball-05.svg",
+  "/pokeballs/pokeball-09.svg",
+];
 
-      exp: 12,
-      sprite: "/placeholders/pokesprites/Blastoise.png",
-    },
-    {
-      id: "#lap",
-      ball: "03",
-      name: "Enoch",
-      species: "Lapras",
-      type: ["water", "electric"],
+export const Urls_2 = [
+  "/01 - Pikachu.svg",
+  "/08 - Snorlax.svg",
+  "/06 - Charizard.svg",
+  "/pokeballs/pokeball-01.svg",
+  "/pokeballs/pokeball-03.svg",
+  "/pokeballs/pokeball-04.svg",
+  "/pokeballs/pokeball-05.svg",
+  "/pokeballs/pokeball-06.svg",
+  "/pokeballs/pokeball-07.svg",
+  "/pokeballs/pokeball-08.svg",
+];
 
-      exp: 12,
-      sprite: "/placeholders/pokesprites/Lapras.png",
-    },
-    {
-      id: "#treek",
-      ball: "02",
-      name: "Herbie",
-      species: "treecko",
-      type: ["water", "electric"],
+export const Urls_login = [
+  "/trainers/oak.png",
+  "/trainers/trainer_1.png",
+  "/trainers/trainer_2.png",
+  "/trainers/trainer_3.png",
+  "/trainers/trainer_4.png",
+  "/trainers/trainer_5.png",
+  "/trainers/trainer_6.png",
+  "/trainers/trainer_7.png",
+  "/trainers/trainer_8.png",
+  "/ditheredgrad_bw.jpg",
+];
+export const Urls_app = [
+  "/placeholders/placeholder_pk.png",
+  "/placeholders/pd_norm.png",
+  "/placeholders/pd_error.png",
+  "/pokebg_3.png",
+  "/pokebg_2.jpg",
+  "/pokebg_4.png",
+  "/pokebg_5.png",
+];
 
-      exp: 12,
-      sprite: "/placeholders/pokesprites/Treeko.png",
-    },
-    {
-      id: "#eggs",
-      ball: "01",
-      name: "Cassandra",
-      species: "exeggutor",
-      type: ["water", "electric"],
-
-      exp: 12,
-      sprite: "/placeholders/pokesprites/Eggsecutor.png",
-    },
-    {
-      id: "#blast2",
-      ball: "04",
-      name: "Michael",
-      species: "Blastoise",
-      type: ["water", "electric"],
-      exp: 12,
-      sprite: "/placeholders/pokesprites/Blastoise.png",
-    },
-    {
-      id: "#blast3",
-      ball: "04",
-      name: "Michael",
-      species: "Blastoise",
-      type: ["water", "electric"],
-      exp: 12,
-      sprite: "/placeholders/pokesprites/Blastoise.png",
-    },
-  ],
-};
+export const elementUrls = [
+  "elements/bug.svg",
+  "elements/dark.svg",
+  "elements/dragon.svg",
+  "elements/electric.svg",
+  "elements/fairy.svg",
+  "elements/fighting.svg",
+  "elements/fire.svg",
+  "elements/flying.svg",
+  "elements/ghost.svg",
+  "elements/grass.svg",
+  "elements/ground.svg",
+  "elements/ice.svg",
+  "elements/normal.svg",
+  "elements/poison.svg",
+  "elements/psychic.svg",
+  "elements/rock.svg",
+  "elements/steel.svg",
+  "elements/fairy.svg",
+  "elements/normal.svg",
+  "elements/ground.svg",
+  "elements/fighting.svg",
+  "elements/flying.svg",
+  "elements/dark.svg",
+];
 
 export const testPokeData = ["Blastoise", "Lapras", "Pikachu", "Charizard"];
 

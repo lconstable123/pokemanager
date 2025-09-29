@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense, use, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import PlaceholderPk from "./placeholder-pk";
@@ -9,21 +9,25 @@ import { DialogHeader } from "@/components/ui/dialog";
 import { FaCaretDown } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { Element } from "@/lib/types";
+import { useSingleImageLoader } from "@/lib/useImageLoader";
+import { is } from "zod/v4/locales";
+
 export const PokeImageField = ({
   children,
   image,
-  isImageLoaded,
+  isUrlLoaded,
   elements,
   clickhandle,
   userJourney,
 }: {
   children: React.ReactNode;
   image?: string | null;
-  isImageLoaded: boolean;
+  isUrlLoaded: boolean;
   elements: string[];
   clickhandle: () => void;
   userJourney?: "initial" | "addpk" | "addname";
 }) => {
+  const imageLoaded = useSingleImageLoader(image || "");
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -32,9 +36,8 @@ export const PokeImageField = ({
       className="mt-6 flex justify-center relative  h-full "
     >
       <div className="absolute -left-5 top-0 z-10">{children}</div>
-
       <div className="absolute -right-20 -top-2 w-20 h-20">
-        {isImageLoaded && elements && <PKCardTypes types={elements} />}
+        {isUrlLoaded && elements && <PKCardTypes types={elements} />}
       </div>
       <div
         onClick={() => {
@@ -42,14 +45,13 @@ export const PokeImageField = ({
         }}
         className="border-2  ring-blue-200 border-blue-100 ring-3  cursor-pointer relative mt-1   overflow-hidden w-50 h-50 rounded-full bg2 "
       >
-        {!isImageLoaded && (
+        {!imageLoaded || !isUrlLoaded || image === null ? (
           <PlaceholderPk
             text={"Add a pokemon"}
-            loading={!isImageLoaded}
+            loading={!isUrlLoaded}
             userJourney={userJourney}
           />
-        )}
-        {isImageLoaded && image && (
+        ) : (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -134,21 +136,22 @@ export const SearchFilterButton = ({
 export function PKCardTypes({ types }: { types: string[] }) {
   return (
     <div className="mt-1 flex flex-col gap-0 ">
-      {types.map((type, index) => (
-        <motion.img
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{
-            type: "spring",
-            duration: 0.2,
-            delay: 0.1 + index * 0.05,
-          }}
-          key={index}
-          src={getElementSprite(type as Element)}
-          alt={type}
-          className="w-8 h-8 object-cover z-3 user-select-none pixelImage pointer-events-none"
-        />
-      ))}
+      {types &&
+        types.map((type, index) => (
+          <motion.img
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              duration: 0.2,
+              delay: 0.1 + index * 0.05,
+            }}
+            key={index}
+            src={getElementSprite(type as Element)}
+            alt={type}
+            className="w-8 h-8 object-cover z-3 user-select-none pixelImage pointer-events-none"
+          />
+        ))}
     </div>
   );
 }

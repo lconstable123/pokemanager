@@ -65,7 +65,7 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
       )}
       {reorderable && (
         <PokeButton
-          disabled={isTransitionUi}
+          disabled={false}
           text="Reorder"
           type="action"
           onClick={handleToggleReorder}
@@ -97,9 +97,11 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
                 >
                   <div
                     className={clsx(
-                      "duration-500 delay-0 transition-all absolute -top-3 left-1/2 w-2 h-2 -translate-x-1/2 rounded-full bg-yellow-300",
+                      "duration-500 delay-0 transition-all absolute -top-3 left-1/2 w-2 h-2 -translate-x-1/2 rounded-full ",
                       isReordering && ballEdit !== index
-                        ? "opacity-100"
+                        ? "opacity-100 bg-yellow-300"
+                        : isReordering
+                        ? "bg-green-400"
                         : "opacity-0"
                     )}
                   />

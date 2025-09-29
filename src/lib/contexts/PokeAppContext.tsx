@@ -73,6 +73,8 @@ export default function PokeAppContextProvider({
     }
   }, [AddPkModalopen, EditPkModalopen]);
 
+  useEffect(() => {}, []);
+
   const disableScroll = UseDisableScroll;
 
   return (

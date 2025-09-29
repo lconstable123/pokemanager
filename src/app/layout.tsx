@@ -32,6 +32,9 @@ const inter = Inter({
   display: "swap",
 });
 
+//immediate loads
+// <link rel="preload" href="/new-images/bg/BG16.jpg" as="image" />;
+
 export const metadata: Metadata = {
   title: "PokeManager",
   description: "Created by Luke Constable",
@@ -43,7 +46,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const trainer = await FetchTrainerById("testId");
-  // const lineUp = trainer?.trainer?.lineup ?? [];
+
   return (
     <html lang="en" className="">
       <body
@@ -54,7 +57,6 @@ export default async function RootLayout({
           <DexContextProvider>
             <TrainerContextProvider trainerFromServer={trainer?.trainer}>
               <Canvas>
-                <PsyduckServer />
                 <MainWindow>
                   <NavBar
                     isBackEnabled={true}

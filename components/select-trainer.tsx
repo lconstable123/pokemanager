@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { set } from "zod";
+import { toast } from "react-hot-toast";
 type SelectTrainerProps = {
   mode: "sign-up" | "sign-in";
 };
@@ -63,13 +64,13 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, scale: 0.5 }}
+      initial={{ opacity: 0, scale: 1 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{
         type: "tween",
 
-        duration: 0.3,
+        duration: 0.2,
       }}
       className={`mb-0 sm:mb-0 h-full  flex flex-col z-50`}
     >
@@ -94,8 +95,8 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
         <TrainerFrame trainerFrameWidth={trainerFrameWidth}>
           {trainers.map((trainer, index) => (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              // initial={{ opacity: 0 }}
+              // animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               key={trainer}
               style={{
@@ -111,7 +112,7 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
             >
               <Image
                 priority
-                className="translate-x-[10px] user-select-none pixelImage pointer-events-none "
+                className="animate-breathing translate-x-[10px] user-select-none pixelImage pointer-events-none "
                 src={
                   index > 0
                     ? `/trainers/trainer_${index}.png`
@@ -170,8 +171,8 @@ function TrainerBg({
     durationIn = 0.4;
     durationOut = 0.2;
   } else {
-    durationIn = 0;
-    durationOut = 0;
+    durationIn = 0.4;
+    durationOut = 0.2;
   }
 
   const trainerColors = [
@@ -195,10 +196,12 @@ function TrainerBg({
     await Promise.all([
       Bg1controls.start({
         height: 120,
+        opacity: 1,
         transition: { delay: 0.1, duration: durationIn, ease: "easeOut" },
       }),
       Bg2controls.start({
         height: 200,
+        opacity: 1,
         transition: { duration: durationIn, ease: "easeOut" },
       }),
     ]);
@@ -208,27 +211,30 @@ function TrainerBg({
     await Promise.all([
       Bg1controls.start({
         height: 0,
+        opacity: 0,
         transition: { duration: durationOut, ease: "easeIn" },
       }),
       Bg2controls.start({
         height: 0,
+        opacity: 0,
         transition: { delay: 0.1, duration: durationOut, ease: "easeIn" },
       }),
     ]);
   };
 
   useEffect(() => {
-    // const run = async () => {
-    //   await AnimateOut().then(() =>
-    //     setSelectedTrainerColors(
-    //       trainerColors[selectedTrainer % trainerColors.length]
-    //     )
-    //   );
-    //   await AnimateIn();
-    // };
-    // if (!firstTime) run();
+    // toast.success("Selected Avatar Changed!");
+    const run = async () => {
+      await AnimateOut().then(() =>
+        setSelectedTrainerColors(
+          trainerColors[selectedTrainer % trainerColors.length]
+        )
+      );
+      await AnimateIn();
+    };
+    if (!firstTime) run();
     // const timer = setTimeout(() => {
-    //   // AnimateIn();
+    //   AnimateIn();
     // }, 2);
     // return () => clearTimeout(timer);
   }, [selectedTrainer]);
@@ -239,29 +245,19 @@ function TrainerBg({
 
   return (
     <>
-      <div className={`transition-all absolute inset-0 ${bg3} -z-5 `} />
       <motion.div
-        // initial={{ height: 0 }}
+        initial={{ height: 0, opacity: 0 }}
         animate={Bg1controls}
         className={`absolute bottom-0 w-full h-30 ${bg1} -z-2 `}
       />
       <motion.div
-        // initial={{ height: 0 }}
+        initial={{ height: 0, opacity: 0 }}
         animate={Bg2controls}
-        className={`absolute bottom-0 w-full h-50 ${bg2} -z-3 `}
+        className={`absolute bottom-0 w-full h-50 ${bg2} -z-4 `}
       />
-      <motion.div
-        // initial={{ height: 0 }}
-        animate={{ height: 80 }}
-        transition={{ duration: 0.2 }}
-        className="ditheredGrad absolute top-0 -z-1 h-20 w-full scale-y-[-1] opacity-[20%]"
-      />
-      <motion.div
-        // initial={{ height: 0 }}
-        animate={{ height: 80 }}
-        transition={{ delay: 0.2 }}
-        className="ditheredGrad absolute bottom-0 -z-1 h-20 w-full opacity-[10%]"
-      />
+      <motion.div className="ditheredGrad absolute top-0 z-3 h-20 w-full scale-y-[-1] opacity-10 " />
+      <motion.div className="ditheredGrad absolute bottom-0 z-3 h-20 w-full opacity-10 " />
+      <div className={`transition-all absolute inset-0 ${bg3} -z-8 `} />
     </>
   );
 }

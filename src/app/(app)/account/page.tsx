@@ -7,33 +7,33 @@ import { Element, TPokemon } from "@/lib/types";
 import { cn, getElementSprite } from "@/lib/utils";
 import { useEffect } from "react";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-import WindowBg from "../../../../components/window-bg/window-bg";
 import { toast } from "react-hot-toast";
+import { useMultipleImageLoader } from "@/lib/useImageLoader";
 
 export default function Home() {
-  const { lineUp, trainer, slots, isReordering, uiLineup } =
-    useTrainerContext();
-
+  const { slots, isReordering, uiLineup } = useTrainerContext();
+  const lineUpUrls = [...uiLineup?.map((pk) => pk?.sprite), "/pokebg_3.png"];
+  const allImagesLoaded = useMultipleImageLoader(lineUpUrls);
   return (
     <WholeSection>
-      <PokeGrid>
-        {slots.map((slot, index) => (
-          <div key={slot.id} className="relative">
-            <GridNumber
-              index={index}
-              isReordering={isReordering}
-              status={slot.empty}
-            />
-            {/* <span className="absolute text-[8pt] opacity-30">{slot.id}</span> */}
-            <PokemonCard
-              // key={uiLineup[index]?.id || slot.id}
-              pokemon={slot.empty ? undefined : (uiLineup[index] as TPokemon)}
-              id={uiLineup[index]?.id || slot.id}
-              lineUpPos={index}
-            />
-          </div>
-        ))}
-      </PokeGrid>
+      {allImagesLoaded && (
+        <PokeGrid>
+          {slots.map((slot, index) => (
+            <div key={slot.id} className="relative">
+              <GridNumber
+                index={index}
+                isReordering={isReordering}
+                status={slot.empty}
+              />
+              <PokemonCard
+                pokemon={slot.empty ? undefined : (uiLineup[index] as TPokemon)}
+                id={uiLineup[index]?.id || slot.id}
+                lineUpPos={index}
+              />
+            </div>
+          ))}
+        </PokeGrid>
+      )}
     </WholeSection>
   );
 }
@@ -179,9 +179,14 @@ export function PkCardImage({
         <img
           src={pokemon.sprite}
           alt={pokemon.name}
-          className={`${
-            highlighted ? " scale-120" : "scale-102 hover:scale-110   "
-          } w-full h-full cursor-pointer   absolute z-3 user-select-none pixelImage `}
+          className={cn(
+            "transition-all w-full h-full cursor-pointer absolute z-3 user-select-none pixelImage",
+            !isReordering
+              ? "scale-110"
+              : highlighted
+              ? " scale-145"
+              : "scale-130 hover:scale-130"
+          )}
         />
       </motion.div>
       <BackBubble editing={isReordering} />
@@ -224,8 +229,8 @@ function PKCardTypes({ types }: { types: Element[] }) {
 function BackBubble({ editing = false }: { editing?: boolean }) {
   return (
     <div
-      className={` transition-all outline-3 outline-gray-200 duration-700 absolute m-1 noSelect inset-0 z-1  rounded-full ${
-        editing ? "bg-gray-100 scale-70 " : "bg-gray-200 scale-100"
+      className={` transition-all outline-3 bg3 outline-gray-200 duration-700  absolute m-1 noSelect inset-0 z-1  rounded-full ${
+        editing ? " scale-70  opacity-40 " : "  scale-100 opacity-100"
       }`}
     />
   );

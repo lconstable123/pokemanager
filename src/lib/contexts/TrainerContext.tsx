@@ -6,6 +6,7 @@ import React, {
   useOptimistic,
   useTransition,
   useMemo,
+  useEffect,
 } from "react";
 import {
   Element,
@@ -61,8 +62,13 @@ export default function TrainerContextProvider({
     };
   }, [trainerFromServer, initialLineUp]);
 
-  const [trainer, setTrainer] = useState<TTrainer | null>(initialTrainer);
+  const [trainer, setTrainer] = useState<TTrainer | null>(null);
   const [badServer, setBadServer] = useState(false);
+  const [serverError, setServerError] = useState(false);
+
+  useEffect(() => {
+    setTrainer(initialTrainer);
+  }, [initialTrainer]);
 
   //---------------------------------------------------------------------Optimistic UI Lineup
 
@@ -127,12 +133,10 @@ export default function TrainerContextProvider({
   const [signOutTransition, startSignOutTransition] = useTransition();
 
   // any transition in progress
-  const isTransitionUi =
-    addPkTransition ||
-    editPkTransition ||
-    deletePkTransition ||
-    signOutTransition;
-
+  const handleServerError = () => {
+    setServerError(true);
+    setTimeout(() => setServerError(false), 100);
+  };
   //---------------------------------------------------------------------Ball Logic
   const {
     //----------------------ball reorder outputs
@@ -144,6 +148,7 @@ export default function TrainerContextProvider({
     handleBallClick,
     ballLayoutEnabled,
     uiLineup,
+    isRearranging,
   } = useBallReorder({
     //-----------------------ball reorder inputs
     optimisticLineUp,
@@ -151,9 +156,16 @@ export default function TrainerContextProvider({
     badServer,
     lineupRearrange,
     setLineupRearrange,
+    handleServerError,
   });
 
   //-----------------------------------------------------------------------------HANDLERS
+  const isTransitionUi =
+    addPkTransition ||
+    editPkTransition ||
+    deletePkTransition ||
+    signOutTransition ||
+    isRearranging;
 
   //-----after rearranging, finally prepare the slots for rendering
 
@@ -185,6 +197,7 @@ export default function TrainerContextProvider({
     );
 
     if (error) {
+      handleServerError();
       toast.error("Server Failed to add Pokémon.");
       console.log(error);
       return;
@@ -214,6 +227,7 @@ export default function TrainerContextProvider({
       !badServer ? Pk : "invalid-id-to-test-error"
     );
     if (error) {
+      handleServerError();
       toast.error("Failed to edit Pokémon on server. .");
       return;
     }
@@ -232,6 +246,7 @@ export default function TrainerContextProvider({
       !badServer ? id : "invalid-id-to-test-error"
     );
     if (error) {
+      handleServerError();
       toast.error("Failed to delete Pokémon on server. ");
       return;
     }
@@ -243,6 +258,7 @@ export default function TrainerContextProvider({
     setTrainer(data as TTrainer);
     const error = await AddTrainer(data);
     if (error) {
+      handleServerError();
       toast.error("Failed to sign up." + error.message);
       return;
     } else {
@@ -293,6 +309,7 @@ export default function TrainerContextProvider({
         badServer,
         uiLineup,
         isTransitionUi,
+        serverError,
       }}
     >
       {children}
@@ -351,4 +368,5 @@ type TrainerContextType = {
   badServer: boolean;
   uiLineup: TLineUp;
   isTransitionUi: boolean;
+  serverError: boolean;
 };
