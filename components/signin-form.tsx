@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SubmitButton from "./submit-button";
@@ -13,11 +13,28 @@ import { SignInFormData, SignInFormSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInTrainer } from "@/lib/actions";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
+import { useFormState } from "react-dom";
+import { signIn } from "@/lib/auth";
+import { tr } from "framer-motion/client";
+import { motion, useAnimate, useAnimation } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { set } from "zod";
+import { start } from "repl";
 export default function SignInForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
   const { handleSignIn } = useTrainerContext();
-  const router = useRouter();
+  const controls = useAnimation();
 
+  const handleAnimateError = () => {
+    setInvalidInput(true);
+    setTimeout(() => setInvalidInput(false), 400);
+    controls.start({
+      x: [0, -7, 12, -10, 4, 0],
+      transition: { duration: 0.5, ease: "easeInOut" },
+    });
+  };
+
+  const router = useRouter();
   const {
     register,
     trigger,
@@ -30,30 +47,37 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
     },
     resolver: zodResolver(SignInFormSchema),
   });
+  const [isPending, startTransition] = useTransition();
+  const [invalidInput, setInvalidInput] = useState(false);
+  // const [signUpError] = useFormState();
 
   return (
-    <form
+    <motion.form
+      animate={controls}
       action={async () => {
-        const values = getValues();
-        console.log("Form Values:", values);
-        // toast.success("Submitting...");
-        const isValid = await trigger();
-        if (!isValid) {
-          toast.error("Please fix the errors in the form.");
-          return;
-        } else {
-          const { trainer, error } = await SignInTrainer(values);
-          if (error) {
-            toast.error(error.message);
+        startTransition(async () => {
+          const values = getValues();
+          const isValid = await trigger();
+          if (!isValid) {
+            toast.error("Please fix the errors in the form.");
             return;
           } else {
-            handleSignIn(trainer);
+            const trainer = await SignInTrainer(values);
+            if (trainer?.message) {
+              toast.error(trainer.message || "Failed to sign in");
+              handleAnimateError();
+            } else {
+              toast.success("Successfully signed in");
+
+              router.push("/account");
+            }
           }
-          // toast.success("Successfully signed in!");
-          router.push("/account");
-        }
+        });
       }}
-      className=" flex flex-col items-center justify-center "
+      className={cn(
+        "transition-opacity flex-col items-center justify-center ",
+        isPending === true && "opacity-70 pointer-events-none"
+      )}
     >
       {isMobile && (
         <div className="mb-4">
@@ -69,6 +93,10 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
             {...register("email")}
             id="email"
             defaultValue={getValues("email")}
+            className={cn(
+              "transition-all duration-600",
+              invalidInput ? "border-red-500 bg-red-100" : "bg-white"
+            )}
           />
           {errors.email && (
             <FormErrorMessage message={errors.email?.message || ""} />
@@ -82,18 +110,23 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
             {...register("password")}
             id="password"
             defaultValue={getValues("password")}
+            className={cn(
+              "transition-all duration-600",
+              invalidInput ? "border-red-500 bg-red-100" : "bg-white"
+            )}
           />
           {errors.password && (
             <FormErrorMessage message={errors.password?.message || ""} />
           )}
         </div>
       </div>
+      {/* {signUpError && <div className="text-red-500">{signUpError}</div>} */}
       <SubmitButton
         ball="02"
         name="Submit"
         type="submit"
         // onClick={() => toast.success("clicked button")}
       />
-    </form>
+    </motion.form>
   );
 }

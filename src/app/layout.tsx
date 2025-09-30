@@ -12,7 +12,9 @@ import TrainerContextProvider, {
 } from "@/lib/contexts/TrainerContext";
 import DexContextProvider from "@/lib/contexts/DexContext";
 import { FetchTrainerById } from "@/lib/actions";
+import { auth } from "@/lib/auth";
 import PsyduckServer from "../../components/psyduck-server";
+import { redirect } from "next/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,8 +47,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const trainer = await FetchTrainerById("testId");
+  const session = await auth();
+  console.log("Auth session:", session);
+  // console.log("Session in layout:", session);
 
+  if (!session?.user) {
+    // redirect("/login");
+  }
+  const trainer = await FetchTrainerById(session?.user?.id || "");
+  // console.log("Trainer in layout:", trainer);
   return (
     <html lang="en" className="">
       <body
@@ -63,7 +72,7 @@ export default async function RootLayout({
                     isProfileEnabled={true}
                     Navlink="/"
                   />
-                  <div className="flex-grow ">{children}</div>
+                  <div className="flex-grow">{children}</div>
                 </MainWindow>
               </Canvas>
             </TrainerContextProvider>

@@ -5,6 +5,7 @@ import React from "react";
 import Pokeball from "./pokeball";
 import { motion } from "framer-motion";
 import { col } from "framer-motion/client";
+import { useFormStatus } from "react-dom";
 export default function SubmitButton({
   ball,
   name,
@@ -26,6 +27,7 @@ export default function SubmitButton({
   textSize?: "small" | "base";
   onClick?: () => void;
 }) {
+  const { pending } = useFormStatus();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -34,7 +36,7 @@ export default function SubmitButton({
       className={` transition-transform duration-300 flex flex-row gap-2 items-center h-10 w-[${ballPadding}] group`}
     >
       <Button
-        onClick={onClick}
+        onClick={pending ? undefined : onClick}
         type={type}
         className={cn(
           " w-30 h-8 transition-all duration-300 active:scale-90",
@@ -46,7 +48,8 @@ export default function SubmitButton({
           colorStyle === "urgent" &&
             "bg-red-600 hover:bg-red-500 text-white border-yellow-200",
           colorStyle === "default" &&
-            "bg-yellow-100 text-yellow-900 border-yellow-400  "
+            "bg-yellow-100 text-yellow-900 border-yellow-400  ",
+          pending && "opacity-20 noSelect mouse-events-none"
         )}
       >
         <span

@@ -12,12 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import Pokeball from "./pokeball";
-
 import toast from "react-hot-toast";
 import SubmitButton from "./submit-button";
-import { Delete } from "lucide-react";
 import DeleteButton from "./delete-button";
 import { DeleteTrainer } from "@/lib/actions";
 import { TTrainer } from "@/lib/types";
@@ -38,12 +34,6 @@ export default function NavBar({
   return (
     <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
       {isBackEnabled && <BackButton />}
-      {/* <button
-        className={cn("border-3", badServer ? "bg-red-200" : "bg-green-200")}
-        onClick={handleToggleBadServer}
-      >
-        toggle bad server
-      </button> */}
       {isProfileEnabled && (
         <div className="flex items-center gap-3">
           {/* <h3 className="text-[10pt]  italic font-light noSelect">
@@ -114,9 +104,7 @@ function TrainerModal() {
       >
         <div className="absolute bottom-0 ditheredGrad w-full h-20 -z-10 opacity-20 " />
         <div className="absolute top-0 rotate-180 ditheredGrad w-full h-20 -z-10 opacity-20 " />
-
         <DialogHeader></DialogHeader>
-
         <DialogTitle className="hidden">Trainer Info</DialogTitle>
         <DialogDescription id="trainer-info-modal" className="sr-only">
           Trainer info.

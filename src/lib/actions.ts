@@ -13,11 +13,17 @@ import prisma from "./prisma";
 import bcrypt from "bcrypt";
 
 import { ServerTrainerWithLineup, TLineUp, TServerPK } from "./types";
-import { get } from "http";
-import { Trainer } from "@/generated/prisma/wasm";
+
 import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid";
-import { line } from "framer-motion/client";
+import { signIn, signOut } from "./auth";
+import { AuthError } from "next-auth";
+import { tr } from "framer-motion/client";
+
+export async function logIn(authData: unknown) {
+  const data = JSON.parse(authData as string);
+  console.log("Logging in with data:", data);
+}
+
 export const FetchTrainerById = async (
   id: string
 ): Promise<{ trainer: ServerTrainerWithLineup | null; error: string }> => {
@@ -32,10 +38,6 @@ export const FetchTrainerById = async (
       },
     });
     if (!trainer) return { trainer: null, error: "Trainer not found" };
-    console.log(
-      "Fetched trainer with lineup:",
-      trainer.lineup.flat().join(", ")
-    );
     return { trainer, error: "" };
   } catch (error) {
     console.error("Error fetching trainer by ID:", error);
@@ -233,54 +235,52 @@ export const DeleteTrainer = async (email: string) => {
   }
 };
 
-const FindTrainerByEmail = async (email: string, includePk = false) => {
+export const FindTrainerByEmail = async (email: string, includePk = false) => {
   const existingTrainer = prisma.trainer.findFirst({
     where: { email: email },
     include: { lineup: includePk },
   });
   return existingTrainer;
 };
-
+//---------------------------------------------------------------------SIGN IN
 export const SignInTrainer = async (data: unknown) => {
-  // const { handleSignIn } = useTrainerContext();
-  await sleep(500);
+  // await sleep(500);
   const validatedTrainer = SignInFormSchema.safeParse(data);
   let error = null;
   if (!validatedTrainer.success) {
     error = validatedTrainer.error.issues.map(
       (issue) => issue.path + " | " + issue.message
     );
+    console.log("Validation errors:", error);
   }
   const trainerData = validatedTrainer.data!;
-  const existingTrainer = await FindTrainerByEmail(trainerData.email, true);
-  if (!existingTrainer) {
-    console.log("No trainer found with that email");
-    return {
-      trainer: null,
-      error: { message: "No trainer found with that email" },
-    };
-  } else {
-    const passwordMatch = await bcrypt.compare(
-      trainerData.password,
-      existingTrainer.hashedPassword
-    );
-    if (!passwordMatch) {
-      console.log("Incorrect password");
-      return { trainer: null, error: { message: "Incorrect password" } };
+  try {
+    await signIn("credentials", trainerData);
+    revalidatePath("/", "layout");
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin": {
+          return {
+            message: "Invalid credentials.",
+          };
+        }
+        default:
+          {
+            return {
+              message: "Error. Could not sign in.",
+            };
+          }
+          throw error;
+      }
     }
-
-    const lineUpFromServer = existingTrainer.lineup.map((pk) => ({
-      ...pk,
-      type: JSON.parse(pk.types),
-    }));
-    const trainerDataPrepped = {
-      id: existingTrainer.id,
-      name: existingTrainer.name,
-      email: existingTrainer.email,
-      avatar: existingTrainer.avatar,
-      lineup: lineUpFromServer,
-    };
-    return { trainer: trainerDataPrepped, error: null };
-    // setTrainer(trainerDataPrepped);
   }
+};
+
+//---------------------------------------------------------------------SIGN OUT
+
+export const SignOutTrainer = async () => {
+  // await sleep(500);
+  await signOut();
+  revalidatePath("/", "layout");
 };

@@ -5,22 +5,22 @@ export const Urls_1 = [
   "/ditheredgrad.jpg",
   "/placeholders/slowpoke.png",
   "/08 - Snorlax.svg",
-  "/pokeballs/pokeball-02.svg",
-  "/pokeballs/pokeball-05.svg",
-  "/pokeballs/pokeball-09.svg",
+  "/pokeballs/pokeballs-02.svg",
+  "/pokeballs/pokeballs-05.svg",
+  "/pokeballs/pokeballs-09.svg",
 ];
 
 export const Urls_2 = [
   "/01 - Pikachu.svg",
   "/08 - Snorlax.svg",
   "/06 - Charizard.svg",
-  "/pokeballs/pokeball-01.svg",
-  "/pokeballs/pokeball-03.svg",
-  "/pokeballs/pokeball-04.svg",
-  "/pokeballs/pokeball-05.svg",
-  "/pokeballs/pokeball-06.svg",
-  "/pokeballs/pokeball-07.svg",
-  "/pokeballs/pokeball-08.svg",
+  "/pokeballs/pokeballs-01.svg",
+  "/pokeballs/pokeballs-03.svg",
+  "/pokeballs/pokeballs-04.svg",
+  "/pokeballs/pokeballs-05.svg",
+  "/pokeballs/pokeballs-06.svg",
+  "/pokeballs/pokeballs-07.svg",
+  "/pokeballs/pokeballs-08.svg",
 ];
 
 export const Urls_login = [

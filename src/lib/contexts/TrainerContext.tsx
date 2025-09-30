@@ -18,9 +18,16 @@ import {
 } from "../types";
 import toast from "react-hot-toast";
 import { AddPkFormValues, EditPkFormValues } from "../schemas";
-import { AddPokemon, AddTrainer, DeletePokemon, EditPokemon } from "../actions";
+import {
+  AddPokemon,
+  AddTrainer,
+  DeletePokemon,
+  EditPokemon,
+  SignOutTrainer,
+} from "../actions";
 import useBallReorder from "../useBallReorder";
 import { v4 as uuidv4 } from "uuid";
+import { signOut } from "../auth";
 
 //-----------------------------------------------------Trainer Context Provider
 // Manages trainer state and optimistic UI for lineup changes
@@ -266,10 +273,12 @@ export default function TrainerContextProvider({
     }
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     if (isTransitionUi) return;
-    startSignOutTransition(() => {
+    startSignOutTransition(async () => {
+      await SignOutTrainer();
       setTrainer(null);
+      // router.push("/account");
     });
     toast.success("Signed out");
   };
