@@ -4,12 +4,15 @@ import MainWindow from "../../../components/main-window";
 import WindowBg from "../../../components/window-bg/window-bg";
 import Nav from "../../../components/nav";
 import AppPreview from "../../../components/app-preview";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 
 import { useFontsLoaded, useIsMobile } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
 import LoadingContent from "../../../components/loading-content";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import { useEffect } from "react";
+import { p } from "framer-motion/client";
 const features = [
   "Full Stack with Next",
   "Optimistic Frontend",
@@ -80,10 +83,29 @@ function BottomSection({ children }: { children: React.ReactNode }) {
 }
 
 function WholeSection({ children }: { children: React.ReactNode }) {
+  const controls = useAnimation();
+  const { pageTransition } = usePokeAppContext();
+  useEffect(() => {
+    if (pageTransition) {
+      controls.start({
+        opacity: 0,
+        transition: { duration: 0.2 },
+      });
+    } else {
+      controls.start({
+        opacity: 1,
+        transition: { duration: 0 },
+      });
+    }
+  }, [pageTransition]);
   return (
-    <div className="mx-5  h-full flex flex-col items-center justify-center">
+    <motion.div
+      animate={controls}
+      className={`mx-5  
+      } h-full flex flex-col items-center justify-center`}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -94,7 +116,7 @@ function WelcomeText() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
         className="noSelect  w-full mx-2 mb-1 sm:mb-1 lg:mb-1 py-0 leading-12! sm:leading-11! text-[40pt]! sm:text-[37pt]!  "
       >
         POKEMON MANAGER

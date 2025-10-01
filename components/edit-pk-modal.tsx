@@ -163,10 +163,10 @@ export function EditPkModal() {
           console.log("order " + (selectedPk?.order || 0));
           const result = await trigger();
           if (!result) {
-            toast.error("Please fix the errors.");
+            // toast.error("Please fix the errors.");
             console.log("Zod validation failed");
             console.log(errors);
-            toast.error("Validation failed. Check form fields.");
+            // toast.error("Validation failed. Check form fields.");
             return;
           }
           const pokeData = getValues();

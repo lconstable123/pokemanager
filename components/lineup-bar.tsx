@@ -29,7 +29,6 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
     handleBallClick,
     uiLineup,
     ballLayoutEnabled,
-    isTransitionUi,
   } = useTrainerContext();
   const controls = useAnimation();
 
@@ -106,7 +105,11 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
                     )}
                   />
 
-                  <Pokeball type={"01"} fill={true} hoverAnim={true} />
+                  <Pokeball
+                    type={uiLineup[index].ball}
+                    fill={true}
+                    hoverAnim={true}
+                  />
                 </motion.div>
               ) : (
                 <AddBall isReordering={isReordering} />

@@ -5,7 +5,6 @@ import { FindTrainerByEmail } from "./actions";
 import Credentials from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
 import prisma from "./prisma";
-import { revalidatePath } from "next/cache";
 const config = {
   pages: {
     signIn: "/auth/login",
@@ -60,25 +59,30 @@ const config = {
       }
       if (isTryingToAccessApp && !isLoggedIn) {
         console.log("permission denied");
-        // return Response.redirect(new URL("/", request.nextUrl));
-        return false;
+        return Response.redirect(new URL("/", request.nextUrl));
       }
       if (isLoggedIn && isTryingToAccessApp) {
-        // revalidatePath("/account", "layout");
         console.log("permission granted");
         return true;
       }
       if (isLoggedIn && !isTryingToAccessApp) {
         console.log("redirecting to /account");
-        // revalidatePath("/account", "layout");
-        // return Response.redirect(new URL("/account", request.nextUrl));
-        return true;
+        return Response.redirect(new URL("/account", request.nextUrl));
       }
       if (!isLoggedIn && !isTryingToAccessApp) {
-        console.log("not logged in not acceing app");
-        return true;
+        const pathname = request.nextUrl.pathname;
+        const validPage =
+          pathname === "/" ||
+          pathname.includes("/login") ||
+          pathname.includes("/sign-up");
+        if (!validPage) {
+          console.log("badpage");
+          return Response.redirect(new URL("/", request.nextUrl));
+        } else {
+          console.log("allowed");
+          return true;
+        }
       }
-      return false;
     },
     jwt: ({ token, user }) => {
       if (user) {

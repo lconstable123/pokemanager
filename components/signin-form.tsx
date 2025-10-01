@@ -18,6 +18,7 @@ import { cn, sleep } from "@/lib/utils";
 export default function SignInForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
   // const { handleSignIn } = useTrainerContext();
+  const { handlePageTransition } = usePokeAppContext();
   const controls = useAnimation();
 
   const handleAnimateError = () => {
@@ -77,14 +78,15 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
             const trainer = await SignInTrainer(values);
             // await revalidateAccountLayout();
             if (trainer?.message) {
-              toast.error(trainer.message || "Failed to sign in");
+              // toast.error(trainer.message || "Failed to sign in");
               handleAnimateError();
             } else {
-              toast.success("Successfully signed in with form ");
+              // toast.success("Successfully signed in with form ");
               // await sleep(1400);
+              handlePageTransition("/account", 2000);
               await new Promise((r) => setTimeout(r, 50));
               router.refresh();
-              toast.success("moving to your account...");
+              // toast.success("moving to your account...");
               router.push("/account");
             }
           }

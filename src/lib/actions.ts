@@ -17,6 +17,7 @@ import { ServerTrainerWithLineup, TLineUp, TServerPK } from "./types";
 import { revalidatePath } from "next/cache";
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth";
+import { redirect } from "next/dist/server/api-utils";
 
 export async function logIn(authData: unknown) {
   const data = JSON.parse(authData as string);
@@ -298,6 +299,6 @@ export const SignOutTrainer = async () => {
   "use server";
   // await sleep(500);
   console.log("Signing out and revalidating path");
-  await signOut({ redirectTo: "/" });
+  await signOut({ redirect: false });
   revalidatePath("/account");
 };

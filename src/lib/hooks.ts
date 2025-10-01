@@ -74,7 +74,7 @@ export const useLineUp = () => {
         resetShifting();
       }
     } else {
-      toast.success("navigating inside ball");
+      // toast.success("navigating inside ball");
     }
   };
 

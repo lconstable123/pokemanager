@@ -192,7 +192,7 @@ export default function TrainerContextProvider({
 
     if (error) {
       handleServerError();
-      toast.error("Server Failed to add Pokémon.");
+      // toast.error("Server Failed to add Pokémon.");
       console.log(error);
       return;
     }
@@ -222,7 +222,7 @@ export default function TrainerContextProvider({
     );
     if (error) {
       handleServerError();
-      toast.error("Failed to edit Pokémon on server. .");
+      // toast.error("Failed to edit Pokémon on server. .");
       return;
     }
     toast.success("Pokémon edited on server");
@@ -241,7 +241,7 @@ export default function TrainerContextProvider({
     );
     if (error) {
       handleServerError();
-      toast.error("Failed to delete Pokémon on server. ");
+      // toast.error("Failed to delete Pokémon on server. ");
       return;
     }
     toast.success(`Deleted Pokémon on server. `);

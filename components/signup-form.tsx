@@ -34,7 +34,7 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
   //---------------------------------------------------------------handles
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Successfully signed in!");
+    // toast.success("Successfully signed in!");
     // validate, send request, etc.
     router.push("/account");
   };
@@ -78,12 +78,14 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
         const isValid = await trigger();
         // console.log(values);
         if (!isValid) {
-          toast.error("Please fix the errors in the form.");
+          // toast.error("Please fix the errors in the form.");
           return;
         }
         // toast.success("Successfully signed in!");
-        handleSignUp(values);
+        await handleSignUp(values);
+
         // validate, send request, etc.
+
         router.push("/account");
       }}
       // onSubmit={handleSubmit}

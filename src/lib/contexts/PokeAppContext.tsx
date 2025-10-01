@@ -38,7 +38,7 @@ type AppContextType = {
   handleToggleBadServer: () => void;
   handleSignOut: () => void;
   handleSignUp: (data: unknown) => Promise<void>;
-  handleSignIn: (trainer: TTrainer) => void;
+  // handleSignIn: (trainer: TTrainer) => void;
 
   //transitions
   editPkTransition: boolean;
@@ -54,6 +54,8 @@ type AppContextType = {
   isRearranging: boolean;
   trainer: TTrainer | null;
   setTrainer: React.Dispatch<React.SetStateAction<TTrainer | null>>;
+  handlePageTransition: (destination: string, duration: number) => void;
+  pageTransition: boolean;
 };
 
 export const PokeAppContext = createContext<AppContextType | null>(null);
@@ -92,12 +94,12 @@ export default function PokeAppContextProvider({
   const handleSelectPk = (pokemon: TPokemon) => {
     if (selectedPk && EditPkModalopen) {
       if (modalTimerRef.current) clearTimeout(modalTimerRef.current);
-      toast.error("modeal is already open.");
+      // toast.error("modeal is already open.");
       setAddPkModalOpen(false);
       setSelectedPk(pokemon);
       modalTimerRef.current = setTimeout(() => {
         setAddPkModalOpen(true);
-        toast.success("Switched to new Pokémon.");
+        // toast.success("Switched to new Pokémon.");
       }, 1000);
       return;
     } else if (pokemon) {
@@ -123,29 +125,39 @@ export default function PokeAppContextProvider({
     const error = await AddTrainer(data);
     if (error) {
       handleServerError();
-      toast.error("Failed to sign up." + error.message);
+      // toast.error("Failed to sign up." + error.message);
       return;
     } else {
-      toast.success("Signing up..." + (data as TTrainer).name);
+      // toast.success("Signing up..." + (data as TTrainer).name);
     }
+  };
+
+  const [pageTransition, setPageTransition] = useState(false);
+
+  const handlePageTransition = (destination: string, duration: number) => {
+    setPageTransition(true);
+    toast.success("moving to new page...");
+    setTimeout(() => {
+      router.push(destination);
+    }, duration);
+    setTimeout(() => {
+      setPageTransition(false);
+    }, duration + 250);
   };
 
   const handleSignOut = async () => {
     if (isTransitionUi) return;
     startSignOutTransition(async () => {
-      toast.success("Signing out...");
       await SignOutTrainer();
       setTrainer(null);
       router.refresh();
-      router.push("/");
+      handlePageTransition("/", 400);
     });
-    toast.success("Signed out");
   };
 
-  const handleSignIn = async (trainer: TTrainer) => {
-    toast.success("Welcome back, " + trainer.name + "!");
-    setTrainer(trainer);
-  };
+  // const handleSignIn = async (trainer: TTrainer) => {
+  //   handlePageTransition("/account", 2000);
+  // };
 
   useEffect(() => {
     if (AddPkModalopen) {
@@ -196,7 +208,9 @@ export default function PokeAppContextProvider({
         setTrainer,
         handleSignOut,
         handleSignUp,
-        handleSignIn,
+        // handleSignIn,
+        handlePageTransition,
+        pageTransition,
       }}
     >
       {children}

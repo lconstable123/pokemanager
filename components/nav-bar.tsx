@@ -18,29 +18,34 @@ import DeleteButton from "./delete-button";
 import { DeleteTrainer } from "@/lib/actions";
 import { TTrainer } from "@/lib/types";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-
+import { usePathname } from "next/navigation";
 type TNavBar = {
-  isBackEnabled?: boolean;
-  isProfileEnabled?: boolean;
   Navlink?: string;
 };
 
-export default function NavBar({
-  isBackEnabled = true,
-  isProfileEnabled = false,
-  Navlink = "/",
-}: TNavBar) {
+export default function NavBar({ Navlink = "/" }: TNavBar) {
   const { trainer } = usePokeAppContext();
+  const pathname = usePathname();
+
+  const isAccount = pathname === "/account";
+  const isAuth =
+    pathname.startsWith("/sign-up") || pathname.startsWith("/login");
+
   return (
     <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
-      {isBackEnabled && <BackButton />}
-      {isProfileEnabled && (
-        <div className="flex items-center gap-3">
-          <h3 className="text-[10pt]  italic font-light noSelect">
-            {/* Welcome back, {trainer?.name || "MissingNo"}. */}
-          </h3>
-          <TrainerModal />
-        </div>
+      {isAuth && <BackButton />}
+      {isAccount && (
+        <>
+          {/* <h3 className="text-[9pt]  italic font-light noSelect">
+            Welcome back, {trainer?.name || "MissingNo"}. Feel free to add,
+            edit, or rerarrange Pokémon from your lineup!
+          </h3> */}
+          <div className=" ml-auto flex items-center gap-3">
+            <div className="mr-auto">
+              <TrainerModal />
+            </div>
+          </div>
+        </>
       )}
     </nav>
   );
@@ -138,6 +143,7 @@ function TrainerModal() {
               type={"button"}
               style={"noball"}
               onClick={() => {
+                setModalOpen(false);
                 handleSignOut();
               }}
               ball="02"
@@ -145,12 +151,12 @@ function TrainerModal() {
             />
             <DeleteButton
               handleDelete={async () => {
-                toast.success("Account deletion initiated");
+                // toast.success("Account deletion initiated");
                 const error = await DeleteTrainer(SafeTrainer.email);
                 if (error) {
-                  toast.success(error.message);
+                  // toast.success(error.message);
                 } else {
-                  toast.success("Account deleted successfully");
+                  // toast.success("Account deleted successfully");
                 }
               }}
             />

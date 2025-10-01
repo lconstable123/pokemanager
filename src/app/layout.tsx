@@ -51,11 +51,7 @@ export default async function RootLayout({
           <DexContextProvider>
             <Canvas>
               <MainWindow>
-                <NavBar
-                  isBackEnabled={true}
-                  isProfileEnabled={true}
-                  Navlink="/"
-                />
+                <NavBar Navlink="/" />
                 <div className="flex-grow">{children}</div>
               </MainWindow>
             </Canvas>

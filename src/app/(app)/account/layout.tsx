@@ -5,6 +5,7 @@ import WindowBg from "../../../../components/window-bg/window-bg";
 import TrainerContextProvider from "@/lib/contexts/TrainerContext";
 import { FetchTrainerById } from "@/lib/actions";
 import { checkAuth } from "@/lib/server-utlils";
+import NavBar from "../../../../components/nav-bar";
 
 export default async function Layout({
   children,
@@ -30,6 +31,7 @@ export default async function Layout({
         <AddPkModal mode="add" />
         <EditPkModal />
         <WindowBg image="Charizard" pos="mid" />
+        {/* <NavBar isBackEnabled={false} isProfileEnabled={true} Navlink="/" /> */}
         {children}
       </TrainerContextProvider>
     </>
