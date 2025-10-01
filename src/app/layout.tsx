@@ -7,14 +7,8 @@ import PokeAppContextProvider from "@/lib/contexts/PokeAppContext";
 import MainWindow from "../../components/main-window";
 import Canvas from "../../components/canvas";
 import NavBar from "../../components/nav-bar";
-import TrainerContextProvider, {
-  TrainerContext,
-} from "@/lib/contexts/TrainerContext";
+
 import DexContextProvider from "@/lib/contexts/DexContext";
-import { FetchTrainerById } from "@/lib/actions";
-import { auth } from "@/lib/auth";
-import PsyduckServer from "../../components/psyduck-server";
-import { redirect } from "next/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,15 +41,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-  console.log("Auth session:", session);
-  // console.log("Session in layout:", session);
-
-  if (!session?.user) {
-    // redirect("/login");
-  }
-  const trainer = await FetchTrainerById(session?.user?.id || "");
-  // console.log("Trainer in layout:", trainer);
   return (
     <html lang="en" className="">
       <body
@@ -64,18 +49,16 @@ export default async function RootLayout({
         <Toaster position="top-center" />
         <PokeAppContextProvider>
           <DexContextProvider>
-            <TrainerContextProvider trainerFromServer={trainer?.trainer}>
-              <Canvas>
-                <MainWindow>
-                  <NavBar
-                    isBackEnabled={true}
-                    isProfileEnabled={true}
-                    Navlink="/"
-                  />
-                  <div className="flex-grow">{children}</div>
-                </MainWindow>
-              </Canvas>
-            </TrainerContextProvider>
+            <Canvas>
+              <MainWindow>
+                <NavBar
+                  isBackEnabled={true}
+                  isProfileEnabled={true}
+                  Navlink="/"
+                />
+                <div className="flex-grow">{children}</div>
+              </MainWindow>
+            </Canvas>
           </DexContextProvider>
         </PokeAppContextProvider>
         <BG />

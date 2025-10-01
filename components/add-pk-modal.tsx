@@ -15,8 +15,17 @@ import FormErrorMessage from "./form-error-message";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
 
-import { AddPkFormSchema, AddPkFormValues } from "@/lib/schemas";
-import { cn, generateRandomName, getElementSprite } from "@/lib/utils";
+import {
+  AddPkFormSchema,
+  AddPkFormValues,
+  EditPkFormValues,
+} from "@/lib/schemas";
+import {
+  cn,
+  generateRandomBall,
+  generateRandomName,
+  getElementSprite,
+} from "@/lib/utils";
 import { elmOptions, genOptions, testPokeData } from "@/lib/data";
 import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
 import { MultiSelectFilterDropdown } from "@/components/ui/dropdown-elements";
@@ -43,9 +52,9 @@ import { set } from "zod";
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   //------------------------------------------------------------------------ derived states
 
-  const { trainer, handleAddPokemon, uiLineup } = useTrainerContext();
+  const { handleAddPokemon, uiLineup } = useTrainerContext();
 
-  const { AddPkModalopen, setAddPkModalOpen, setSelectedPk } =
+  const { AddPkModalopen, setAddPkModalOpen, setSelectedPk, trainer } =
     usePokeAppContext();
 
   const {
@@ -77,25 +86,29 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
     getValues,
     control,
     watch,
-    formState: { isSubmitting, errors },
+    resetField,
+    formState: { dirtyFields, isSubmitting, errors },
   } = useForm<AddPkFormValues>({
     resolver: zodResolver(AddPkFormSchema),
     defaultValues: {
       Name: "",
       Xp: 12,
       Pokemon: "",
-      Ball: "02",
+      Ball: generateRandomBall(),
     },
   });
 
   //----------------------------------------------------------------------handles
 
   const handleSearchToggle = () => {
+    updateField("Ball", generateRandomBall());
     setIsSearchOpen(!isSearchOpen);
   };
 
   // When modal is closed, reset everything
   const handleModal = () => {
+    resetField("Ball");
+    updateField("Ball", generateRandomBall());
     handleDeselectPk();
   };
 
@@ -108,10 +121,12 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
 
   // internal pk selection modal
   const handlePkModalToggleOpen = () => {
+    updateField("Ball", generateRandomBall());
     setChoosePkModalOpen((prev) => !prev);
   };
 
   const handlePkModalOpenChange = (newOpen: boolean) => {
+    updateField("Ball", generateRandomBall());
     setChoosePkModalOpen(newOpen);
   };
 
@@ -122,6 +137,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
 
   const handleDeselectPk = () => {
     // toast.success("deselecting pk");
+    resetField("Ball");
     setIsSearchOpen(false);
     setSelectedDexPk(null);
     setAddPkModalOpen(!AddPkModalopen);
@@ -135,11 +151,21 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   // When pokemon is selected from dropdown, set random name and change journey to addname
 
   const watchedPokemon = watch("Pokemon");
+  const updateField = (field: keyof AddPkFormValues, value: any) => {
+    setValue(field, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
 
   useEffect(() => {
     if (watchedPokemon.length === 0) return;
     setSelectedDexPk(watchedPokemon);
-    setValue("Name", generateRandomName());
+    updateField("Name", generateRandomName());
+    if (!dirtyFields.Ball) {
+      updateField("Ball", generateRandomBall());
+    }
     setUserJourney("addname");
   }, [watchedPokemon]);
 
@@ -340,7 +366,7 @@ const DialogWindowStyle = ({
         aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
-          "w-100 border-3  border-black bg-blue-50 duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
+          "w-100 border-3  border-blue-950 bg-blue-50 duration-0 flex flex-col items-center gap-y-0! noSelect pb-1",
           isSearchOpen
             ? userJourney === "initial"
               ? "h-[500px]"

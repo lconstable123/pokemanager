@@ -13,21 +13,22 @@ type TuseBallReorder = {
   lineupRearrange: TLineUp;
   optimisticLineUp: TLineUp;
   setOptimisticLineup: (action: OptimisticAction) => void;
-  badServer?: boolean;
-  setServerError?: React.Dispatch<React.SetStateAction<boolean>>;
-  handleServerError: () => void;
 };
 export default function useBallReorder({
   setLineupRearrange,
   lineupRearrange,
   optimisticLineUp,
   setOptimisticLineup,
-  badServer,
-  handleServerError,
 }: TuseBallReorder) {
   //---------------------------------------------------------------derived states
 
-  const { handleSelectPk, setEvolutions } = usePokeAppContext();
+  const {
+    handleSelectPk,
+    setEvolutions,
+    badServer,
+    handleServerError,
+    startRearranging,
+  } = usePokeAppContext();
   const { handleFetchEvolution } = useDexContext();
 
   //---------------------------------------------------------------states
@@ -38,7 +39,7 @@ export default function useBallReorder({
   const [ballShiftMode, setBallShiftMode] = useState<"select" | "shift">(
     "select"
   );
-  const [isRearranging, startRearranging] = useTransition();
+  // const [isRearranging, startRearranging] = useTransition();
   const [uiEdit, setuiEdit] = useState(false);
   const uiLineup = uiEdit ? lineupRearrange : optimisticLineUp;
   //--------------------------------------------------------------handlers
@@ -134,6 +135,5 @@ export default function useBallReorder({
     handleBallClick,
     ballLayoutEnabled,
     uiLineup,
-    isRearranging,
   };
 }

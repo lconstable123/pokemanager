@@ -5,6 +5,7 @@ import { FindTrainerByEmail } from "./actions";
 import Credentials from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
 import prisma from "./prisma";
+import { revalidatePath } from "next/cache";
 const config = {
   pages: {
     signIn: "/auth/login",
@@ -39,6 +40,7 @@ const config = {
           return null;
         }
         console.log("Login successful for:", existingTrainer.id);
+
         return {
           id: existingTrainer.id,
           name: existingTrainer.name,
@@ -58,16 +60,18 @@ const config = {
       }
       if (isTryingToAccessApp && !isLoggedIn) {
         console.log("permission denied");
-        return Response.redirect(new URL("/", request.nextUrl));
-        // return false;
+        // return Response.redirect(new URL("/", request.nextUrl));
+        return false;
       }
       if (isLoggedIn && isTryingToAccessApp) {
+        // revalidatePath("/account", "layout");
         console.log("permission granted");
         return true;
       }
       if (isLoggedIn && !isTryingToAccessApp) {
         console.log("redirecting to /account");
-        return Response.redirect(new URL("/account", request.nextUrl));
+        // revalidatePath("/account", "layout");
+        // return Response.redirect(new URL("/account", request.nextUrl));
         return true;
       }
       if (!isLoggedIn && !isTryingToAccessApp) {

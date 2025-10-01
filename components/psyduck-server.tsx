@@ -9,12 +9,17 @@ import { FiMonitor } from "react-icons/fi";
 import { motion, useAnimation } from "framer-motion";
 import { useSingleImageLoader } from "@/lib/useImageLoader";
 import { is } from "zod/v4/locales";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import { revalidateAccountLayout } from "@/lib/actions";
+import { checkAuth } from "@/lib/server-utlils";
 
 export default function PsyduckServer() {
   const [error, setError] = useState(false);
   const { isTransitionUi, handleToggleBadServer, serverError } =
-    useTrainerContext();
-  const handleToggleError = () => {
+    usePokeAppContext();
+  const handleToggleError = async () => {
+    await revalidateAccountLayout();
+
     setError(!error);
     handleToggleBadServer();
   };
@@ -39,7 +44,7 @@ export default function PsyduckServer() {
         animate={controls}
         onClick={handleToggleError}
         className={cn(
-          "z-30 cursor-pointer group hardSVGShadow absolute flex flex-col justify-center items-center gap-y-1 w-35 h-35 text-[8px] ",
+          "z-100 cursor-pointer group hardSVGShadow absolute flex flex-col justify-center items-center gap-y-1 w-35 h-35 text-[8px] ",
           "bottom-1/2 sm:bottom-0 lg:bottom-0 right-2 sm:right-0 lg:-right-10 "
         )}
       >

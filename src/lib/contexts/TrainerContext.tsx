@@ -4,7 +4,6 @@ import React, {
   useContext,
   useState,
   useOptimistic,
-  useTransition,
   useMemo,
   useEffect,
 } from "react";
@@ -27,7 +26,7 @@ import {
 } from "../actions";
 import useBallReorder from "../useBallReorder";
 import { v4 as uuidv4 } from "uuid";
-import { signOut } from "../auth";
+import { usePokeAppContext } from "./PokeAppContext";
 
 //-----------------------------------------------------Trainer Context Provider
 // Manages trainer state and optimistic UI for lineup changes
@@ -69,16 +68,27 @@ export default function TrainerContextProvider({
     };
   }, [trainerFromServer, initialLineUp]);
 
-  const [trainer, setTrainer] = useState<TTrainer | null>(null);
-  const [badServer, setBadServer] = useState(false);
-  const [serverError, setServerError] = useState(false);
+  // const [trainer, setTrainer] = useState<TTrainer | null>(null);
+
+  // const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
+    // toast.success("Trainer data loaded");
     setTrainer(initialTrainer);
   }, [initialTrainer]);
 
   //---------------------------------------------------------------------Optimistic UI Lineup
-
+  const {
+    badServer,
+    handleServerError,
+    startAddPkTransition,
+    startEditTransition,
+    startDeletePkTransition,
+    startSignOutTransition,
+    isTransitionUi,
+    trainer,
+    setTrainer,
+  } = usePokeAppContext();
   const [optimisticLineUp, setOptimisticLineup] = useOptimistic<
     TPokemon[],
     OptimisticAction
@@ -132,18 +142,6 @@ export default function TrainerContextProvider({
     );
   };
 
-  //--------------------------------------------------------------------Transitions
-
-  const [editPkTransition, startEditTransition] = useTransition();
-  const [deletePkTransition, startDeletePkTransition] = useTransition();
-  const [addPkTransition, startAddPkTransition] = useTransition();
-  const [signOutTransition, startSignOutTransition] = useTransition();
-
-  // any transition in progress
-  const handleServerError = () => {
-    setServerError(true);
-    setTimeout(() => setServerError(false), 100);
-  };
   //---------------------------------------------------------------------Ball Logic
   const {
     //----------------------ball reorder outputs
@@ -155,26 +153,15 @@ export default function TrainerContextProvider({
     handleBallClick,
     ballLayoutEnabled,
     uiLineup,
-    isRearranging,
   } = useBallReorder({
     //-----------------------ball reorder inputs
     optimisticLineUp,
     setOptimisticLineup,
-    badServer,
     lineupRearrange,
     setLineupRearrange,
-    handleServerError,
   });
 
   //-----------------------------------------------------------------------------HANDLERS
-  const isTransitionUi =
-    addPkTransition ||
-    editPkTransition ||
-    deletePkTransition ||
-    signOutTransition ||
-    isRearranging;
-
-  //-----after rearranging, finally prepare the slots for rendering
 
   const slots = handleCalculateSlots(uiLineup);
 
@@ -260,45 +247,13 @@ export default function TrainerContextProvider({
     toast.success(`Deleted Pokémon on server. `);
   };
 
-  //---------------------------------------------------------------------SIGN UP
-  const handleSignUp = async (data: unknown) => {
-    setTrainer(data as TTrainer);
-    const error = await AddTrainer(data);
-    if (error) {
-      handleServerError();
-      toast.error("Failed to sign up." + error.message);
-      return;
-    } else {
-      toast.success("Signing up..." + (data as TTrainer).name);
-    }
-  };
-
-  const handleSignOut = async () => {
-    if (isTransitionUi) return;
-    startSignOutTransition(async () => {
-      await SignOutTrainer();
-      setTrainer(null);
-      // router.push("/account");
-    });
-    toast.success("Signed out");
-  };
-
-  const handleSignIn = (trainer: TTrainer) => {
-    toast.success("Welcome back, " + trainer.name + "!");
-    setTrainer(trainer);
-  };
-
   //-------------------------------------------------------------- manual server disconnect
-
-  const handleToggleBadServer = () => {
-    setBadServer((prev) => !prev);
-  };
 
   return (
     <TrainerContext.Provider
       value={{
-        trainer,
-        setTrainer,
+        // trainer,
+        // setTrainer,
         lineUp: slots,
         handleReorder,
         slots,
@@ -307,18 +262,13 @@ export default function TrainerContextProvider({
         isReordering,
         handleToggleReorder,
         handleBallClick,
-        handleSignUp,
+
         ballLayoutEnabled,
         handleAddPokemon,
         handleEditPokemon,
         handleDeletePokemon,
-        handleSignOut,
-        handleSignIn,
-        handleToggleBadServer,
-        badServer,
+
         uiLineup,
-        isTransitionUi,
-        serverError,
       }}
     >
       {children}
@@ -342,8 +292,8 @@ export const TrainerContext = createContext<TrainerContextType | null>(null);
 //--------------------------------------------------------------------------Types
 
 type TrainerContextType = {
-  trainer: TTrainer | null;
-  setTrainer: React.Dispatch<React.SetStateAction<TTrainer | null>>;
+  // trainer: TTrainer | null;
+  // setTrainer: React.Dispatch<React.SetStateAction<TTrainer | null>>;
   lineUp: (
     | TPokemon
     | {
@@ -370,12 +320,8 @@ type TrainerContextType = {
     Pk: EditPkFormValues
   ) => Promise<void | { success: true; data: unknown } | undefined>;
   handleDeletePokemon?: (id: string) => Promise<void>;
-  handleSignUp: (data: unknown) => Promise<void>;
-  handleSignOut: () => void;
-  handleSignIn: (trainer: TTrainer) => void;
-  handleToggleBadServer: () => void;
-  badServer: boolean;
+
   uiLineup: TLineUp;
-  isTransitionUi: boolean;
-  serverError: boolean;
+  // isTransitionUi: boolean;
+  // serverError: boolean;
 };

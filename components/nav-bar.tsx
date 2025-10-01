@@ -17,6 +17,7 @@ import SubmitButton from "./submit-button";
 import DeleteButton from "./delete-button";
 import { DeleteTrainer } from "@/lib/actions";
 import { TTrainer } from "@/lib/types";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 
 type TNavBar = {
   isBackEnabled?: boolean;
@@ -29,16 +30,15 @@ export default function NavBar({
   isProfileEnabled = false,
   Navlink = "/",
 }: TNavBar) {
-  const { trainer } = useTrainerContext();
-  const { handleToggleBadServer, badServer } = useTrainerContext();
+  const { trainer } = usePokeAppContext();
   return (
     <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
       {isBackEnabled && <BackButton />}
       {isProfileEnabled && (
         <div className="flex items-center gap-3">
-          {/* <h3 className="text-[10pt]  italic font-light noSelect">
-            Welcome back, {trainer?.name || "MissingNo"}.
-          </h3> */}
+          <h3 className="text-[10pt]  italic font-light noSelect">
+            {/* Welcome back, {trainer?.name || "MissingNo"}. */}
+          </h3>
           <TrainerModal />
         </div>
       )}
@@ -59,7 +59,7 @@ function ProfileButton({
         handleClick();
       }}
       className={cn(
-        " origin-top-right noSelect hover:scale-140 scale-100 transition-all border-2 ring-2 ring-red-200 border-gray-700 relative overflow-hidden w-10 h-10 rounded-full bg-red-300"
+        " origin-top-right noSelect duration-300 hover:scale-140 scale-100 transition-all border-2 ring-2 hover:ring-4 hover:translate-y-1 ring-red-200 border-gray-700 relative overflow-hidden w-10 h-10 rounded-full bg-red-300 hover:bg-blue-300"
         // "hover:w-30 hover:h-30"
       )}
     >
@@ -73,7 +73,8 @@ function ProfileButton({
 }
 
 function TrainerModal() {
-  const { trainer, setTrainer, handleSignOut } = useTrainerContext();
+  const { handleSignOut } = usePokeAppContext();
+  const { trainer } = usePokeAppContext();
   const SafeTrainer: TTrainer = trainer ?? {
     id: "unknown",
     name: "Unknown",
@@ -100,7 +101,7 @@ function TrainerModal() {
       <DialogContent
         aria-describedby="trainer-info-modal"
         tabIndex={-1}
-        className="border-3  border-black bg-yellow-100 overflow-hidden w-80 flex justify-center items-center flex-col gap-y-1! noSelect pb-2 "
+        className="border-3  border-yellow-800 bg-yellow-100 overflow-hidden w-80 flex justify-center items-center flex-col gap-y-1! noSelect pb-2 "
       >
         <div className="absolute bottom-0 ditheredGrad w-full h-20 -z-10 opacity-20 " />
         <div className="absolute top-0 rotate-180 ditheredGrad w-full h-20 -z-10 opacity-20 " />

@@ -35,8 +35,8 @@ import { motion } from "framer-motion";
 export function EditPkModal() {
   //---------------------------------------------------------------------------------derived states
 
-  const { trainer, handleEditPokemon, handleDeletePokemon } =
-    useTrainerContext();
+  const { handleEditPokemon, handleDeletePokemon } = useTrainerContext();
+  const { trainer } = usePokeAppContext();
 
   const {
     EditPkModalopen,
@@ -129,6 +129,7 @@ export function EditPkModal() {
     updateField("Xp", selectedPk?.exp || 0);
     updateField("Pokemon", selectedPk?.species || "");
     updateField("Type", selectedPk?.type || [""]);
+
     updateField("Trainer", trainer?.id || "");
     updateField("Sprite", selectedPk?.sprite || "");
     updateField("Id", selectedPk?.id || "");
@@ -305,7 +306,7 @@ const DialogWindowStyle = ({
         aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
-          "border-3  border-black bg-blue-50 w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
+          "border-3  border-blue-950 bg-blue-50 w-100 duration-0 flex flex-col items-center gap-y-0! noSelect pb-3",
           "h-[510px]"
         )}
       >

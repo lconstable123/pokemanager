@@ -5,36 +5,51 @@ import { motion, Reorder, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { Element, TPokemon } from "@/lib/types";
 import { cn, getElementSprite } from "@/lib/utils";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { toast } from "react-hot-toast";
 import { useMultipleImageLoader } from "@/lib/useImageLoader";
+import LineupBar from "../../../../components/lineup-bar";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const { slots, isReordering, uiLineup } = useTrainerContext();
+  const { isMobile, isSmall } = useIsMobile();
   const lineUpUrls = [...uiLineup?.map((pk) => pk?.sprite), "/pokebg_3.png"];
   const allImagesLoaded = useMultipleImageLoader(lineUpUrls);
+  // useEffect(() => {
+  //   router.refresh();
+  // }, []);
+
   return (
-    <WholeSection>
-      {allImagesLoaded && (
-        <PokeGrid>
-          {slots.map((slot, index) => (
-            <div key={slot.id} className="relative">
-              <GridNumber
-                index={index}
-                isReordering={isReordering}
-                status={slot.empty}
-              />
-              <PokemonCard
-                pokemon={slot.empty ? undefined : (uiLineup[index] as TPokemon)}
-                id={uiLineup[index]?.id || slot.id}
-                lineUpPos={index}
-              />
-            </div>
-          ))}
-        </PokeGrid>
-      )}
-    </WholeSection>
+    <>
+      {" "}
+      {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
+      <WholeSection>
+        {allImagesLoaded && (
+          <PokeGrid>
+            {slots.map((slot, index) => (
+              <div key={slot.id} className="relative">
+                <GridNumber
+                  index={index}
+                  isReordering={isReordering}
+                  status={slot.empty}
+                />
+                <PokemonCard
+                  pokemon={
+                    slot.empty ? undefined : (uiLineup[index] as TPokemon)
+                  }
+                  id={uiLineup[index]?.id || slot.id}
+                  lineUpPos={index}
+                />
+              </div>
+            ))}
+          </PokeGrid>
+        )}
+      </WholeSection>
+      {!isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
+    </>
   );
 }
 
@@ -182,10 +197,10 @@ export function PkCardImage({
           className={cn(
             "transition-all w-full h-full cursor-pointer absolute z-3 user-select-none pixelImage",
             !isReordering
-              ? "scale-110"
+              ? "scale-110 hover:scale-130"
               : highlighted
-              ? " scale-145"
-              : "scale-130 hover:scale-130"
+              ? " scale-145 hover:scale-150"
+              : "scale-130 hover:scale-140"
           )}
         />
       </motion.div>

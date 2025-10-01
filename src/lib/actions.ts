@@ -17,7 +17,6 @@ import { ServerTrainerWithLineup, TLineUp, TServerPK } from "./types";
 import { revalidatePath } from "next/cache";
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth";
-import { tr } from "framer-motion/client";
 
 export async function logIn(authData: unknown) {
   const data = JSON.parse(authData as string);
@@ -244,7 +243,9 @@ export const FindTrainerByEmail = async (email: string, includePk = false) => {
 };
 //---------------------------------------------------------------------SIGN IN
 export const SignInTrainer = async (data: unknown) => {
+  // "use server";
   // await sleep(500);
+  console.log("Signing in with data:", data);
   const validatedTrainer = SignInFormSchema.safeParse(data);
   let error = null;
   if (!validatedTrainer.success) {
@@ -255,9 +256,15 @@ export const SignInTrainer = async (data: unknown) => {
   }
   const trainerData = validatedTrainer.data!;
   try {
-    await signIn("credentials", trainerData);
+    await signIn("credentials", { ...trainerData, redirect: false });
+    console.log("Sign in function completed");
+    // await sleep(500);
+    console.log("Sign in successful, revalidating path");
+    revalidatePath("/account");
     revalidatePath("/", "layout");
   } catch (error) {
+    revalidatePath("/account");
+    revalidatePath("/", "layout");
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin": {
@@ -265,22 +272,32 @@ export const SignInTrainer = async (data: unknown) => {
             message: "Invalid credentials.",
           };
         }
-        default:
-          {
-            return {
-              message: "Error. Could not sign in.",
-            };
-          }
-          throw error;
+        default: {
+          return {
+            message: "Error. Could not sign in.",
+          };
+        }
       }
     }
+    console.error("Error signing in:");
+    throw new Error("Sign in failed"); // nextjs redirects throws error, so we need to rethrow it
   }
+  console.log("Sign in function completed without error");
+  revalidatePath("/account", "layout");
+  revalidatePath("/", "layout");
 };
+
+export async function revalidateAccountLayout() {
+  console.log("Revalidating /account layout");
+  revalidatePath("/account", "layout");
+}
 
 //---------------------------------------------------------------------SIGN OUT
 
 export const SignOutTrainer = async () => {
+  "use server";
   // await sleep(500);
-  await signOut();
-  revalidatePath("/", "layout");
+  console.log("Signing out and revalidating path");
+  await signOut({ redirectTo: "/" });
+  revalidatePath("/account");
 };

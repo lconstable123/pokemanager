@@ -9,20 +9,15 @@ import { useRouter } from "next/navigation";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { SignInFormData, SignInFormSchema } from "@/lib/schemas";
+import { SignInFormData, SignInFormSchema, UserFormInput } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SignInTrainer } from "@/lib/actions";
-import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { useFormState } from "react-dom";
-import { signIn } from "@/lib/auth";
-import { tr } from "framer-motion/client";
+import { revalidateAccountLayout, SignInTrainer } from "@/lib/actions";
 import { motion, useAnimate, useAnimation } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { set } from "zod";
-import { start } from "repl";
+import { cn, sleep } from "@/lib/utils";
+
 export default function SignInForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
-  const { handleSignIn } = useTrainerContext();
+  // const { handleSignIn } = useTrainerContext();
   const controls = useAnimation();
 
   const handleAnimateError = () => {
@@ -33,12 +28,19 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
       transition: { duration: 0.5, ease: "easeInOut" },
     });
   };
-
+  const updateField = (field: keyof SignInFormData, value: any) => {
+    setValue(field, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
   const router = useRouter();
   const {
     register,
     trigger,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm<SignInFormData>({
     defaultValues: {
@@ -50,7 +52,17 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
   const [isPending, startTransition] = useTransition();
   const [invalidInput, setInvalidInput] = useState(false);
   // const [signUpError] = useFormState();
-
+  const [userToggle, setUserToggle] = useState(false);
+  const handleChangeUser = () => {
+    setUserToggle((prev) => !prev);
+    if (userToggle) {
+      updateField("email", "stellacadzow@hotmail.com");
+      updateField("password", "password123");
+    } else {
+      updateField("email", "ash.ketchum@example.com");
+      updateField("password", "password");
+    }
+  };
   return (
     <motion.form
       animate={controls}
@@ -63,12 +75,16 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
             return;
           } else {
             const trainer = await SignInTrainer(values);
+            // await revalidateAccountLayout();
             if (trainer?.message) {
               toast.error(trainer.message || "Failed to sign in");
               handleAnimateError();
             } else {
-              toast.success("Successfully signed in");
-
+              toast.success("Successfully signed in with form ");
+              // await sleep(1400);
+              await new Promise((r) => setTimeout(r, 50));
+              router.refresh();
+              toast.success("moving to your account...");
               router.push("/account");
             }
           }
@@ -79,6 +95,13 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
         isPending === true && "opacity-70 pointer-events-none"
       )}
     >
+      <button
+        type="button"
+        className="border-2 rounded-full p-1"
+        onClick={handleChangeUser}
+      >
+        Change user
+      </button>
       {isMobile && (
         <div className="mb-4">
           <SelectTrainer mode={"sign-in"} />

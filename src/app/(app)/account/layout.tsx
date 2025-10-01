@@ -1,28 +1,37 @@
-"use client";
-import React, { useState } from "react";
-
-import LineupBar from "../../../../components/lineup-bar";
-import { useIsMobile } from "@/lib/hooks";
-
+import React from "react";
 import { AddPkModal } from "../../../../components/add-pk-modal";
-
 import { EditPkModal } from "../../../../components/edit-pk-modal";
 import WindowBg from "../../../../components/window-bg/window-bg";
-import NavBar from "../../../../components/nav-bar";
 import TrainerContextProvider from "@/lib/contexts/TrainerContext";
-import DexContextProvider from "@/lib/contexts/DexContext";
+import { FetchTrainerById } from "@/lib/actions";
+import { checkAuth } from "@/lib/server-utlils";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const { isMobile, isSmall } = useIsMobile();
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  console.log(
+    "fetching trainer in account layout---------------------------------------------------------"
+  );
+
+  const session = await checkAuth();
+  console.log("Auth session:", session);
+  if (!session?.user) {
+    console.log("No user session");
+  }
+  const trainer = await FetchTrainerById(session?.user?.id || "");
   return (
     <>
-      <AddPkModal mode="add" />
-      <EditPkModal />
-
-      <WindowBg image="Charizard" pos="mid" />
-      {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
-      {children}
-      {!isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
+      <TrainerContextProvider
+        key={session?.user?.id || "guest"}
+        trainerFromServer={trainer?.trainer}
+      >
+        <AddPkModal mode="add" />
+        <EditPkModal />
+        <WindowBg image="Charizard" pos="mid" />
+        {children}
+      </TrainerContextProvider>
     </>
   );
 }

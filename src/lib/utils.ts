@@ -1,6 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Element } from "./types";
+
+import { parseBall, TBallSchema } from "./schemas";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -107,6 +110,16 @@ export function getElementSprite(element: Element) {
       return "";
   }
 }
+
+export const generateRandomBall = (): TBallSchema => {
+  const seed = Date.now();
+  const balls = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
+  const randomValue = (seed % 9) / 9;
+  const randomBall = balls[Math.floor(Math.random() * balls.length)];
+  const validateBall = parseBall(randomBall);
+  if (!validateBall) return "02" as TBallSchema; // default to pokeball if invalid
+  return validateBall;
+};
 
 export const generateRandomName = () => {
   const names = [

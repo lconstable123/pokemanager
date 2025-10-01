@@ -5,10 +5,13 @@ import React, {
   useEffect,
   useRef,
   useState,
+  useTransition,
 } from "react";
 import { UseDisableScroll, useIsMobile } from "../hooks";
 import toast from "react-hot-toast";
-import { ApiPkData, TPokemon } from "../types";
+import { ApiPkData, TPokemon, TTrainer } from "../types";
+import { AddTrainer, SignOutTrainer } from "../actions";
+import { useRouter } from "next/navigation";
 
 type AppContextType = {
   isMobile: boolean;
@@ -20,13 +23,37 @@ type AppContextType = {
   setEditPkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   selectedPk: TPokemon | null;
   setSelectedPk: React.Dispatch<React.SetStateAction<TPokemon | null>>;
-  handleSelectPk: (pokemon: TPokemon) => void;
   evolutions: string[];
   selectedFormTrainer: number;
   setSelectedFormTrainer: React.Dispatch<React.SetStateAction<number>>;
   setEvolutions: React.Dispatch<React.SetStateAction<string[]>>;
   isInspectingLineup: boolean;
   setIsInspectingLineup: React.Dispatch<React.SetStateAction<boolean>>;
+  badServer: boolean;
+  isTransitionUi: boolean;
+  serverError: boolean;
+
+  //handles
+  handleSelectPk: (pokemon: TPokemon) => void;
+  handleToggleBadServer: () => void;
+  handleSignOut: () => void;
+  handleSignUp: (data: unknown) => Promise<void>;
+  handleSignIn: (trainer: TTrainer) => void;
+
+  //transitions
+  editPkTransition: boolean;
+  deletePkTransition: boolean;
+  addPkTransition: boolean;
+  signOutTransition: boolean;
+  startEditTransition: React.TransitionStartFunction;
+  startDeletePkTransition: React.TransitionStartFunction;
+  startAddPkTransition: React.TransitionStartFunction;
+  startSignOutTransition: React.TransitionStartFunction;
+  startRearranging: React.TransitionStartFunction;
+  handleServerError: () => void;
+  isRearranging: boolean;
+  trainer: TTrainer | null;
+  setTrainer: React.Dispatch<React.SetStateAction<TTrainer | null>>;
 };
 
 export const PokeAppContext = createContext<AppContextType | null>(null);
@@ -37,13 +64,29 @@ export default function PokeAppContextProvider({
   children: React.ReactNode;
 }) {
   const { isMobile, isSmall } = useIsMobile(); // default 640px breakpoint
-  const [AddPkModalopen, setAddPkModalOpen] = useState(false);
-  const [EditPkModalopen, setEditPkModalOpen] = useState(false);
+  const [trainer, setTrainer] = useState<TTrainer | null>(null);
   const [selectedPk, setSelectedPk] = useState<TPokemon | null>(null);
   const [evolutions, setEvolutions] = useState<string[]>([]);
   const modalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [isInspectingLineup, setIsInspectingLineup] = useState(true);
   const [selectedFormTrainer, setSelectedFormTrainer] = useState(0);
+  const [badServer, setBadServer] = useState(false);
+  const [serverError, setServerError] = useState(false);
+  //transitions
+  const [EditPkModalopen, setEditPkModalOpen] = useState(false);
+  const [AddPkModalopen, setAddPkModalOpen] = useState(false);
+  const [isInspectingLineup, setIsInspectingLineup] = useState(true);
+  const [isRearranging, startRearranging] = useTransition();
+  const [editPkTransition, startEditTransition] = useTransition();
+  const [deletePkTransition, startDeletePkTransition] = useTransition();
+  const [addPkTransition, startAddPkTransition] = useTransition();
+  const [signOutTransition, startSignOutTransition] = useTransition();
+  const router = useRouter();
+  const isTransitionUi =
+    addPkTransition ||
+    editPkTransition ||
+    deletePkTransition ||
+    signOutTransition ||
+    isRearranging;
 
   //------------------------------------------------Selection of Pokémon from list
   const handleSelectPk = (pokemon: TPokemon) => {
@@ -59,9 +102,49 @@ export default function PokeAppContextProvider({
       return;
     } else if (pokemon) {
       setSelectedPk(pokemon);
-      // toast.success("Selected Pokémon: " + pokemon.name);
       setEditPkModalOpen(true);
     }
+  };
+
+  //-------------------------------------------------Toggle bad server for testing
+
+  const handleToggleBadServer = () => {
+    setBadServer((prev) => !prev);
+  };
+
+  const handleServerError = () => {
+    setServerError(true);
+    setTimeout(() => setServerError(false), 100);
+  };
+
+  //---------------------------------------------------------------------SIGN UP
+  const handleSignUp = async (data: unknown) => {
+    setTrainer(data as TTrainer);
+    const error = await AddTrainer(data);
+    if (error) {
+      handleServerError();
+      toast.error("Failed to sign up." + error.message);
+      return;
+    } else {
+      toast.success("Signing up..." + (data as TTrainer).name);
+    }
+  };
+
+  const handleSignOut = async () => {
+    if (isTransitionUi) return;
+    startSignOutTransition(async () => {
+      toast.success("Signing out...");
+      await SignOutTrainer();
+      setTrainer(null);
+      router.refresh();
+      router.push("/");
+    });
+    toast.success("Signed out");
+  };
+
+  const handleSignIn = async (trainer: TTrainer) => {
+    toast.success("Welcome back, " + trainer.name + "!");
+    setTrainer(trainer);
   };
 
   useEffect(() => {
@@ -72,8 +155,6 @@ export default function PokeAppContextProvider({
       setIsInspectingLineup(true);
     }
   }, [AddPkModalopen, EditPkModalopen]);
-
-  useEffect(() => {}, []);
 
   const disableScroll = UseDisableScroll;
 
@@ -96,6 +177,26 @@ export default function PokeAppContextProvider({
         setSelectedFormTrainer,
         isInspectingLineup,
         setIsInspectingLineup,
+        handleToggleBadServer,
+        badServer,
+        isTransitionUi,
+        addPkTransition,
+        editPkTransition,
+        deletePkTransition,
+        signOutTransition,
+        startAddPkTransition,
+        startEditTransition,
+        startDeletePkTransition,
+        startSignOutTransition,
+        startRearranging,
+        serverError,
+        handleServerError,
+        isRearranging,
+        trainer,
+        setTrainer,
+        handleSignOut,
+        handleSignUp,
+        handleSignIn,
       }}
     >
       {children}

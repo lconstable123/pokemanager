@@ -160,7 +160,7 @@ h2 {
   user-select: none !important; /* ✅ corrected line */
   -webkit-user-drag: none;
   display: inline-block; /* prevents inline selection box */
-  backface-visibility: hidden;
+  /* backface-visibility: hidden; */
   font-smooth: never;
   -webkit-font-smoothing: none;
 }

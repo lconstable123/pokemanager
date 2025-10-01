@@ -1,4 +1,4 @@
-import { Infer, z } from "zod";
+import { z } from "zod";
 import { elmOptions, genOptions, balloptions } from "./data";
 import { Element } from "./types";
 
@@ -7,6 +7,12 @@ import { Element } from "./types";
 const ElementSchema = z.enum(elmOptions);
 const GenSchema = z.enum(genOptions);
 const BallSchema = z.enum(balloptions);
+export type TBallSchema = z.infer<typeof BallSchema>; // to export as a type only
+
+export function parseBall(value: string): TBallSchema | null {
+  const result = BallSchema.safeParse(value);
+  return result.success ? result.data : null;
+}
 
 export const AddPkFormSchema = z.object({
   Name: z
@@ -95,7 +101,7 @@ export const SignInFormSchema = z.object({
 });
 
 export type SignInFormData = z.infer<typeof SignInFormSchema>;
-export type ServerTrainer = Infer<typeof UserFormSchema> & { lineup: string };
+export type ServerTrainer = z.infer<typeof UserFormSchema> & { lineup: string };
 // =================================================================== Settings Schemas
 export const TPokemonSchema = z.object({
   id: z.string(),

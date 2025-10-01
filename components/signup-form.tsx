@@ -29,7 +29,7 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
   const router = useRouter();
   const { selectedFormTrainer } = usePokeAppContext();
-  const { handleSignUp } = useTrainerContext();
+  const { handleSignUp } = usePokeAppContext();
 
   //---------------------------------------------------------------handles
   const handleSubmit = (e: React.FormEvent) => {
