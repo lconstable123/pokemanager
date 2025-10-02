@@ -1,12 +1,12 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Nav from "./nav";
 import { cn, generateRandomTrainer } from "@/lib/utils";
 import Pokeball from "./pokeball";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import SubmitButton from "./submit-button";
 import FormErrorMessage from "./form-error-message";
 import { time } from "console";
@@ -21,22 +21,25 @@ import {
   UserFormInput,
   UserFormData,
 } from "@/lib/schemas";
-import { ZodSchema } from "zod/v3";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
-import { useTrainerContext } from "@/lib/contexts/TrainerContext";
+import { SignInTrainer } from "@/lib/actions";
 export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
-  const router = useRouter();
-  const { selectedFormTrainer } = usePokeAppContext();
-  const { handleSignUp } = usePokeAppContext();
-
+  const [invalidInput, setInvalidInput] = useState(false);
+  const { selectedFormTrainer, handleSignUp, handlePageTransition } =
+    usePokeAppContext();
+  const controls = useAnimation();
   //---------------------------------------------------------------handles
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // toast.success("Successfully signed in!");
-    // validate, send request, etc.
-    router.push("/account");
+
+  const handleAnimateError = () => {
+    setInvalidInput(true);
+    setTimeout(() => setInvalidInput(false), 400);
+    controls.start({
+      x: [0, -7, 12, -10, 4, 0],
+      transition: { duration: 0.5, ease: "easeInOut" },
+    });
   };
 
   const updateField = (field: keyof UserFormInput, value: any) => {
@@ -51,7 +54,6 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
 
   const {
     register,
-    // handleSubmit,
     trigger,
     control,
     getValues,
@@ -68,27 +70,30 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
   });
 
   return (
-    <form
+    <motion.form
+      animate={controls}
       action={async () => {
         const id = uuidv4();
         updateField("avatar", selectedFormTrainer);
         updateField("id", id);
         const values = getValues();
-        // console.log(errors);
         const isValid = await trigger();
-        // console.log(values);
         if (!isValid) {
-          // toast.error("Please fix the errors in the form.");
+          handleAnimateError();
           return;
         }
-        // toast.success("Successfully signed in!");
-        await handleSignUp(values);
-
-        // validate, send request, etc.
-
-        router.push("/account");
+        const error = await handleSignUp(values);
+        if (error?.message) {
+          handleAnimateError();
+          return;
+        }
+        const trainer = await SignInTrainer(values);
+        if (trainer?.message) {
+          handleAnimateError();
+        } else {
+          handlePageTransition("/account", 0.15);
+        }
       }}
-      // onSubmit={handleSubmit}
       className="flex flex-col items-center justify-center "
     >
       {isMobile && <SelectTrainer mode={"sign-up"} />}
@@ -150,6 +155,6 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
         </div>
       </div>
       <SubmitButton type="submit" ball="02" name="Submit" onSubmit={() => {}} />
-    </form>
+    </motion.form>
   );
 }

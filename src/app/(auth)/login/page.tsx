@@ -14,7 +14,7 @@ export default function Page() {
       {imagesLoaded ? (
         <EntryWindow mode="sign-in" isMobile={isMobile} />
       ) : (
-        <div className="w-full flex justify-center items-center h-full">
+        <div className=" h-[712px] w-full flex justify-center items-center ">
           <LoadingContent />
         </div>
       )}

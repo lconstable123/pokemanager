@@ -64,15 +64,16 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, scale: 1 }}
+      initial={{ opacity: 0, scale: 0.4 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{
         type: "tween",
+        ease: "easeOut",
 
-        duration: 0.2,
+        duration: 0.3,
       }}
-      className={`mb-0 sm:mb-0 h-full  flex flex-col z-50`}
+      className={`mt-3 mb-0 sm:mb-0 h-full  flex flex-col z-50`}
     >
       <Label
         className={`transition-quick self-center ${
@@ -95,8 +96,6 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
         <TrainerFrame trainerFrameWidth={trainerFrameWidth}>
           {trainers.map((trainer, index) => (
             <motion.div
-              // initial={{ opacity: 0 }}
-              // animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               key={trainer}
               style={{

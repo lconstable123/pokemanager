@@ -30,7 +30,8 @@ export default function AppPreview({ isMobile }: { isMobile: boolean }) {
           duration: 0.5,
         }}
         className={`relative overflow-hidden 
- pointer-events-none  p-0 m-1 w-[350px]  sm:w-[450px] h-[250px]   sm:h-[180px] mb-1 lg:h-[250px] imageFrame`}
+ pointer-events-none  p-0 m-1  opacity-0 lg:opacity-100 lg:w-[450px]  w-0  h-0  mb-1 lg:h-[250px] 
+ imageFrame`}
       >
         {/* <h2 className="font-semibold! text-gray-800! text-[8pt]! w-full bg-white border-t-2 border-b-2    z-32 absolute -bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-center  ">
           Find and take care of your lineup.

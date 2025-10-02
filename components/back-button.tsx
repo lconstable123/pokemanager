@@ -1,7 +1,10 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 type Tpokebutton = {
   text?: string;
   link?: string;
@@ -19,20 +22,33 @@ export default function PokeButton({
   modeActive = false,
   disabled = false,
 }: Tpokebutton) {
+  const { handlePageTransition } = usePokeAppContext();
+
   if (type === "nav") {
     return (
-      <Link href={link} tabIndex={-1} className=" z-4 focus:outline-none">
+      // <Link href={link} tabIndex={-1} className=" z-4 focus:outline-none">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0, x: 0 }}
+        animate={{ scale: 1, opacity: 1, x: 0 }}
+        whileHover={{ x: -5, transition: { delay: 0 } }} // no delay, instant
+        whileTap={{ scale: 0.9, x: -5, transition: { delay: 0 } }} // instant tap
+        transition={{
+          type: "tween",
+          ease: "easeOut",
+          duration: 0.3,
+        }}
+        className=" z-4 focus:outline-none"
+      >
         <Button
-          className={cn(
-            "  cursor-pointer w-25 h-7 transition-transform duration-300 active:scale-80 hover:scale-105",
-            {
-              "opacity-50  pointer-events-none": disabled,
-            }
-          )}
+          onClick={() => handlePageTransition(link, 0.15)}
+          className={cn("  cursor-pointer w-25 h-7  ", {
+            "opacity-50  pointer-events-none": disabled,
+          })}
         >
           {text}
         </Button>
-      </Link>
+      </motion.div>
+      // </Link>
     );
   }
   if (type === "action") {

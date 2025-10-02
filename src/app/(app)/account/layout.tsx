@@ -31,7 +31,6 @@ export default async function Layout({
         <AddPkModal mode="add" />
         <EditPkModal />
         <WindowBg image="Charizard" pos="mid" />
-        {/* <NavBar isBackEnabled={false} isProfileEnabled={true} Navlink="/" /> */}
         {children}
       </TrainerContextProvider>
     </>

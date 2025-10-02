@@ -14,17 +14,17 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
+  const { setPsyduckServer } = usePokeAppContext();
   const { slots, isReordering, uiLineup } = useTrainerContext();
   const { isMobile, isSmall } = useIsMobile();
   const lineUpUrls = [...uiLineup?.map((pk) => pk?.sprite), "/pokebg_3.png"];
   const allImagesLoaded = useMultipleImageLoader(lineUpUrls);
-  // useEffect(() => {
-  //   router.refresh();
-  // }, []);
+  useEffect(() => {
+    setPsyduckServer(true);
+  }, []);
 
   return (
     <>
-      {" "}
       {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
       <WholeSection>
         {allImagesLoaded && (
@@ -56,7 +56,7 @@ export default function Home() {
 //---------------------------------------------------
 function PokeGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className=" px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
+    <div className="z-0 px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
       {children}
     </div>
   );
@@ -85,7 +85,7 @@ function GridNumber({
 
 function WholeSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className=" relative mb-30 sm:mb-3 mt-5 flex justify-center ">
+    <section className="min-h-[712px] z-4 relative mb-30 sm:mb-3 mt-5 flex justify-center ">
       {children}
     </section>
   );
@@ -127,7 +127,7 @@ export function PokemonCard({
       initial={{ opacity: 0 }}
       animate={cardAnimationControls}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
-      className="h-45 relative flex flex-col items-center gap-0"
+      className="h-45 z-3 relative flex flex-col items-center gap-0"
       onClick={() => handleBallClick?.(lineUpPos)}
     >
       {/* <span className="text-[8pt] text-red-400">{id}</span> */}

@@ -243,8 +243,8 @@ export const FindTrainerByEmail = async (email: string, includePk = false) => {
   return existingTrainer;
 };
 //---------------------------------------------------------------------SIGN IN
+
 export const SignInTrainer = async (data: unknown) => {
-  // "use server";
   // await sleep(500);
   console.log("Signing in with data:", data);
   const validatedTrainer = SignInFormSchema.safeParse(data);

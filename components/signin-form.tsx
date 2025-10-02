@@ -17,7 +17,6 @@ import { cn, sleep } from "@/lib/utils";
 
 export default function SignInForm({ timeOffset }: { timeOffset: number }) {
   const { isMobile } = usePokeAppContext();
-  // const { handleSignIn } = useTrainerContext();
   const { handlePageTransition } = usePokeAppContext();
   const controls = useAnimation();
 
@@ -36,7 +35,7 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
       shouldTouch: true,
     });
   };
-  const router = useRouter();
+
   const {
     register,
     trigger,
@@ -52,7 +51,6 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
   });
   const [isPending, startTransition] = useTransition();
   const [invalidInput, setInvalidInput] = useState(false);
-  // const [signUpError] = useFormState();
   const [userToggle, setUserToggle] = useState(false);
   const handleChangeUser = () => {
     setUserToggle((prev) => !prev);
@@ -72,22 +70,14 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
           const values = getValues();
           const isValid = await trigger();
           if (!isValid) {
-            toast.error("Please fix the errors in the form.");
+            handleAnimateError();
             return;
           } else {
             const trainer = await SignInTrainer(values);
-            // await revalidateAccountLayout();
             if (trainer?.message) {
-              // toast.error(trainer.message || "Failed to sign in");
               handleAnimateError();
             } else {
-              // toast.success("Successfully signed in with form ");
-              // await sleep(1400);
-              handlePageTransition("/account", 2000);
-              await new Promise((r) => setTimeout(r, 50));
-              router.refresh();
-              // toast.success("moving to your account...");
-              router.push("/account");
+              handlePageTransition("/account", 0.15);
             }
           }
         });
@@ -105,7 +95,7 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
         Change user
       </button>
       {isMobile && (
-        <div className="mb-4">
+        <div className="flex justify-center  mb-7 sm:mb-4">
           <SelectTrainer mode={"sign-in"} />
         </div>
       )}
@@ -146,12 +136,7 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
         </div>
       </div>
       {/* {signUpError && <div className="text-red-500">{signUpError}</div>} */}
-      <SubmitButton
-        ball="02"
-        name="Submit"
-        type="submit"
-        // onClick={() => toast.success("clicked button")}
-      />
+      <SubmitButton ball="02" name="Submit" type="submit" />
     </motion.form>
   );
 }

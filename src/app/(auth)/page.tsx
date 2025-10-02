@@ -33,6 +33,7 @@ export default function Home() {
         <>
           <TopSection>
             <WelcomeText />
+            {!isMobile && <AppPreview isMobile={false} />}
           </TopSection>
 
           <BottomSection>
@@ -45,7 +46,7 @@ export default function Home() {
           </BottomSection>
         </>
       ) : (
-        <div>
+        <div className="h-[712px]">
           <LoadingContent />
         </div>
       )}
@@ -54,9 +55,6 @@ export default function Home() {
   );
 }
 
-{
-  /* //  {!isMobile && <AppPreview isMobile={false} />}     */
-}
 //---------------------------------------------------
 
 function TopSection({ children }: { children: React.ReactNode }) {
@@ -83,29 +81,28 @@ function BottomSection({ children }: { children: React.ReactNode }) {
 }
 
 function WholeSection({ children }: { children: React.ReactNode }) {
-  const controls = useAnimation();
-  const { pageTransition } = usePokeAppContext();
-  useEffect(() => {
-    if (pageTransition) {
-      controls.start({
-        opacity: 0,
-        transition: { duration: 0.2 },
-      });
-    } else {
-      controls.start({
-        opacity: 1,
-        transition: { duration: 0 },
-      });
-    }
-  }, [pageTransition]);
+  // const controls = useAnimation();
+  // const { pageTransition } = usePokeAppContext();
+  // useEffect(() => {
+  //   if (pageTransition) {
+  //     controls.start({
+  //       opacity: 0,
+  //       transition: { duration: 0.2 },
+  //     });
+  //   } else {
+  //     controls.start({
+  //       opacity: 1,
+  //       transition: { duration: 0 },
+  //     });
+  //   }
+  // }, [pageTransition]);
   return (
-    <motion.div
-      animate={controls}
+    <div
       className={`mx-5  
       } h-full flex flex-col items-center justify-center`}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 

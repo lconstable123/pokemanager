@@ -13,6 +13,8 @@ export function sleep(ms: number) {
 }
 export function getTrainerSprite(avatar: number) {
   switch (avatar) {
+    case 0:
+      return "/trainers/oak.png";
     case 1:
       return "/trainers/trainer_1.png";
     case 2:
@@ -30,7 +32,7 @@ export function getTrainerSprite(avatar: number) {
     case 8:
       return "/trainers/trainer_8.png";
     default:
-      return "/trainers/trainer_0.png";
+      return "/trainers/trainer_1.png";
   }
 }
 

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import BackButton from "./back-button";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { cn, getTrainerSprite } from "@/lib/utils";
+import { cn, getTrainerSprite, sleep } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   Dialog,
@@ -15,7 +15,7 @@ import {
 import toast from "react-hot-toast";
 import SubmitButton from "./submit-button";
 import DeleteButton from "./delete-button";
-import { DeleteTrainer } from "@/lib/actions";
+import { DeleteTrainer, SignOutTrainer } from "@/lib/actions";
 import { TTrainer } from "@/lib/types";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { usePathname } from "next/navigation";
@@ -36,15 +36,28 @@ export default function NavBar({ Navlink = "/" }: TNavBar) {
       {isAuth && <BackButton />}
       {isAccount && (
         <>
-          {/* <h3 className="text-[9pt]  italic font-light noSelect">
-            Welcome back, {trainer?.name || "MissingNo"}. Feel free to add,
-            edit, or rerarrange Pokémon from your lineup!
-          </h3> */}
-          <div className=" ml-auto flex items-center gap-3">
+          <motion.h3
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.7 }}
+            className="text-[9pt]  absolute left-1/2  -translate-x-1/2 text-center italic font-light noSelect"
+          >
+            Welcome back,{" "}
+            <span className="font-semibold">
+              {trainer?.name || "MissingNo"}
+            </span>
+            . Feel free to add, edit, or rerarrange your team!
+          </motion.h3>
+          <motion.div
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+            className=" ml-auto flex items-center gap-3"
+          >
             <div className="mr-auto">
               <TrainerModal />
             </div>
-          </div>
+          </motion.div>
         </>
       )}
     </nav>
@@ -78,7 +91,7 @@ function ProfileButton({
 }
 
 function TrainerModal() {
-  const { handleSignOut } = usePokeAppContext();
+  const { handleSignOut, handlePageTransition } = usePokeAppContext();
   const { trainer } = usePokeAppContext();
   const SafeTrainer: TTrainer = trainer ?? {
     id: "unknown",
@@ -87,15 +100,14 @@ function TrainerModal() {
     avatar: 1,
     lineup: [],
   };
-  const trainerSprite = getTrainerSprite(SafeTrainer.avatar || 1);
+  const trainerSprite = getTrainerSprite(SafeTrainer.avatar);
+  // toast.success("Loaded trainer: " + SafeTrainer.avatar);
   const [Modalopen, setModalOpen] = useState(false);
   const handleOpen = () => {
-    // toast.success("Profile modal opened");
     setModalOpen(true);
   };
 
   const handleClose = () => {
-    // toast.success("Profile modal closed");
     setModalOpen(false);
   };
   return (
@@ -135,7 +147,9 @@ function TrainerModal() {
             <img
               src={trainerSprite}
               alt="Trainer"
-              className="pixelImage animate-breathing absolute object-cover -top-15 w-100 h-100"
+              className={`${
+                SafeTrainer.avatar === 0 ? "w-40 h-50 " : "w-100 h-100 -top-15 "
+              } pixelImage animate-breathing absolute object-cover `}
             />
           </motion.div>
           <div className=" px-4 py-2 rounded-full flex gap-2">
@@ -151,12 +165,15 @@ function TrainerModal() {
             />
             <DeleteButton
               handleDelete={async () => {
-                // toast.success("Account deletion initiated");
+                // toast.success("Signed out");
+                // await sleep(100);
                 const error = await DeleteTrainer(SafeTrainer.email);
                 if (error) {
-                  // toast.success(error.message);
+                  toast.error("Error deleting trainer");
                 } else {
-                  // toast.success("Account deleted successfully");
+                  await SignOutTrainer();
+                  setModalOpen(false);
+                  handlePageTransition("/", 0.15);
                 }
               }}
             />

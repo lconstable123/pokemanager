@@ -1,22 +1,30 @@
 "use client";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { cn } from "@/lib/utils";
+import { cn, sleep } from "@/lib/utils";
 import { error } from "console";
 import { s } from "framer-motion/client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { BiSolidServer } from "react-icons/bi";
 import { FiMonitor } from "react-icons/fi";
 import { motion, useAnimation } from "framer-motion";
 import { useSingleImageLoader } from "@/lib/useImageLoader";
-import { is } from "zod/v4/locales";
+import { en, is } from "zod/v4/locales";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { revalidateAccountLayout } from "@/lib/actions";
 import { checkAuth } from "@/lib/server-utlils";
+import toast from "react-hot-toast";
+import { set } from "zod";
 
 export default function PsyduckServer() {
   const [error, setError] = useState(false);
-  const { isTransitionUi, handleToggleBadServer, serverError } =
-    usePokeAppContext();
+  const {
+    isMobile,
+    isTransitionUi,
+    handleToggleBadServer,
+    serverError,
+    psyduckServer,
+  } = usePokeAppContext();
+
   const handleToggleError = async () => {
     await revalidateAccountLayout();
 
@@ -24,36 +32,70 @@ export default function PsyduckServer() {
     handleToggleBadServer();
   };
   const controls = useAnimation();
-
+  const isLoaded = useSingleImageLoader("/placeholders/pd_norm.png");
   const handleError = () => {
     controls.start({
-      translateX: [0, -10, 10, -10, 10, -10, 10, 0],
+      x: [0, -10, 10, -10, 10, -10, 10, 0],
       transition: { duration: 0.7 },
     });
   };
+  const AnimateServerOut = async () => {
+    await controls.start({
+      opacity: 0,
+      scale: 0.5,
+      transition: { duration: 0.3 },
+    });
+  };
+
+  const AnimateServerIn = async () => {
+    controls.set({
+      opacity: 0,
+      scale: 0,
+    });
+
+    await sleep(1200);
+    // toast.success("Psyduck server connected!");
+    await controls.start({
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.3 },
+    });
+  };
+
+  useEffect(() => {
+    if (!psyduckServer) {
+      AnimateServerOut();
+    } else {
+      AnimateServerIn();
+    }
+  }, [psyduckServer]);
 
   useEffect(() => {
     if (serverError) {
       handleError();
     }
   }, [serverError]);
-  const isLoaded = useSingleImageLoader("/placeholders/pd_norm.png");
+
   return (
-    isLoaded && (
-      <motion.section
-        animate={controls}
-        onClick={handleToggleError}
-        className={cn(
-          "z-100 cursor-pointer group hardSVGShadow absolute flex flex-col justify-center items-center gap-y-1 w-35 h-35 text-[8px] ",
-          "bottom-1/2 sm:bottom-0 lg:bottom-0 right-2 sm:right-0 lg:-right-10 "
-        )}
-      >
-        <PsyImg error={error} />
-        <Server error={error} isFetching={isTransitionUi} />
-        <BackBubble error={error} />
-        <TextButton error={error} />
-      </motion.section>
-    )
+    <>
+      {isLoaded && (
+        <motion.section
+          animate={controls}
+          onClick={handleToggleError}
+          className={cn(
+            `${
+              !isMobile ? "z-52" : "z-20"
+            } cursor-pointer group hardSVGShadow absolute flex flex-col justify-center items-center gap-y-1 w-35 h-35 text-[8px] `,
+            "bottom-1/2 sm:bottom-0 lg:bottom-0 right-2 sm:right-0 lg:-right-10 "
+          )}
+        >
+          <PsyImg error={error} />
+          <Server error={error} isFetching={isTransitionUi} />
+          <BackBubble error={error} />
+          <TextButton error={error} />
+        </motion.section>
+      )}
+    </>
   );
 }
 

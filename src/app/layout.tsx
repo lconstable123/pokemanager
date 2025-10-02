@@ -52,7 +52,7 @@ export default async function RootLayout({
             <Canvas>
               <MainWindow>
                 <NavBar Navlink="/" />
-                <div className="flex-grow">{children}</div>
+                <div className=" flex-grow">{children}</div>
               </MainWindow>
             </Canvas>
           </DexContextProvider>

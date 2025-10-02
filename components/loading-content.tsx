@@ -8,7 +8,7 @@ export default function LoadingContent() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 1, ease: "easeOut", type: "tween" }}
-      className="relative   w-40 h-40 rounded-full z-600 -translate-y-4  "
+      className="relative    w-40 h-40 rounded-full z-600 -translate-y-4  "
     >
       <img
         src="/placeholders/slowpoke.png"

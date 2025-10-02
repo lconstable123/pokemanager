@@ -12,50 +12,63 @@ import toast from "react-hot-toast";
 import { ApiPkData, TPokemon, TTrainer } from "../types";
 import { AddTrainer, SignOutTrainer } from "../actions";
 import { useRouter } from "next/navigation";
+import { set } from "zod";
+import { start } from "repl";
+import { LegacyAnimationControls, useAnimation } from "framer-motion";
+import { sleep } from "../utils";
+import usePageTransition from "../usePageTransition";
 
 type AppContextType = {
+  //utils
   isMobile: boolean;
   isSmall: boolean;
   disableScroll: (time?: number) => void;
+
+  //states
   AddPkModalopen: boolean;
   setAddPkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   EditPkModalopen: boolean;
   setEditPkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isInspectingLineup: boolean;
+  setIsInspectingLineup: React.Dispatch<React.SetStateAction<boolean>>;
+
+  //stores
   selectedPk: TPokemon | null;
   setSelectedPk: React.Dispatch<React.SetStateAction<TPokemon | null>>;
   evolutions: string[];
   selectedFormTrainer: number;
   setSelectedFormTrainer: React.Dispatch<React.SetStateAction<number>>;
   setEvolutions: React.Dispatch<React.SetStateAction<string[]>>;
-  isInspectingLineup: boolean;
-  setIsInspectingLineup: React.Dispatch<React.SetStateAction<boolean>>;
+  trainer: TTrainer | null;
+  setTrainer: React.Dispatch<React.SetStateAction<TTrainer | null>>;
+
+  //debugs
   badServer: boolean;
   isTransitionUi: boolean;
   serverError: boolean;
+  psyduckServer: boolean;
+  setPsyduckServer: React.Dispatch<React.SetStateAction<boolean>>;
 
   //handles
   handleSelectPk: (pokemon: TPokemon) => void;
   handleToggleBadServer: () => void;
   handleSignOut: () => void;
-  handleSignUp: (data: unknown) => Promise<void>;
-  // handleSignIn: (trainer: TTrainer) => void;
+  handleSignUp: (data: unknown) => Promise<{ message: string } | void>;
 
   //transitions
   editPkTransition: boolean;
   deletePkTransition: boolean;
   addPkTransition: boolean;
   signOutTransition: boolean;
+  isRearranging: boolean;
   startEditTransition: React.TransitionStartFunction;
   startDeletePkTransition: React.TransitionStartFunction;
   startAddPkTransition: React.TransitionStartFunction;
   startSignOutTransition: React.TransitionStartFunction;
   startRearranging: React.TransitionStartFunction;
   handleServerError: () => void;
-  isRearranging: boolean;
-  trainer: TTrainer | null;
-  setTrainer: React.Dispatch<React.SetStateAction<TTrainer | null>>;
   handlePageTransition: (destination: string, duration: number) => void;
-  pageTransition: boolean;
+  pageAnimControls: LegacyAnimationControls;
 };
 
 export const PokeAppContext = createContext<AppContextType | null>(null);
@@ -73,7 +86,10 @@ export default function PokeAppContextProvider({
   const [selectedFormTrainer, setSelectedFormTrainer] = useState(0);
   const [badServer, setBadServer] = useState(false);
   const [serverError, setServerError] = useState(false);
-  //transitions
+  const [psyduckServer, setPsyduckServer] = useState(false);
+
+  //------------------------------------------------------------------ transitions
+
   const [EditPkModalopen, setEditPkModalOpen] = useState(false);
   const [AddPkModalopen, setAddPkModalOpen] = useState(false);
   const [isInspectingLineup, setIsInspectingLineup] = useState(true);
@@ -90,16 +106,17 @@ export default function PokeAppContextProvider({
     signOutTransition ||
     isRearranging;
 
+  const { pageAnimControls, handlePageTransition } = usePageTransition(router);
+
   //------------------------------------------------Selection of Pokémon from list
+
   const handleSelectPk = (pokemon: TPokemon) => {
     if (selectedPk && EditPkModalopen) {
       if (modalTimerRef.current) clearTimeout(modalTimerRef.current);
-      // toast.error("modeal is already open.");
       setAddPkModalOpen(false);
       setSelectedPk(pokemon);
       modalTimerRef.current = setTimeout(() => {
         setAddPkModalOpen(true);
-        // toast.success("Switched to new Pokémon.");
       }, 1000);
       return;
     } else if (pokemon) {
@@ -120,44 +137,35 @@ export default function PokeAppContextProvider({
   };
 
   //---------------------------------------------------------------------SIGN UP
+
   const handleSignUp = async (data: unknown) => {
-    setTrainer(data as TTrainer);
     const error = await AddTrainer(data);
     if (error) {
       handleServerError();
-      // toast.error("Failed to sign up." + error.message);
-      return;
+      toast.error(error.message);
+      return error;
     } else {
-      // toast.success("Signing up..." + (data as TTrainer).name);
+      setTrainer(data as TTrainer);
+      return;
     }
-  };
-
-  const [pageTransition, setPageTransition] = useState(false);
-
-  const handlePageTransition = (destination: string, duration: number) => {
-    setPageTransition(true);
-    toast.success("moving to new page...");
-    setTimeout(() => {
-      router.push(destination);
-    }, duration);
-    setTimeout(() => {
-      setPageTransition(false);
-    }, duration + 250);
-  };
-
-  const handleSignOut = async () => {
-    if (isTransitionUi) return;
-    startSignOutTransition(async () => {
-      await SignOutTrainer();
-      setTrainer(null);
-      router.refresh();
-      handlePageTransition("/", 400);
-    });
   };
 
   // const handleSignIn = async (trainer: TTrainer) => {
   //   handlePageTransition("/account", 2000);
   // };
+
+  //---------------------------------------------------------------------SIGN OUT
+
+  const handleSignOut = async () => {
+    if (isTransitionUi) return;
+    startSignOutTransition(async () => {
+      await SignOutTrainer();
+      setPsyduckServer(false);
+      setTrainer(null);
+      router.refresh();
+      handlePageTransition("/", 0.1);
+    });
+  };
 
   useEffect(() => {
     if (AddPkModalopen) {
@@ -208,9 +216,10 @@ export default function PokeAppContextProvider({
         setTrainer,
         handleSignOut,
         handleSignUp,
-        // handleSignIn,
         handlePageTransition,
-        pageTransition,
+        pageAnimControls,
+        psyduckServer,
+        setPsyduckServer,
       }}
     >
       {children}

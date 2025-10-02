@@ -30,9 +30,9 @@ export default function Nav({
             >
               <Pokeball type={item.ball} size={30} fill={true} shadow={true} />
             </div>
-            {/* <Link href={item.href} tabIndex={-1}> */}
+
             <Button
-              onClick={() => handlePageTransition(item.href, 200)}
+              onClick={() => handlePageTransition(item.href, 0.15)}
               key={item.name}
               className={cn(
                 " w-25 h-8 transition-transform duration-300 bg-yellow-100 text-yellow-900 border-yellow-400 active:scale-90",

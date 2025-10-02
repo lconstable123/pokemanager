@@ -1,12 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import WindowBg from "./window-bg/window-bg";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import PsyduckServer from "./psyduck-server";
 import { Urls_1, Urls_2 } from "@/lib/data";
-import usePrioritizedMultiImageLoader from "@/lib/useImageLoader";
+import usePrioritizedMultiImageLoader, {
+  useSingleImageLoader,
+} from "@/lib/useImageLoader";
 import { useFontsLoaded } from "@/lib/hooks";
-import { cn } from "@/lib/utils";
+import { cn, sleep } from "@/lib/utils";
+import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
+import { usePathname } from "next/navigation";
+import { is } from "zod/v4/locales";
 
 export default function MainWindow({
   children,
@@ -17,41 +22,38 @@ export default function MainWindow({
     Primaryurls: Urls_1,
     SecondaryUrls: Urls_2,
   });
+  const { pageAnimControls } = usePokeAppContext();
 
+  const pathname = usePathname();
+  const isAccount = pathname === "/account";
+  const isLoaded = useSingleImageLoader("/placeholders/pd_norm.png");
   return (
     <>
       {assetsLoaded && (
         <motion.main
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut", type: "tween" }}
-          className="relative flex flex-col w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] "
+          transition={{ duration: 0.7, ease: "easeOut", type: "tween" }}
+          className="z-20 relative flex flex-col  w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] "
         >
-          <div className="border-3 border-black outline-4 outline-red-800  hardShadow overflow-hidden rounded-none sm:rounded-lg">
-            <PsyduckServer />
-            {/* <div
-              onClick={() => {
-                // handleClick();
-              }}
-              className={cn(
-                "z-30 absolute duration-400 top-0 right-0 hover:scale-110 scale-100 transition-all border-1 border-gray-700 overflow-hidden  rounded-full bg-red-300",
-                "hover:w-30 hover:h-30",
-                "w-11 h-11"
-              )}
-            >
-              <img
-                src={"dd"}
-                alt="Trainer"
-                className="absolute object-cover -top-3 w-20 h-20"
-              />
-            </div> */}
+          <div className=" bg-white border-0 sm:border-3 border-black outline-4 outline-red-800  hardShadow overflow-hidden rounded-none sm:rounded-lg">
+            {isAccount && isLoaded && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <PsyduckServer />
+              </motion.div>
+            )}
             <FrameBar />
 
-            <div
-              className={` bg-white  h-full sm:h-[550px]  w-full relative flex flex-col`}
+            <motion.div
+              animate={pageAnimControls}
+              className={`h-full sm:h-[550px]  w-full relative flex flex-col`}
             >
               {children}
-            </div>
+            </motion.div>
             <FrameBar />
           </div>
         </motion.main>
