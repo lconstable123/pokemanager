@@ -9,13 +9,13 @@ export default function AppPreview({ isMobile }: { isMobile: boolean }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 1 }}
-        className={`relative overflow-hidden z-5  translate-y-0  h-80 sm:h-40   md:translate-y-[100%] pointer-events-none w-screen sm:w-full  border-t-2 lg:border-2 border-black/60 bg-gray-100/100 rounded-none lg:rounded-lg lg:hardShadow`}
+        className={`relative overflow-hidden z-5   h-80 sm:h-40   pointer-events-none w-screen px-0! mx-0! sm:w-full  border-t-2 lg:border-2 `}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-400/30 to-yellow-500/30 z-30"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-400/10 to-yellow-500/20 z-30"></div>
         <img
           src="/placeholders/app_placeholder.png"
           alt="App screenshot"
-          className="object-contain absolute -top-0 left-0 transform-border origin-center    pointer-events-none scale-170  rotate-5 "
+          className="object-contain absolute -top-0 left-0 origin-center    pointer-events-none scale-170  rotate-5 "
         />
       </motion.section>
     );

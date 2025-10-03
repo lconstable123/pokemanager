@@ -162,7 +162,7 @@ export default function PokeAppContextProvider({
       await SignOutTrainer();
       setPsyduckServer(false);
       setTrainer(null);
-      router.refresh();
+      // router.refresh();
       handlePageTransition("/", 0.1);
     });
   };

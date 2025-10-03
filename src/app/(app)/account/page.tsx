@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 import { useMultipleImageLoader } from "@/lib/useImageLoader";
 import LineupBar from "../../../../components/lineup-bar";
 import { useRouter } from "next/navigation";
+import LoadingContent from "../../../../components/loading-content";
 
 export default function Home() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function Home() {
   return (
     <>
       {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
+
       <WholeSection>
         {allImagesLoaded && (
           <PokeGrid>
@@ -56,7 +58,7 @@ export default function Home() {
 //---------------------------------------------------
 function PokeGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="z-0 px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
+    <div className=" pt-2 z-0 px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
       {children}
     </div>
   );

@@ -34,7 +34,7 @@ export default function NavBar({ Navlink = "/" }: TNavBar) {
   return (
     <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
       {isAuth && <BackButton />}
-      {isAccount && (
+      {isAccount && trainer && (
         <>
           <motion.h3
             initial={{ opacity: 0, y: -10 }}
@@ -51,7 +51,7 @@ export default function NavBar({ Navlink = "/" }: TNavBar) {
           <motion.div
             initial={{ scale: 0.7, opacity: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.5 }}
             className=" ml-auto flex items-center gap-3"
           >
             <div className="mr-auto">
@@ -77,7 +77,7 @@ function ProfileButton({
         handleClick();
       }}
       className={cn(
-        " origin-top-right noSelect duration-300 hover:scale-140 scale-100 transition-all border-2 ring-2 hover:ring-4 hover:translate-y-1 ring-red-200 border-gray-700 relative overflow-hidden w-10 h-10 rounded-full bg-red-300 hover:bg-blue-300"
+        " origin-top-right noSelect duration-300 hover:scale-150 scale-140 transition-all border-2 ring-2 hover:ring-4 hover:translate-y-1 ring-red-200 border-gray-700 relative overflow-hidden w-10 h-10 rounded-full bg-red-300 hover:bg-blue-300"
         // "hover:w-30 hover:h-30"
       )}
     >

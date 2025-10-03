@@ -22,7 +22,7 @@ export default function MainWindow({
     Primaryurls: Urls_1,
     SecondaryUrls: Urls_2,
   });
-  const { pageAnimControls } = usePokeAppContext();
+  const { pageAnimControls, trainer } = usePokeAppContext();
 
   const pathname = usePathname();
   const isAccount = pathname === "/account";
@@ -37,11 +37,11 @@ export default function MainWindow({
           className="z-20 relative flex flex-col  w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] "
         >
           <div className=" bg-white border-0 sm:border-3 border-black outline-4 outline-red-800  hardShadow overflow-hidden rounded-none sm:rounded-lg">
-            {isAccount && isLoaded && (
+            {isAccount && isLoaded && trainer && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
               >
                 <PsyduckServer />
               </motion.div>
@@ -63,5 +63,5 @@ export default function MainWindow({
 }
 
 function FrameBar() {
-  return <div className="bg-red-900 h-5 w-full" />;
+  return <div className=" opacity-0 sm:opacity-100 bg-red-800/20 h-5 w-full" />;
 }

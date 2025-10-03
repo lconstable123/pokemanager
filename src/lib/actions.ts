@@ -262,10 +262,10 @@ export const SignInTrainer = async (data: unknown) => {
     // await sleep(500);
     console.log("Sign in successful, revalidating path");
     revalidatePath("/account");
-    revalidatePath("/", "layout");
+    // revalidatePath("/", "layout");
   } catch (error) {
     revalidatePath("/account");
-    revalidatePath("/", "layout");
+    // revalidatePath("/", "layout");
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin": {

@@ -33,7 +33,7 @@ export default function Home() {
         <>
           <TopSection>
             <WelcomeText />
-            {!isMobile && <AppPreview isMobile={false} />}
+            {/* {!isMobile && <AppPreview isMobile={false} />} */}
           </TopSection>
 
           <BottomSection>
@@ -42,7 +42,7 @@ export default function Home() {
               initialDelay={timeOffset_1}
               delayBetweenItems={0.1}
             />
-            {isMobile && <AppPreview isMobile={true} />}
+            {/* {isMobile && <AppPreview isMobile={true} />} */}
           </BottomSection>
         </>
       ) : (
@@ -59,15 +59,8 @@ export default function Home() {
 
 function TopSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className="pt-8 sm:max-w-140 md:max-w-160 lg:max-w-170 2xl:max-w-200  ml-7 mr-10 h-full flex flex-col justify-center ">
-      <div
-        className={cn(
-          " text-center flex flex-col-reverse  items-center  gap-4 ms:gap-5 lg:gap-9 justify-center lg:flex-row ",
-          " pb-1 sm:pb-7 translate-y-1 z-10"
-        )}
-      >
-        {children}
-      </div>
+    <section className="pt-8 sm:max-w-140 md:max-w-160 lg:max-w-170 2xl:max-w-200   h-full flex flex-col justify-center ">
+      <div className={cn(" ")}>{children}</div>
     </section>
   );
 }
@@ -81,24 +74,9 @@ function BottomSection({ children }: { children: React.ReactNode }) {
 }
 
 function WholeSection({ children }: { children: React.ReactNode }) {
-  // const controls = useAnimation();
-  // const { pageTransition } = usePokeAppContext();
-  // useEffect(() => {
-  //   if (pageTransition) {
-  //     controls.start({
-  //       opacity: 0,
-  //       transition: { duration: 0.2 },
-  //     });
-  //   } else {
-  //     controls.start({
-  //       opacity: 1,
-  //       transition: { duration: 0 },
-  //     });
-  //   }
-  // }, [pageTransition]);
   return (
     <div
-      className={`mx-5  
+      className={`mx-0  
       } h-full flex flex-col items-center justify-center`}
     >
       {children}
@@ -108,13 +86,13 @@ function WholeSection({ children }: { children: React.ReactNode }) {
 
 function WelcomeText() {
   return (
-    <section className="max-w-90  sm:pb:0  flex flex-col  justify-center items-center">
+    <section className="text-center max-w-90 sm:pb:0 flex flex-col justify-center items-center">
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="noSelect  w-full mx-2 mb-1 sm:mb-1 lg:mb-1 py-0 leading-12! sm:leading-11! text-[40pt]! sm:text-[37pt]!  "
+        className="noSelect w-full mx-2 mb-1 sm:mb-1 lg:mb-1 py-0 leading-12! sm:leading-11! text-[40pt]! sm:text-[37pt]!  "
       >
         POKEMON MANAGER
       </motion.h1>

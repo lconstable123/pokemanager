@@ -43,7 +43,6 @@ export default function Nav({
             >
               {item.name}
             </Button>
-            {/* </Link> */}
           </div>
         );
       })}

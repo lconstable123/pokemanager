@@ -106,7 +106,7 @@ export default function useBallReorder({
     //reorder mode toggled
     if (isReordering && selectedBallIndex !== undefined) {
       if (optimisticLineUp[selectedBallIndex] === undefined) {
-        toast.error("Cannot shift with empty ball");
+        // toast.error("Cannot shift with empty ball");
         return;
       }
       if (ballShiftMode === "select") {

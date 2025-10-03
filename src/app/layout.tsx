@@ -9,6 +9,8 @@ import Canvas from "../../components/canvas";
 import NavBar from "../../components/nav-bar";
 
 import DexContextProvider from "@/lib/contexts/DexContext";
+import { Suspense } from "react";
+import LoadingContent from "../../components/loading-content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

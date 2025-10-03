@@ -18,7 +18,7 @@ export default function Page() {
         <EntryWindow mode="sign-up" isMobile={isMobile} />
       ) : (
         <div className="h-[712px] w-full flex justify-center items-center ">
-          <LoadingContent />
+          {/* <LoadingContent /> */}
         </div>
       )}
       <WindowBg image="Pikachu" />

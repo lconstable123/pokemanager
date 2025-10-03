@@ -57,10 +57,10 @@ export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
   }, [isReordering]);
 
   return (
-    <nav className="  z-50 pt-6 pb-5  fixed sm:absolute w-full bottom-10 sm:bottom-0  flex flex-col-reverse sm:flex-row gap-2 sm:gap-5 items-center justify-center ">
+    <nav className="z-50 pt-6 pb-5 fixed sm:absolute w-full bottom-10 sm:bottom-0  flex flex-col-reverse sm:flex-row gap-2 sm:gap-5 items-center justify-center ">
       {isMobile && (
         // add background bubble for mobile
-        <div className="mx-5 rounded-full absolute inset-0 bg-gray-50 border-2 border-black text-sm hardShadow" />
+        <div className="absolute inset-0 bg-gray-50 border-t-2 border-b-2 border-black text-sm hardShadow" />
       )}
       {reorderable && (
         <PokeButton

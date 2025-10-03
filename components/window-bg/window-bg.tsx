@@ -6,9 +6,14 @@ import React from "react";
 type WindowBgProps = {
   image: "Snorlax" | "Charizard" | "Pikachu" | "Gengar";
   pos?: "high" | "low" | "mid";
+  duration?: number;
 };
 
-export default function WindowBg({ image, pos = "low" }: WindowBgProps) {
+export default function WindowBg({
+  image,
+  pos = "low",
+  duration = 1,
+}: WindowBgProps) {
   const getImageSrc = (
     image: "Snorlax" | "Charizard" | "Pikachu" | "Gengar"
   ) => {
@@ -32,7 +37,7 @@ export default function WindowBg({ image, pos = "low" }: WindowBgProps) {
           ? { scale: 1, opacity: 0.03 }
           : { scale: 1, opacity: 0.02 }
       }
-      transition={{ duration: 1, ease: "easeOut" }}
+      transition={{ duration: duration, ease: "easeOut" }}
       src={getImageSrc(image)}
       width={6000}
       height={300}
