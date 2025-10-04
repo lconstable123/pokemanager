@@ -17,13 +17,7 @@ import {
 } from "../types";
 import toast from "react-hot-toast";
 import { AddPkFormValues, EditPkFormValues } from "../schemas";
-import {
-  AddPokemon,
-  AddTrainer,
-  DeletePokemon,
-  EditPokemon,
-  SignOutTrainer,
-} from "../actions";
+import { AddPokemon, DeletePokemon, EditPokemon } from "../actions";
 import useBallReorder from "../useBallReorder";
 import { v4 as uuidv4 } from "uuid";
 import { usePokeAppContext } from "./PokeAppContext";

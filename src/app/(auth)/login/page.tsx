@@ -5,7 +5,7 @@ import EntryWindow from "../../../../components/entry-window";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { Urls_login } from "@/lib/data";
 import { useMultipleImageLoader } from "@/lib/useImageLoader";
-import LoadingContent from "../../../../components/loading-content";
+
 export default function Page() {
   const imagesLoaded = useMultipleImageLoader(Urls_login);
   const { isMobile } = usePokeAppContext();

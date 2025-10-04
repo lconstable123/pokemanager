@@ -10,7 +10,6 @@ import { FaCaretDown } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { Element } from "@/lib/types";
 import { useSingleImageLoader } from "@/lib/useImageLoader";
-import { is } from "zod/v4/locales";
 
 export const PokeImageField = ({
   children,

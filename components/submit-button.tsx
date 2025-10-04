@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import Pokeball from "./pokeball";
 import { motion } from "framer-motion";
-import { col } from "framer-motion/client";
 import { useFormStatus } from "react-dom";
 export default function SubmitButton({
   ball,

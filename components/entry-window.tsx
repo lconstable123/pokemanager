@@ -49,11 +49,7 @@ function WelcomeForm({ mode, isMobile }: welcomeTextProps) {
         exit={{ opacity: 0 }}
         className="pb-0 sm:pb-0 -translate-x-0 z-3 px-5 sm:px-10 w-80 sm:w-90 "
       >
-        {mode === "sign-up" ? (
-          <SignUpForm timeOffset={timeOffset_2} />
-        ) : (
-          <SignInForm timeOffset={timeOffset_2} />
-        )}
+        {mode === "sign-up" ? <SignUpForm /> : <SignInForm />}
       </motion.div>
     </div>
   );
@@ -73,15 +69,6 @@ function FormHeaderText({ mode }: { mode: "sign-up" | "sign-in" }) {
       >
         {mode === "sign-up" ? "Welcome, trainer!" : "Welcome back, trainer!"}
       </motion.h1>
-      {/* <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ delay: timeOffset_3, duration: 0.8 }}
-        className=" my-0!  pt-2 pb-3 sm:pb-5! pointer-events-none text-[12pt]! 2xl:text-[12pt]! "
-      >
-        Enter your details to get started.
-      </motion.h2> */}
     </>
   );
 }

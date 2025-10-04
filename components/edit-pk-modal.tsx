@@ -6,8 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import FormErrorMessage from "./form-error-message";
@@ -15,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
 import { EditPkFormSchema, EditPkFormValues } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-import toast from "react-hot-toast";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Pokeball from "./pokeball";
@@ -29,7 +26,6 @@ import {
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 import { flushSync } from "react-dom";
 import { useDexContext } from "@/lib/contexts/DexContext";
-import { UseFetchPkImg } from "@/lib/useFetchPkDetails";
 import { motion } from "framer-motion";
 
 export function EditPkModal() {
@@ -72,7 +68,7 @@ export function EditPkModal() {
     setValue,
     watch,
     control,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<EditPkFormValues>({
     resolver: zodResolver(EditPkFormSchema),
     defaultValues: {

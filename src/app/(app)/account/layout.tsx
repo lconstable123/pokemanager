@@ -5,7 +5,6 @@ import WindowBg from "../../../../components/window-bg/window-bg";
 import TrainerContextProvider from "@/lib/contexts/TrainerContext";
 import { FetchTrainerById } from "@/lib/actions";
 import { checkAuth } from "@/lib/server-utlils";
-import NavBar from "../../../../components/nav-bar";
 import { sleep } from "@/lib/utils";
 import LoadingContent from "../../../../components/loading-content";
 
@@ -18,7 +17,7 @@ export default async function Layout({
     <>
       <Suspense
         fallback={
-          <div className=" flex justify-center items-center h-full z-60 w-full  ">
+          <div className=" flex justify-center items-center h-200 sm:h-full z-60 w-full  ">
             <LoadingContent />
           </div>
         }

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import React from "react";
 import Pokeball from "./pokeball";
-import Link from "next/link";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 
 export default function Nav({

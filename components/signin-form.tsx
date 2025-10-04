@@ -5,17 +5,15 @@ import { Label } from "@/components/ui/label";
 import SubmitButton from "./submit-button";
 import FormErrorMessage from "./form-error-message";
 import SelectTrainer from "./select-trainer";
-import { useRouter } from "next/navigation";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { SignInFormData, SignInFormSchema, UserFormInput } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { revalidateAccountLayout, SignInTrainer } from "@/lib/actions";
-import { motion, useAnimate, useAnimation } from "framer-motion";
-import { cn, sleep } from "@/lib/utils";
+import { SignInTrainer } from "@/lib/actions";
+import { motion, useAnimation } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-export default function SignInForm({ timeOffset }: { timeOffset: number }) {
+export default function SignInForm() {
   const { isMobile } = usePokeAppContext();
   const { handlePageTransition } = usePokeAppContext();
   const controls = useAnimation();

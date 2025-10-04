@@ -12,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { platform } from "os";
 
 const techStack = [
   "Next.JS",

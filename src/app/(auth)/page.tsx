@@ -1,18 +1,13 @@
 "use client";
 import Features from "../../../components/features";
-import MainWindow from "../../../components/main-window";
 import WindowBg from "../../../components/window-bg/window-bg";
 import Nav from "../../../components/nav";
-import AppPreview from "../../../components/app-preview";
-import { motion, useAnimation } from "framer-motion";
-
-import { useFontsLoaded, useIsMobile } from "@/lib/hooks";
+import { motion } from "framer-motion";
+import { useFontsLoaded } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
-import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
+import { timeOffset_1, timeOffset_3 } from "@/lib/constants";
 import LoadingContent from "../../../components/loading-content";
-import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-import { useEffect } from "react";
-import { p } from "framer-motion/client";
+
 const features = [
   "Full Stack with Next",
   "Optimistic Frontend",

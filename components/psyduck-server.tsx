@@ -1,19 +1,12 @@
 "use client";
-import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { cn, sleep } from "@/lib/utils";
-import { error } from "console";
-import { s } from "framer-motion/client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSolidServer } from "react-icons/bi";
 import { FiMonitor } from "react-icons/fi";
 import { motion, useAnimation } from "framer-motion";
 import { useSingleImageLoader } from "@/lib/useImageLoader";
-import { en, is } from "zod/v4/locales";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { revalidateAccountLayout } from "@/lib/actions";
-import { checkAuth } from "@/lib/server-utlils";
-import toast from "react-hot-toast";
-import { set } from "zod";
 
 export default function PsyduckServer() {
   const [error, setError] = useState(false);
@@ -84,7 +77,7 @@ export default function PsyduckServer() {
           onClick={handleToggleError}
           className={cn(
             `${
-              !isMobile ? "z-52" : "z-20"
+              !isMobile ? "z-852" : "z-820"
             } cursor-pointer group hardSVGShadow absolute flex flex-col justify-center items-center gap-y-1 w-35 h-35 text-[8px] `,
             "-right-5 bottom-2   "
           )}

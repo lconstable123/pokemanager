@@ -9,13 +9,10 @@ import React, {
 } from "react";
 import { UseDisableScroll, useIsMobile, useWindowWidth } from "../hooks";
 import toast from "react-hot-toast";
-import { ApiPkData, TPokemon, TTrainer } from "../types";
+import { TPokemon, TTrainer } from "../types";
 import { AddTrainer, SignOutTrainer } from "../actions";
 import { useRouter } from "next/navigation";
-import { set } from "zod";
-import { start } from "repl";
-import { LegacyAnimationControls, useAnimation } from "framer-motion";
-import { sleep } from "../utils";
+import { LegacyAnimationControls } from "framer-motion";
 import usePageTransition from "../usePageTransition";
 
 type AppContextType = {

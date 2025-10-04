@@ -25,7 +25,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
 import { SignInTrainer } from "@/lib/actions";
-export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
+export default function SignUpForm() {
   const { isMobile } = usePokeAppContext();
   const [invalidInput, setInvalidInput] = useState(false);
   const { selectedFormTrainer, handleSignUp, handlePageTransition } =

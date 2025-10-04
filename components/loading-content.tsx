@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { tr } from "framer-motion/client";
 import React from "react";
 
 export default function LoadingContent() {

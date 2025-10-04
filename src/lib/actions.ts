@@ -11,13 +11,10 @@ import {
 import { sleep } from "./utils";
 import prisma from "./prisma";
 import bcrypt from "bcrypt";
-
 import { ServerTrainerWithLineup, TLineUp, TServerPK } from "./types";
-
 import { revalidatePath } from "next/cache";
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth";
-import { redirect } from "next/dist/server/api-utils";
 
 export async function logIn(authData: unknown) {
   const data = JSON.parse(authData as string);

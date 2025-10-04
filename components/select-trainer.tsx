@@ -6,10 +6,9 @@ import { cn } from "@/lib/utils";
 import DirectionNav from "./direction-nav";
 import { motion, useAnimation } from "framer-motion";
 import { Label } from "@/components/ui/label";
-import { timeOffset_1, timeOffset_2, timeOffset_3 } from "@/lib/constants";
+import { timeOffset_3 } from "@/lib/constants";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
-import { set } from "zod";
-import { toast } from "react-hot-toast";
+
 type SelectTrainerProps = {
   mode: "sign-up" | "sign-in";
 };

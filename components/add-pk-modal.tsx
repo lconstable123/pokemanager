@@ -1,13 +1,11 @@
 "use client";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
@@ -15,11 +13,7 @@ import FormErrorMessage from "./form-error-message";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "./submit-button";
 
-import {
-  AddPkFormSchema,
-  AddPkFormValues,
-  EditPkFormValues,
-} from "@/lib/schemas";
+import { AddPkFormSchema, AddPkFormValues } from "@/lib/schemas";
 import { cn, generateRandomBall, generateRandomName } from "@/lib/utils";
 import { elmOptions, genOptions, testPokeData } from "@/lib/data";
 import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
@@ -39,7 +33,6 @@ import {
 import { useDexContext } from "@/lib/contexts/DexContext";
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 import { flushSync } from "react-dom";
-import toast from "react-hot-toast";
 
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   //------------------------------------------------------------------------ derived states
@@ -66,7 +59,6 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   //-------------------------------------------------------------------------- local states
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const controls = useAnimation();
   const [choosePkModalOpen, setChoosePkModalOpen] = useState<boolean>(false);
   const [userJourney, setUserJourney] = useState<
     "initial" | "addpk" | "addname"
@@ -76,14 +68,14 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
 
   const {
     register,
-    handleSubmit,
+
     setValue,
     trigger,
     getValues,
     control,
     watch,
     resetField,
-    formState: { dirtyFields, isSubmitting, errors },
+    formState: { dirtyFields, errors },
   } = useForm<AddPkFormValues>({
     resolver: zodResolver(AddPkFormSchema),
     defaultValues: {

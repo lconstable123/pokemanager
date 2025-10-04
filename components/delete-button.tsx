@@ -1,9 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import SubmitButton from "./submit-button";
 import { motion } from "framer-motion";
-import * as Popover from "@radix-ui/react-popover";
-import toast from "react-hot-toast";
+
 export default function DeleteButton({
   handleDelete,
 }: {

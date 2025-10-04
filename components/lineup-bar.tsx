@@ -1,34 +1,28 @@
 "use client";
-import { TPokemon } from "@/lib/types";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect } from "react";
 import PokeButton from "./back-button";
 import Pokeball from "./pokeball";
-import { lineUpArray } from "@/lib/data";
-import toast from "react-hot-toast";
+
 import clsx from "clsx";
-import nav from "./nav";
+
 import { motion, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { line, select } from "framer-motion/client";
-import { useScrollStatus } from "@/lib/hooks";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { cn } from "@/lib/utils";
-import { is } from "zod/v4/locales";
+
 type TLineupBar = {
   reorderable: boolean;
   isMobile: boolean;
 };
 export default function LineupBar({ reorderable, isMobile }: TLineupBar) {
   const {
-    lineUp,
     slots,
     ballEdit,
-    ballShiftMode,
     isReordering,
     handleToggleReorder,
     handleBallClick,
     uiLineup,
-    ballLayoutEnabled,
   } = useTrainerContext();
   const controls = useAnimation();
 

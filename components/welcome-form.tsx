@@ -19,11 +19,7 @@ export default function WelcomeForm({ mode }: welcomeTextProps) {
         exit={{ opacity: 0 }}
         className=" pb-0 sm:pb-0 -translate-x-0 z-3 px-10 w-80 "
       >
-        {mode === "sign-up" ? (
-          <SignUpForm timeOffset={timeOffset_2} />
-        ) : (
-          <SignInForm timeOffset={timeOffset_2} />
-        )}
+        {mode === "sign-up" ? <SignUpForm /> : <SignInForm />}
       </motion.div>
     </div>
   );

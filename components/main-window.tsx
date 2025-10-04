@@ -1,17 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import WindowBg from "./window-bg/window-bg";
-import { motion, useAnimation } from "framer-motion";
+import React from "react";
+
+import { motion } from "framer-motion";
 import PsyduckServer from "./psyduck-server";
 import { Urls_1, Urls_2 } from "@/lib/data";
 import usePrioritizedMultiImageLoader, {
   useSingleImageLoader,
 } from "@/lib/useImageLoader";
-import { useFontsLoaded } from "@/lib/hooks";
-import { cn, sleep } from "@/lib/utils";
+
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { usePathname } from "next/navigation";
-import { is } from "zod/v4/locales";
 
 export default function MainWindow({
   children,

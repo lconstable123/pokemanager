@@ -1,7 +1,4 @@
-// export const runtime = "nodejs"; // ⚡ important!
-
 import NextAuth, { NextAuthConfig } from "next-auth";
-import { FindTrainerByEmail } from "./actions";
 import Credentials from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
 import prisma from "./prisma";

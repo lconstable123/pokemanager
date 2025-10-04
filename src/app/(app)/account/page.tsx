@@ -1,23 +1,21 @@
 "use client";
 import { FaPlus } from "react-icons/fa";
 import { useIsMobile } from "@/lib/hooks";
-import { motion, Reorder, scale, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { Element, TPokemon } from "@/lib/types";
 import { cn, getElementSprite } from "@/lib/utils";
-import { use, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { toast } from "react-hot-toast";
 import { useMultipleImageLoader } from "@/lib/useImageLoader";
 import LineupBar from "../../../../components/lineup-bar";
-import { useRouter } from "next/navigation";
-import { createPortal } from "react-dom";
+
 import Portal from "../../../../components/lineup-portal";
 export default function Home() {
-  const router = useRouter();
   const { setPsyduckServer } = usePokeAppContext();
   const { slots, isReordering, uiLineup } = useTrainerContext();
-  const { isMobile, isSmall } = useIsMobile();
+  const { isMobile } = useIsMobile();
   const lineUpUrls = [
     ...uiLineup?.map((pk) => pk?.sprite),
     ...uiLineup?.map((pk) => pk?.spriteBack),
@@ -80,7 +78,6 @@ function FrontLineUpPortal({
 }) {
   const { windowWidth, pageAnimControls } = usePokeAppContext();
   const spacing = windowWidth / 6; // prevent divide by 0
-  const { isMobile, isSmall } = useIsMobile();
   return (
     <Portal>
       <motion.div
@@ -151,7 +148,7 @@ export function PokemonCard({
   id: string;
   lineUpPos: number;
 }) {
-  const { lineUp, handleBallClick, ballEdit, slots } = useTrainerContext();
+  const { handleBallClick, ballEdit, slots } = useTrainerContext();
   const cardAnimationControls = useAnimation();
 
   const handleAnimateIn = () => {
@@ -202,7 +199,7 @@ export function PkCardImage({
   highlighted: boolean;
   index: number;
 }) {
-  const { isReordering, ballShiftMode, slots } = useTrainerContext();
+  const { isReordering, slots } = useTrainerContext();
 
   const spriteAnimationControls = useAnimation();
 

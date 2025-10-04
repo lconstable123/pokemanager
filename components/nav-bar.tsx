@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import BackButton from "./back-button";
-import { useTrainerContext } from "@/lib/contexts/TrainerContext";
-import { cn, getTrainerSprite, sleep } from "@/lib/utils";
+
+import { cn, getTrainerSprite } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   Dialog,
