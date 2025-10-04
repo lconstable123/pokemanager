@@ -64,7 +64,7 @@ export default function PokeButton({
           }
         )}
       >
-        {text}
+        <span className="noSelect">{text}</span>
       </Button>
     );
   }

@@ -63,5 +63,7 @@ export default function MainWindow({
 }
 
 function FrameBar() {
-  return <div className=" opacity-0 sm:opacity-100 bg-red-800/20 h-5 w-full" />;
+  return (
+    <div className=" z-60 opacity-0 sm:opacity-100 bg-red-200 h-5 w-full" />
+  );
 }

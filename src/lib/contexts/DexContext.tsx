@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { UseFetchPk } from "../useFetchPk";
 import { set } from "zod";
+import { UseFetchPkImg } from "../useFetchPkDetails";
 
 type DexContextType = {
   PkDropdownPage: number;
@@ -23,6 +24,11 @@ type DexContextType = {
   handleFetchEvolution: (pkname: string) => Promise<string[]>;
   isLoadingEvolutions: boolean;
   setIsLoadingEvolutions: React.Dispatch<React.SetStateAction<boolean>>;
+  loadingImage: boolean;
+  DexPrevImg: string | null;
+  DexPrevBackImg: string | null;
+  elements: string[];
+  handleImageReset: () => void;
 };
 
 export const DexContext = createContext<DexContextType | null>(null);
@@ -50,6 +56,14 @@ export default function DexContextProvider({
     setTypeFilter,
     dexloading,
   } = UseFetchPk(P);
+
+  const {
+    loadingImage,
+    DexPrevImg,
+    DexPrevBackImg,
+    elements,
+    handleImageReset,
+  } = UseFetchPkImg(selectedDexPk, P);
 
   async function handleFetchEvolution(pokemonName: string) {
     try {
@@ -128,6 +142,11 @@ export default function DexContextProvider({
         handleFetchEvolution,
         isLoadingEvolutions,
         setIsLoadingEvolutions,
+        loadingImage,
+        DexPrevImg,
+        DexPrevBackImg,
+        elements,
+        handleImageReset,
       }}
     >
       {children}

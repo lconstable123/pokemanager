@@ -7,7 +7,7 @@ import React, {
   useState,
   useTransition,
 } from "react";
-import { UseDisableScroll, useIsMobile } from "../hooks";
+import { UseDisableScroll, useIsMobile, useWindowWidth } from "../hooks";
 import toast from "react-hot-toast";
 import { ApiPkData, TPokemon, TTrainer } from "../types";
 import { AddTrainer, SignOutTrainer } from "../actions";
@@ -23,6 +23,7 @@ type AppContextType = {
   isMobile: boolean;
   isSmall: boolean;
   disableScroll: (time?: number) => void;
+  windowWidth: number;
 
   //states
   AddPkModalopen: boolean;
@@ -177,7 +178,7 @@ export default function PokeAppContextProvider({
   }, [AddPkModalopen, EditPkModalopen]);
 
   const disableScroll = UseDisableScroll;
-
+  const windowWidth = useWindowWidth();
   return (
     <PokeAppContext.Provider
       value={{
@@ -220,6 +221,7 @@ export default function PokeAppContextProvider({
         pageAnimControls,
         psyduckServer,
         setPsyduckServer,
+        windowWidth,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 // hooks/useIsMobile.js
-import { SetStateAction, use, useEffect, useState } from "react";
+import { SetStateAction, use, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useTrainerContext } from "./contexts/TrainerContext";
 
@@ -128,8 +128,6 @@ export function usePreloadImage(
     img.src = imageUrl;
 
     const handleLoad = () => {
-      // toast.success("image loaded: " + imageUrl);
-
       handleLoading(true);
     };
     const handleError = () => {
@@ -145,8 +143,6 @@ export function usePreloadImage(
       img.onerror = null;
     };
   }, [imageUrl]);
-
-  // return isLoaded;
 }
 
 export const UseDisableScroll = (time = 500) => {
@@ -164,3 +160,44 @@ export const UseDisableScroll = (time = 500) => {
     scrollContainer.style.scrollBehavior = "smooth";
   }, time);
 };
+export const useWindowWidth = () => {
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowWidth(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowWidth;
+};
+
+// export function usePortal(id = "modal-root") {
+//   const rootRef = useRef(null);
+
+//   useEffect(() => {
+//     let root = document.getElementById(id);
+//     let created = false;
+
+//     if (!root) {
+//       root = document.createElement("div");
+//       root.setAttribute("id", id);
+//       document.body.appendChild(root);
+//       created = true;
+//     }
+
+//     rootRef.current = root;
+
+//     return () => {
+//       // cleanup the node if we created it (keeps DOM tidy)
+//       if (created && root && root.parentNode) root.parentNode.removeChild(root);
+//     };
+//   }, [id]);
+
+//   return rootRef.current;
+// }

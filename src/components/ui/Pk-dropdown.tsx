@@ -92,7 +92,7 @@ export function PkDropdownAndModal({
             sideOffset={!isMobile ? -150 : -270}
             id={type}
             className={cn(
-              `flex overflow-hidden flex-col items-center  bg-white border-2 border-black rounded-md shadow-md p-0  z-50`,
+              `flex overflow-hidden flex-col items-center  bg-white border-2 border-black rounded-md shadow-md p-0  z-900`,
               type === "dex" ? "sm:w-160 w-100 pt-2" : "w-full h-full pt-0"
             )}
           >

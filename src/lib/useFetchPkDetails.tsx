@@ -5,9 +5,14 @@ import { FetchPkDetails } from "./pokeApi-actions";
 import { usePreloadImage } from "./hooks";
 import { usePokeAppContext } from "./contexts/PokeAppContext";
 import { useDexContext } from "./contexts/DexContext";
-export const UseFetchPkImg = (selectedDexPk: any) => {
-  const { P } = useDexContext();
+import { set } from "zod";
+import { useMultipleImageLoader } from "./useImageLoader";
+export const UseFetchPkImg = (selectedDexPk: any, P: any) => {
+  // const { P } = useDexContext();
   const [DexPrevImg, setSelectedDexPrevImg] = useState<string | null>(null);
+  const [DexPrevBackImg, setSelectedDexPrevBackImg] = useState<string | null>(
+    null
+  );
   const [loadingImage, setLoadingImage] = useState(false);
   const [elements, setElements] = useState<string[]>([]);
   const { isInspectingLineup } = usePokeAppContext();
@@ -16,6 +21,7 @@ export const UseFetchPkImg = (selectedDexPk: any) => {
     // console.log("Resetting image and elements.");
     // toast.success("Resetting image and elements.");
     setSelectedDexPrevImg(null);
+    setSelectedDexPrevBackImg(null);
     setElements([]);
     setLoadingImage(false);
   };
@@ -27,6 +33,7 @@ export const UseFetchPkImg = (selectedDexPk: any) => {
       try {
         console.log("Fetching details for: ", selectedDexPk);
         const imgFront = await FetchPkDetails(P, selectedDexPk!, "imgFront");
+        const imgBack = await FetchPkDetails(P, selectedDexPk!, "imgBack");
         const elements = (await FetchPkDetails(
           P,
           selectedDexPk!,
@@ -37,15 +44,15 @@ export const UseFetchPkImg = (selectedDexPk: any) => {
           //   toast.success("Fetched image: " + imgFront);
           console.log("fetched imgFront: ", imgFront);
           setSelectedDexPrevImg(imgFront as string);
-        } else {
-          // toast.error("Image not found");
+        }
+        if (imgBack) {
+          console.log("fetched imgBack: ", imgBack);
+          setSelectedDexPrevBackImg(imgBack as string);
         }
         if (elements) {
           //   toast.success("Fetched image: " + imgFront);
           setElements(elements);
           console.log("fetched elements: ", elements);
-        } else {
-          // toast.error("elements not found");
         }
       } catch (error) {
         // toast.error("Failed to fetch Pokémon details.");
@@ -58,12 +65,24 @@ export const UseFetchPkImg = (selectedDexPk: any) => {
       fetchData();
     } else {
       setSelectedDexPrevImg(null);
+      setSelectedDexPrevBackImg(null);
       setElements([]);
       setLoadingImage(false);
     }
   }, [selectedDexPk]);
 
   usePreloadImage(DexPrevImg, setLoadingImage);
+  const loading = useMultipleImageLoader([DexPrevImg, DexPrevBackImg]);
 
-  return { loadingImage, DexPrevImg, elements, handleImageReset };
+  useEffect(() => {
+    setLoadingImage(loading);
+  }, [loading]);
+
+  return {
+    loadingImage,
+    DexPrevImg,
+    DexPrevBackImg,
+    elements,
+    handleImageReset,
+  };
 };

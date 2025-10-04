@@ -44,6 +44,7 @@ export const AddPkFormSchema = z.object({
   Ball: BallSchema,
   // Sprite: z.url("Invalid URL"),
   Sprite: z.string().min(1, { message: "Sprite URL required" }),
+  SpriteBack: z.string().min(1, { message: "Back Sprite URL required" }),
   Trainer: z.string().min(1, { message: "Trainer ID required" }),
 });
 
@@ -111,6 +112,7 @@ export const TPokemonSchema = z.object({
   type: z.array(z.string()), // or z.string() if Element is a string union
   exp: z.number(),
   sprite: z.string(),
+  spriteBack: z.string(),
 });
 
 // 2️⃣ Schema for TLineUp

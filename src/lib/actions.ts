@@ -69,6 +69,7 @@ export const AddPokemon = async (data: unknown, id: string) => {
     types: JSON.stringify(newPk.Type),
     ball: newPk.Ball as string,
     sprite: newPk.Sprite,
+    spriteBack: newPk.SpriteBack,
     userId: newPk.Trainer,
     order: newPk.Order,
   };
@@ -113,6 +114,7 @@ export const EditPokemon = async (
     exp: newPk.Xp,
     types: JSON.stringify(newPk.Type),
     sprite: newPk.Sprite,
+    spriteBack: newPk.SpriteBack,
   };
   try {
     await prisma.pokemon.update({

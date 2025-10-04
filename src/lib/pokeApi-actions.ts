@@ -15,6 +15,7 @@ export const FetchPkDetails = async (
     if (detail === "imgBack") {
       return response.sprites.back_default || "";
     }
+
     if (detail === "elements") {
       return response.types.map((type) => type.type.name) || null;
     }

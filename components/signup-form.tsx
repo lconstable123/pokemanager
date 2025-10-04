@@ -154,7 +154,9 @@ export default function SignUpForm({ timeOffset }: { timeOffset: number }) {
           <FormErrorMessage message={errors?.repeatPassword?.message || ""} />
         </div>
       </div>
-      <SubmitButton type="submit" ball="02" name="Submit" onSubmit={() => {}} />
+      <div className="flex justify-center w-full">
+        <SubmitButton ball="02" name="Submit" type="submit" />
+      </div>
     </motion.form>
   );
 }

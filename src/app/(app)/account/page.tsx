@@ -1,24 +1,32 @@
 "use client";
 import { FaPlus } from "react-icons/fa";
 import { useIsMobile } from "@/lib/hooks";
-import { motion, Reorder, useAnimation } from "framer-motion";
+import { motion, Reorder, scale, useAnimation } from "framer-motion";
 import { useTrainerContext } from "@/lib/contexts/TrainerContext";
 import { Element, TPokemon } from "@/lib/types";
 import { cn, getElementSprite } from "@/lib/utils";
-import { use, useEffect } from "react";
+import { use, useEffect, useRef } from "react";
 import { usePokeAppContext } from "@/lib/contexts/PokeAppContext";
 import { toast } from "react-hot-toast";
 import { useMultipleImageLoader } from "@/lib/useImageLoader";
 import LineupBar from "../../../../components/lineup-bar";
 import { useRouter } from "next/navigation";
-import LoadingContent from "../../../../components/loading-content";
-
+import { createPortal } from "react-dom";
+import Portal from "../../../../components/lineup-portal";
 export default function Home() {
   const router = useRouter();
   const { setPsyduckServer } = usePokeAppContext();
   const { slots, isReordering, uiLineup } = useTrainerContext();
   const { isMobile, isSmall } = useIsMobile();
-  const lineUpUrls = [...uiLineup?.map((pk) => pk?.sprite), "/pokebg_3.png"];
+  const lineUpUrls = [
+    ...uiLineup?.map((pk) => pk?.sprite),
+    ...uiLineup?.map((pk) => pk?.spriteBack),
+    "/pokebg_3.png",
+  ];
+  const frontImages = uiLineup.map((pk) => ({
+    sprite: pk?.spriteBack,
+    id: pk.id,
+  }));
   const allImagesLoaded = useMultipleImageLoader(lineUpUrls);
   useEffect(() => {
     setPsyduckServer(true);
@@ -29,6 +37,7 @@ export default function Home() {
       {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
 
       <WholeSection>
+        <FrontLineUpPortal lineUp={frontImages} />
         {allImagesLoaded && (
           <PokeGrid>
             {slots.map((slot, index) => (
@@ -61,6 +70,46 @@ function PokeGrid({ children }: { children: React.ReactNode }) {
     <div className=" pt-2 z-0 px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
       {children}
     </div>
+  );
+}
+
+function FrontLineUpPortal({
+  lineUp,
+}: {
+  lineUp: { sprite?: string; id: string }[];
+}) {
+  const { windowWidth, pageAnimControls } = usePokeAppContext();
+  const spacing = windowWidth / 6; // prevent divide by 0
+  const { isMobile, isSmall } = useIsMobile();
+  return (
+    <Portal>
+      <motion.div
+        animate={pageAnimControls}
+        className="absolute bottom-0 w-screen h-50 z-30"
+      >
+        <div className="">
+          {/* {!isMobile && (
+            <div className="absolute w-full -bottom-0 h-20 bg-gradient-to-t from-yellow-300/30 to-yellow-500/0 z-30" />
+          )} */}
+          {lineUp.map((pk, index) => (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ x: index * spacing, scale: 1 }}
+              key={pk.id}
+              className={`absolute z-100 w-[300px] h-[300px] `}
+            >
+              <img
+                width={200}
+                height={200}
+                src={pk.sprite}
+                alt={pk.id}
+                className="-rotate-12 translate-y-15 -translate-x-20 scale-170 pixelImage hardSVGShadow"
+              />
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </Portal>
   );
 }
 

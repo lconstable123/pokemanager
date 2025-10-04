@@ -86,7 +86,7 @@ export default function PsyduckServer() {
             `${
               !isMobile ? "z-52" : "z-20"
             } cursor-pointer group hardSVGShadow absolute flex flex-col justify-center items-center gap-y-1 w-35 h-35 text-[8px] `,
-            "bottom-1/2 sm:bottom-0 lg:bottom-0 right-2 sm:right-0 lg:-right-10 "
+            "-right-5 bottom-2   "
           )}
         >
           <PsyImg error={error} />

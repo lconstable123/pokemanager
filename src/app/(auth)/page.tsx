@@ -25,7 +25,6 @@ const navItems = [
 ];
 
 export default function Home() {
-  const { isMobile, isSmall } = useIsMobile();
   const fontsLoaded = useFontsLoaded();
   return (
     <WholeSection>

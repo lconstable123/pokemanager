@@ -48,11 +48,16 @@ export function EditPkModal() {
     setIsInspectingLineup,
   } = usePokeAppContext();
 
-  const { selectedDexPk, setSelectedDexPk, isLoadingEvolutions } =
-    useDexContext();
-
-  const { loadingImage, DexPrevImg, elements, handleImageReset } =
-    UseFetchPkImg(selectedDexPk);
+  const {
+    selectedDexPk,
+    setSelectedDexPk,
+    isLoadingEvolutions,
+    loadingImage,
+    DexPrevImg,
+    DexPrevBackImg,
+    elements,
+    handleImageReset,
+  } = useDexContext();
 
   //-------------------------------------------------------------------------------- local states
 
@@ -62,7 +67,6 @@ export function EditPkModal() {
   //-------------------------------------------------------------------------------- form
   const {
     register,
-    handleSubmit,
     trigger,
     getValues,
     setValue,
@@ -129,9 +133,9 @@ export function EditPkModal() {
     updateField("Xp", selectedPk?.exp || 0);
     updateField("Pokemon", selectedPk?.species || "");
     updateField("Type", selectedPk?.type || [""]);
-
     updateField("Trainer", trainer?.id || "");
     updateField("Sprite", selectedPk?.sprite || "");
+    updateField("SpriteBack", selectedPk?.spriteBack || "");
     updateField("Id", selectedPk?.id || "");
     updateField("Ball", selectedPk?.ball || "");
     updateField("Type", selectedPk?.type || []);
@@ -141,7 +145,8 @@ export function EditPkModal() {
 
   useEffect(() => {
     updateField("Sprite", DexPrevImg || selectedPk?.sprite);
-  }, [DexPrevImg]);
+    updateField("SpriteBack", DexPrevBackImg || selectedPk?.spriteBack);
+  }, [DexPrevImg, DexPrevBackImg]);
 
   //---------------------------------------------------------jsx
 

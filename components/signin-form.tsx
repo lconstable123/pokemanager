@@ -87,13 +87,13 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
         isPending === true && "opacity-70 pointer-events-none"
       )}
     >
-      <button
+      {/* <button
         type="button"
         className="border-2 rounded-full p-1"
         onClick={handleChangeUser}
       >
         Change user
-      </button>
+      </button> */}
       {isMobile && (
         <div className="flex justify-center  mb-7 sm:mb-4">
           <SelectTrainer mode={"sign-in"} />
@@ -136,7 +136,9 @@ export default function SignInForm({ timeOffset }: { timeOffset: number }) {
         </div>
       </div>
       {/* {signUpError && <div className="text-red-500">{signUpError}</div>} */}
-      <SubmitButton ball="02" name="Submit" type="submit" />
+      <div className="flex justify-center w-full">
+        <SubmitButton ball="02" name="Submit" type="submit" />
+      </div>
     </motion.form>
   );
 }

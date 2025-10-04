@@ -49,6 +49,7 @@ export default function TrainerContextProvider({
         id: pk.id,
         name: pk.name,
         sprite: pk.sprite,
+        spriteBack: pk.spriteBack,
         ball: pk.ball,
         species: pk.species,
         exp: pk.exp,
@@ -68,12 +69,7 @@ export default function TrainerContextProvider({
     };
   }, [trainerFromServer, initialLineUp]);
 
-  // const [trainer, setTrainer] = useState<TTrainer | null>(null);
-
-  // const [serverError, setServerError] = useState(false);
-
   useEffect(() => {
-    // toast.success("Trainer data loaded");
     setTrainer(initialTrainer);
   }, [initialTrainer]);
 
@@ -178,6 +174,7 @@ export default function TrainerContextProvider({
       type: Pk.Type as Element[],
       exp: Pk.Xp,
       sprite: Pk.Sprite,
+      spriteBack: Pk.SpriteBack,
       order: Pk.Order,
     };
 
@@ -211,6 +208,7 @@ export default function TrainerContextProvider({
       type: Pk.Type as Element[],
       exp: Pk.Xp,
       sprite: Pk.Sprite,
+      spriteBack: Pk.SpriteBack,
       order: Pk.Order,
     };
     startEditTransition(() => {

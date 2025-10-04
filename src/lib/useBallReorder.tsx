@@ -70,7 +70,7 @@ export default function useBallReorder({
 
   const handleReorder = async (fromIndex: number, toIndex: number) => {
     setuiEdit(true);
-    UseDisableScroll(300); // disable scroll for 300ms during animation
+    // UseDisableScroll(300); // disable scroll for 300ms during animation
     setLineupRearrange((prev) => {
       const tempFromTrainer = prev[fromIndex];
       const tempToTrainer = prev[toIndex];

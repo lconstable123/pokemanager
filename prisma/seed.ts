@@ -11,6 +11,8 @@ const seedPkData = [
     order: 1,
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    spriteBack:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png",
     types: '["Electric"]',
   },
 ];

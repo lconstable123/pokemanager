@@ -87,13 +87,13 @@ export const useSingleImageLoader = (url: string) => {
   return imageLoaded;
 };
 
-export function useMultipleImageLoader(urlArray: string[]) {
+export function useMultipleImageLoader(urlArray: (string | null)[]) {
   const [firstTime, setFirstTime] = useState(true);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
 
-  const preloadImages = useCallback((imageUrls: string[]) => {
+  const preloadImages = useCallback((imageUrls: (string | null)[]) => {
     let loadedCount = 0;
-    const total = imageUrls.length;
+    const total = imageUrls?.length || 0;
     let cancelled = false;
 
     if (total === 0) {
@@ -103,9 +103,11 @@ export function useMultipleImageLoader(urlArray: string[]) {
 
     setAllImagesLoaded(false);
 
-    imageUrls.forEach((url) => {
+    imageUrls?.forEach((url) => {
       const img = new Image();
-      img.src = url;
+      if (url) {
+        img.src = url;
+      }
 
       const onDone = () => {
         if (cancelled) return;

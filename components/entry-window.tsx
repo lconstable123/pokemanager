@@ -27,7 +27,7 @@ export default function EntryContent({ mode }: welcomeTextProps) {
 function FormStyle({ children }: { children: React.ReactNode }) {
   return (
     <section className="h-full flex flex-col items-center justify-center w-full">
-      <div className="mt-3 sm:mt-0 mb-30 sm:mb-10 relative px-10  md:px-40  flex flex-col sm:flex-row justify-around items-center">
+      <div className="mt-10 sm:mt-0 mb-30 sm:mb-10 relative px-10  md:px-40  flex flex-col sm:flex-row justify-around items-center">
         {children}
       </div>
     </section>

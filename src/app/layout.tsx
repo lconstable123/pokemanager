@@ -9,8 +9,6 @@ import Canvas from "../../components/canvas";
 import NavBar from "../../components/nav-bar";
 
 import DexContextProvider from "@/lib/contexts/DexContext";
-import { Suspense } from "react";
-import LoadingContent from "../../components/loading-content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,6 +50,9 @@ export default async function RootLayout({
         <PokeAppContextProvider>
           <DexContextProvider>
             <Canvas>
+              <div className="noSelect pointer-events-none overflow-hidden w-screen  h-screen border-0 sm:border-4  border-red-500 z-400 inset-0 fixed ">
+                <div id="portal" className=" " />
+              </div>
               <MainWindow>
                 <NavBar Navlink="/" />
                 <div className=" flex-grow">{children}</div>

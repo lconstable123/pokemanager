@@ -7,6 +7,7 @@ export type TTrainer = {
   name: string;
   email: string;
   avatar: number;
+
   lineup: TLineUp;
 };
 
@@ -20,6 +21,7 @@ export type TPokemon = {
   type: Element[];
   exp: number;
   sprite: string;
+  spriteBack: string;
   order: number;
 };
 

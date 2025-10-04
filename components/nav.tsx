@@ -17,7 +17,7 @@ export default function Nav({
       {items.map((item, index) => {
         return (
           <div
-            className=" flex not-even:flex-row even:flex-row-reverse gap-1.5 items-center h-8 group"
+            className="flex not-even:flex-row even:flex-row-reverse gap-1.5 items-center h-8 group"
             key={index}
           >
             <div
@@ -41,7 +41,7 @@ export default function Nav({
                   : "group-hover:-translate-x-1 "
               )}
             >
-              {item.name}
+              <span className="noSelect">{item.name}</span>
             </Button>
           </div>
         );

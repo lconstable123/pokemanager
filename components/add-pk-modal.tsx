@@ -20,21 +20,14 @@ import {
   AddPkFormValues,
   EditPkFormValues,
 } from "@/lib/schemas";
-import {
-  cn,
-  generateRandomBall,
-  generateRandomName,
-  getElementSprite,
-} from "@/lib/utils";
+import { cn, generateRandomBall, generateRandomName } from "@/lib/utils";
 import { elmOptions, genOptions, testPokeData } from "@/lib/data";
 import { MultiSelectBallDropdown } from "@/components/ui/dropdown-ball";
 import { MultiSelectFilterDropdown } from "@/components/ui/dropdown-elements";
 import clsx from "clsx";
-import toast from "react-hot-toast";
 import { motion, useAnimation } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseFetchPkImg } from "@/lib/useFetchPkDetails";
 import {
   Border,
   FormHeader,
@@ -46,8 +39,7 @@ import {
 import { useDexContext } from "@/lib/contexts/DexContext";
 import { PkDropdownAndModal } from "@/components/ui/Pk-dropdown";
 import { flushSync } from "react-dom";
-import { AddPokemon } from "@/lib/actions";
-import { set } from "zod";
+import toast from "react-hot-toast";
 
 export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
   //------------------------------------------------------------------------ derived states
@@ -63,8 +55,12 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
     typeFilter,
     setTypeFilter,
     generationFilter,
-    selectedDexPk,
     setSelectedDexPk,
+    loadingImage,
+    DexPrevImg,
+    DexPrevBackImg,
+    elements,
+    handleImageReset,
   } = useDexContext();
 
   //-------------------------------------------------------------------------- local states
@@ -169,11 +165,6 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
     setUserJourney("addname");
   }, [watchedPokemon]);
 
-  // fetch new pokedex image and elements
-
-  const { loadingImage, DexPrevImg, elements, handleImageReset } =
-    UseFetchPkImg(selectedDexPk);
-
   //---------------------------------------------------------jsx
 
   return (
@@ -189,14 +180,16 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
         action={async () => {
           setValue("Type", elements);
           setValue("Sprite", DexPrevImg || "");
+          setValue("SpriteBack", DexPrevBackImg || "");
           setValue("Trainer", trainer?.id || "");
           setValue("Order", uiLineup.length || 0);
-          const result = await trigger();
-          if (!result) return;
+          // toast.success(DexPrevBackImg);
           const pokeData = getValues();
           console.log(pokeData);
+          const result = await trigger();
+          if (!result) return;
           handleAddPokemon?.(pokeData);
-          // const error = await AddPokemon(pokeData);
+
           handleDeselectPk();
           onFormSubmission?.();
           // toast.success("Added " + pokeData.Pokemon + " to your team!");
@@ -297,6 +290,7 @@ export function AddPkModal({ mode }: { mode?: "add" | "edit" }) {
               />
             )}
           </div>
+          {/* <div>{DexPrevBackImg}</div> */}
           {userJourney === "addname" && (
             <VertFields>
               <div className="relative w-130">
