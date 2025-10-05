@@ -32,7 +32,7 @@ export default function NavBar({ Navlink = "/" }: TNavBar) {
     pathname.startsWith("/sign-up") || pathname.startsWith("/login");
 
   return (
-    <nav className=" flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
+    <nav className=" min-h-12 flex pt-2 pl-4 pr-3 items-center justify-between w-full  z-4">
       {isAuth && <BackButton />}
       {isAccount && trainer && (
         <>
@@ -54,7 +54,7 @@ export default function NavBar({ Navlink = "/" }: TNavBar) {
             transition={{ duration: 0.5 }}
             className=" ml-auto flex items-center gap-3"
           >
-            <div className="min-h-12 mr-auto ">
+            <div className=" mr-auto ">
               <TrainerModal />
             </div>
           </motion.div>

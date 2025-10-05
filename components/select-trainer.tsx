@@ -49,7 +49,7 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
         setLocalTransitionSpeed(500);
         setSelectedFormTrainer(1);
         setEngaged(true);
-      }, timeOffset_3 * 1000);
+      }, timeOffset_3 * 2300);
       return () => clearTimeout(timer);
     }, []);
   }
@@ -108,18 +108,24 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
                 index === 0 && `translate-y-[35px]`
               )}
             >
-              <Image
-                priority
-                className="animate-breathing translate-x-[10px] user-select-none pixelImage pointer-events-none "
-                src={
-                  index > 0
-                    ? `/trainers/trainer_${index}.png`
-                    : "/trainers/oak.png"
-                }
-                alt={trainer}
-                width={350}
-                height={350}
-              />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                <Image
+                  priority
+                  className="animate-breathing translate-x-[10px] user-select-none pixelImage pointer-events-none "
+                  src={
+                    index > 0
+                      ? `/trainers/trainer_${index}.png`
+                      : "/trainers/oak.png"
+                  }
+                  alt={trainer}
+                  width={350}
+                  height={350}
+                />
+              </motion.div>
             </motion.div>
           ))}
           <TrainerBg
