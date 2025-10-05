@@ -69,6 +69,8 @@ export const Urls_app = [
   "/pokebg_2.jpg",
   "/pokebg_4.png",
   "/pokebg_5.png",
+  "/ditheredgrad_bw.jpg",
+  "/public/pokebg_5.png",
 ];
 
 export const testPokeData = ["Blastoise", "Lapras", "Pikachu", "Charizard"];
