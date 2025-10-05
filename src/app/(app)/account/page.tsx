@@ -92,7 +92,7 @@ function FrontLineUpPortal({
             <motion.div
               animate={{ x: index * spacing }}
               key={pk.id}
-              className={`absolute z-100 w-[200px] h-[200px] `}
+              className={`absolute z-100 w-[100px] sm:w-[200px] h-[100px]sm:h-[200px] `}
             >
               <motion.img
                 initial={{ opacity: 0 }}
@@ -102,7 +102,7 @@ function FrontLineUpPortal({
                 height={200}
                 src={pk.sprite}
                 alt={pk.id}
-                className="-rotate-12 translate-y-20 -translate-x-20 scale-130 pixelImage hardSVGShadow"
+                className="-rotate-12 translate-y-35 sm:translate-y-20 -translate-x-20 scale-130 pixelImage hardSVGShadow"
               />
             </motion.div>
           ))}

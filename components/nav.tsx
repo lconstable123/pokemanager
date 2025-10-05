@@ -40,7 +40,7 @@ export default function Nav({
                   : "group-hover:-translate-x-1 "
               )}
             >
-              <span className="noSelect">{item.name}</span>
+              <span className="w-30  noSelect">{item.name}</span>
             </Button>
           </div>
         );
