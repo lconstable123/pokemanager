@@ -12,7 +12,7 @@ export const Urls_1 = [
 
 export const Urls_2 = [
   "/01 - Pikachu.svg",
-  "/08 - Snorlax.svg",
+  "/08 - Gengar.svg",
   "/06 - Charizard.svg",
   "/pokeballs/pokeballs-01.svg",
   "/pokeballs/pokeballs-03.svg",
