@@ -13,7 +13,7 @@ export default function Page() {
       {imagesLoaded ? (
         <EntryWindow mode="sign-up" isMobile={isMobile} />
       ) : (
-        <div className="h-[712px] w-full flex justify-center items-center ">
+        <div className="h-[712px] sm:h-full w-full flex justify-center items-center ">
           {/* <LoadingContent /> */}
         </div>
       )}

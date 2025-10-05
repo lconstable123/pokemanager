@@ -21,7 +21,7 @@ export default function MainWindow({
     SecondaryUrls: Urls_2,
   });
   const { pageAnimControls, trainer } = usePokeAppContext();
-
+  //isAccount && isLoaded && trainer &&
   const pathname = usePathname();
   const isAccount = pathname === "/account";
   const isLoaded = useSingleImageLoader("/placeholders/pd_norm.png");

@@ -42,7 +42,7 @@ export default function WindowBg({
       width={6000}
       height={300}
       className={cn(
-        "z-1 absolute scale-[150%] md:scale-120 pointer-events-none",
+        "w-300 h-300 z-1 absolute scale-[150%] md:scale-120 pointer-events-none",
         pos === "low" && "sm:-translate-x-40 -translate-x-10 md:translate-y-20",
         pos === "mid" &&
           "sm:translate-x-10 -translate-x-30  translate-y-20 sm:-translate-y-50  inset-0"
