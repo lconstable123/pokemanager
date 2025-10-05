@@ -10,41 +10,6 @@ export const Urls_1 = [
   "/pokeballs/pokeballs-09.svg",
 ];
 
-export const Urls_2 = [
-  "/01 - Pikachu.svg",
-  "/08 - Gengar.svg",
-  "/06 - Charizard.svg",
-  "/pokeballs/pokeballs-01.svg",
-  "/pokeballs/pokeballs-03.svg",
-  "/pokeballs/pokeballs-04.svg",
-  "/pokeballs/pokeballs-05.svg",
-  "/pokeballs/pokeballs-06.svg",
-  "/pokeballs/pokeballs-07.svg",
-  "/pokeballs/pokeballs-08.svg",
-];
-
-export const Urls_login = [
-  "/trainers/oak.png",
-  "/trainers/trainer_1.png",
-  "/trainers/trainer_2.png",
-  "/trainers/trainer_3.png",
-  "/trainers/trainer_4.png",
-  "/trainers/trainer_5.png",
-  "/trainers/trainer_6.png",
-  "/trainers/trainer_7.png",
-  "/trainers/trainer_8.png",
-  "/ditheredgrad_bw.jpg",
-];
-export const Urls_app = [
-  "/placeholders/placeholder_pk.png",
-  "/placeholders/pd_norm.png",
-  "/placeholders/pd_error.png",
-  "/pokebg_3.png",
-  "/pokebg_2.jpg",
-  "/pokebg_4.png",
-  "/pokebg_5.png",
-];
-
 export const elementUrls = [
   "elements/bug.svg",
   "elements/dark.svg",
@@ -69,6 +34,41 @@ export const elementUrls = [
   "elements/fighting.svg",
   "elements/flying.svg",
   "elements/dark.svg",
+];
+export const Urls_2 = [
+  "/01 - Pikachu.svg",
+  "/08 - Gengar.svg",
+  "/06 - Charizard.svg",
+  "/pokeballs/pokeballs-01.svg",
+  "/pokeballs/pokeballs-03.svg",
+  "/pokeballs/pokeballs-04.svg",
+  "/pokeballs/pokeballs-05.svg",
+  "/pokeballs/pokeballs-06.svg",
+  "/pokeballs/pokeballs-07.svg",
+  "/pokeballs/pokeballs-08.svg",
+  ...elementUrls,
+];
+
+export const Urls_login = [
+  "/trainers/oak.png",
+  "/trainers/trainer_1.png",
+  "/trainers/trainer_2.png",
+  "/trainers/trainer_3.png",
+  "/trainers/trainer_4.png",
+  "/trainers/trainer_5.png",
+  "/trainers/trainer_6.png",
+  "/trainers/trainer_7.png",
+  "/trainers/trainer_8.png",
+  "/ditheredgrad_bw.jpg",
+];
+export const Urls_app = [
+  "/placeholders/placeholder_pk.png",
+  "/placeholders/pd_norm.png",
+  "/placeholders/pd_error.png",
+  "/pokebg_3.png",
+  "/pokebg_2.jpg",
+  "/pokebg_4.png",
+  "/pokebg_5.png",
 ];
 
 export const testPokeData = ["Blastoise", "Lapras", "Pikachu", "Charizard"];
