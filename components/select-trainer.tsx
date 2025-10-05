@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SelectTrainerNav from "./select-trainer-nav";
 import { cn } from "@/lib/utils";
 import DirectionNav from "./direction-nav";
@@ -225,22 +225,16 @@ function TrainerBg({
       }),
     ]);
   };
+  const run = useCallback(async () => {
+    await AnimateOut();
+    setSelectedTrainerColors(
+      trainerColors[selectedTrainer % trainerColors.length]
+    );
+    await AnimateIn();
+  }, [selectedTrainer]);
 
   useEffect(() => {
-    // toast.success("Selected Avatar Changed!");
-    const run = async () => {
-      await AnimateOut().then(() =>
-        setSelectedTrainerColors(
-          trainerColors[selectedTrainer % trainerColors.length]
-        )
-      );
-      await AnimateIn();
-    };
     if (!firstTime && selectedTrainer !== 0) run();
-    // const timer = setTimeout(() => {
-    //   AnimateIn();
-    // }, 2);
-    // return () => clearTimeout(timer);
   }, [selectedTrainer]);
 
   useEffect(() => {
@@ -261,7 +255,9 @@ function TrainerBg({
       />
       <motion.div className="ditheredGrad absolute top-0 z-3 h-20 w-full scale-y-[-1] opacity-10 " />
       <motion.div className="ditheredGrad absolute bottom-0 z-3 h-20 w-full opacity-10 " />
-      <div className={`transition-all absolute inset-0 ${bg3} -z-8 `} />
+      <div
+        className={`transition-colors w-full h-full absolute inset-0 ${bg3} -z-8 `}
+      />
     </>
   );
 }
@@ -278,7 +274,7 @@ function TrainerFrame({
       style={{
         width: trainerFrameWidth,
       }}
-      className="user-select-none pointer-events-none relative z-2 w-full h-80  imageFrame overflow-hidden bg-white rounded-2xl"
+      className="user-select-none pointer-events-none relative z-2 w-full h-80  imageFrame overflow-hidden bg3 rounded-2xl"
     >
       <div className="pointer-events-none  absolute left-0 bottom-0 flex flex-row ">
         {children}
