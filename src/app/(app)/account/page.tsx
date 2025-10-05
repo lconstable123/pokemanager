@@ -102,7 +102,7 @@ function FrontLineUpPortal({
                 height={200}
                 src={pk.sprite}
                 alt={pk.id}
-                className="-rotate-12 translate-y-20 -translate-x-20 scale-150 pixelImage hardSVGShadow"
+                className="-rotate-12 translate-y-20 -translate-x-20 scale-130 pixelImage hardSVGShadow"
               />
             </motion.div>
           ))}

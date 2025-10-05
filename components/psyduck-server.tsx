@@ -73,6 +73,7 @@ export default function PsyduckServer() {
     <>
       {isLoaded && (
         <motion.section
+          initial={{ opacity: 0 }}
           animate={controls}
           onClick={handleToggleError}
           className={cn(

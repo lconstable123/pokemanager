@@ -54,7 +54,7 @@ export default function NavBar({ Navlink = "/" }: TNavBar) {
             transition={{ duration: 0.5 }}
             className=" ml-auto flex items-center gap-3"
           >
-            <div className="mr-auto">
+            <div className="min-h-12 mr-auto ">
               <TrainerModal />
             </div>
           </motion.div>
@@ -72,7 +72,9 @@ function ProfileButton({
   sprite: string;
 }) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       onClick={() => {
         handleClick();
       }}
@@ -86,7 +88,7 @@ function ProfileButton({
         alt="Trainer"
         className="not-hover:pixelImage absolute object-cover -top-3 w-20 h-20"
       />
-    </div>
+    </motion.div>
   );
 }
 
@@ -113,7 +115,9 @@ function TrainerModal() {
   return (
     <Dialog open={Modalopen} onOpenChange={setModalOpen}>
       <DialogTrigger asChild>
-        <ProfileButton handleClick={handleOpen} sprite={trainerSprite} />
+        {trainerSprite && (
+          <ProfileButton handleClick={handleOpen} sprite={trainerSprite} />
+        )}
       </DialogTrigger>
       <DialogContent
         aria-describedby="trainer-info-modal"
