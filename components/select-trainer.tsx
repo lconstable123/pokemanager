@@ -236,7 +236,7 @@ function TrainerBg({
       );
       await AnimateIn();
     };
-    if (!firstTime) run();
+    if (!firstTime && selectedTrainer !== 0) run();
     // const timer = setTimeout(() => {
     //   AnimateIn();
     // }, 2);
