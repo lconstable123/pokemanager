@@ -274,7 +274,7 @@ function TrainerFrame({
       style={{
         width: trainerFrameWidth,
       }}
-      className="user-select-none pointer-events-none relative z-2 w-full h-80  imageFrame overflow-hidden bg3 rounded-2xl"
+      className="user-select-none pointer-events-none relative z-100 w-full h-80  imageFrame overflow-hidden bg-green-200 rounded-2xl"
     >
       <div className="pointer-events-none  absolute left-0 bottom-0 flex flex-row ">
         {children}
