@@ -63,7 +63,7 @@ export default function SelectTrainer({ mode }: SelectTrainerProps) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, scale: 0.4 }}
+      initial={{ opacity: 0, scale: 0.7 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{
