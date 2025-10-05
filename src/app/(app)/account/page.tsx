@@ -90,17 +90,19 @@ function FrontLineUpPortal({
           )} */}
           {lineUp.map((pk, index) => (
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ x: index * spacing, scale: 1 }}
+              animate={{ x: index * spacing }}
               key={pk.id}
-              className={`absolute z-100 w-[300px] h-[300px] `}
+              className={`absolute z-100 w-[200px] h-[200px] `}
             >
-              <img
+              <motion.img
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 + 0.2, duration: 0.2 }}
                 width={200}
                 height={200}
                 src={pk.sprite}
                 alt={pk.id}
-                className="-rotate-12 translate-y-15 -translate-x-20 scale-170 pixelImage hardSVGShadow"
+                className="-rotate-12 translate-y-20 -translate-x-20 scale-150 pixelImage hardSVGShadow"
               />
             </motion.div>
           ))}
