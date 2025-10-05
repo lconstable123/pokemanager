@@ -71,7 +71,7 @@ export default function PsyduckServer() {
 
   return (
     <>
-      {isLoaded && (
+      {isLoaded && !isMobile && (
         <motion.section
           initial={{ opacity: 0 }}
           animate={controls}

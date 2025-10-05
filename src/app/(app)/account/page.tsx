@@ -135,7 +135,7 @@ function GridNumber({
 
 function WholeSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className="min-h-[712px] z-4 relative mb-30 sm:mb-3 mt-5 flex justify-center ">
+    <section className="min-h-[712px]  z-4 relative mb-30 sm:mb-3 mt-5 flex justify-center ">
       {children}
     </section>
   );

@@ -34,7 +34,7 @@ export default function MainWindow({
           transition={{ duration: 0.7, ease: "easeOut", type: "tween" }}
           className="z-20 relative  flex flex-col  w-screen sm:w-[95vw] md:w-[700px] lg:w-[800px] 2xl:w-[1000px] "
         >
-          <div className=" bg-white pb-10 sm:py-0 h-screen sm:h-full border-0 sm:border-3 border-black outline-4 outline-red-800  hardShadow overflow-hidden rounded-none sm:rounded-lg">
+          <div className=" bg-white pb-20 sm:py-0 h-full sm:h-full border-0 sm:border-3 border-black outline-4 outline-red-800  hardShadow overflow-hidden rounded-none sm:rounded-lg">
             {isAccount && isLoaded && trainer && (
               <motion.div
                 initial={{ opacity: 0 }}
