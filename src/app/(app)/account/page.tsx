@@ -35,7 +35,7 @@ export default function Home() {
       {isMobile && <LineupBar reorderable={true} isMobile={isMobile} />}
 
       <WholeSection>
-        <FrontLineUpPortal lineUp={frontImages} />
+        {!isMobile && <FrontLineUpPortal lineUp={frontImages} />}
         {allImagesLoaded && (
           <PokeGrid>
             {slots.map((slot, index) => (
@@ -65,7 +65,7 @@ export default function Home() {
 //---------------------------------------------------
 function PokeGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className=" pt-2 z-0 px-2 sm:px-7 lg:px-20  rounded-3xl w-70 sm:w-full sm:h-full grid grid-cols-1 grid-rows-6 sm:grid-cols-3 sm:grid-row-2  gap-x-3 gap-y-4 sm:gap-y-4  mb-1 ">
+    <div className=" pt-2 z-0 px-0 sm:px-7 lg:px-20  rounded-3xl w-85 sm:w-full sm:h-full grid grid-cols-2 grid-rows-3 sm:grid-cols-3 sm:grid-row-2  gap-x-1 gap-y-1 sm:gap-y-4  mb-1 ">
       {children}
     </div>
   );
@@ -102,7 +102,7 @@ function FrontLineUpPortal({
                 height={200}
                 src={pk.sprite}
                 alt={pk.id}
-                className="-rotate-12 translate-y-35 sm:translate-y-20 -translate-x-20 scale-130 pixelImage hardSVGShadow"
+                className="-rotate-12 translate-y-35 sm:translate-y-20 -translate-x-20  scale-130 pixelImage hardSVGShadow"
               />
             </motion.div>
           ))}
@@ -125,7 +125,7 @@ function GridNumber({
     <div
       className={`${
         isReordering ? (!status ? "opacity-100" : "opacity-20") : "opacity-0"
-      } transition-opacity duration-500 noSelect z-1 absolute  -top-2 left-0 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-2 font-black border-yellow-300 text-yellow-700 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-yellow-100`}
+      } transition-opacity duration-500 noSelect z-1 absolute  -top-4 sm:-top-2 left-2 sm:left-2 md:left-0  lg:left-0 2xl:left-10 border-2 font-black border-yellow-300 text-yellow-700 text-sm p-4 w-4 h-4 rounded-full flex items-center justify-center bg-yellow-100`}
     >
       {index + 1}
       {/* {status} */}
@@ -135,7 +135,7 @@ function GridNumber({
 
 function WholeSection({ children }: { children: React.ReactNode }) {
   return (
-    <section className="min-h-[712px]  z-4 relative mb-30 sm:mb-3 mt-5 flex justify-center ">
+    <section className="min-h-[660px]  z-4 relative mb-0 sm:mb-3 mt-6 sm:mt-5 flex justify-center ">
       {children}
     </section>
   );
@@ -221,15 +221,15 @@ export function PkCardImage({
   // If no data, return empty bubble
   if (!pokemon)
     return (
-      <div className="noSelect relative  w-35 h-35">
-        <div className="noSelect z-5 absolute -top-2 -left-6 "></div>
+      <div className=" scale-80 sm:scale-100 noSelect relative  w-35 h-35">
+        {/* <div className="noSelect z-5 absolute -top-2 -left-6 "></div> */}
         <AddBubble />
       </div>
     );
   // If data, return populated entry
 
   return (
-    <div className={` noSelect relative  w-35 h-35`}>
+    <div className={`scale-80 sm:scale-100 noSelect relative  w-35 h-35`}>
       <div className="noSelect z-5 absolute -top-2 -right-6 ">
         <PKCardTypes types={pokemon.type} />
       </div>
@@ -278,7 +278,7 @@ export function PKCardDetails({ pokemon }: { pokemon: TPokemon }) {
 // TypeBubbles
 function PKCardTypes({ types }: { types: Element[] }) {
   return (
-    <div className="mt-1 flex flex-col gap-0 ">
+    <div className="mr-2 -translate-y-3 sm:-translate-y-0 sm:mr-0 mt-1 flex flex-row sm:flex-col gap-0 ">
       {types.map((type, index) => (
         <img
           key={index}

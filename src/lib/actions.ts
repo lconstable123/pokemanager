@@ -128,6 +128,7 @@ export const EditPokemon = async (
   return null;
 };
 //---------------------------------------------------------------------DELETE PK
+
 export const DeletePokemon = async (
   id: string
 ): Promise<{ message: string } | null> => {
@@ -216,8 +217,9 @@ export const AddTrainer = async (data: unknown) => {
   }
 };
 
+// export const runtime = "nodejs"; // Not "edge"
 export const DeleteTrainer = async (email: string) => {
-  await sleep(500);
+  // await sleep(500);
   const existingTrainer = await FindTrainerByEmail(email);
   if (!existingTrainer) {
     console.log("No trainer found with that email");
