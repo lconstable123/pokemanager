@@ -12,7 +12,7 @@ export default function Nav({
 }) {
   const { handlePageTransition } = usePokeAppContext();
   return (
-    <nav className="w-42 sm:w-200 mb-6 my-0 sm:my-0 md:my-0 flex flex-col sm:flex-row gap-4 sm:gap-5 animate-pulsing-subtle justify-center">
+    <nav className="forceZ relative w-42 sm:w-200 mb-6 my-0 sm:my-0 md:my-0 flex flex-col sm:flex-row gap-4 sm:gap-5 animate-pulsing-subtle justify-center">
       {items.map((item, index) => {
         return (
           <div
