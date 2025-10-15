@@ -101,8 +101,8 @@ function WelcomeText() {
         Take care of your ultimate lineup.
       </motion.h2>
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ scale: 0.8, opacity: 0, zIndex: 999 }}
+        animate={{ opacity: 1, scale: 1, zIndex: 999 }}
         exit={{ opacity: 0 }}
         transition={{
           ease: "easeOut",
